@@ -1,0 +1,31 @@
+body {
+    background-image: url("./images/home.png");
+    background-size: 100% auto;
+}
+p {
+    position: absolute;
+    left: 3em;
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: 40%;
+    font-weight: bold;
+    font-family: "Campton", sans-serif;
+    font-size: 1.5em;
+}
+
+.SignUpBtn {
+    background-color: green;
+    color: white;
+    font-weight: bold;
+    font-family: "Campton", sans-serif;
+    font-size: 28;
+    border-radius: 10px;
+    padding: 10px 20px;
+    position:absolute;
+    bottom:170px;
+    left:70px;
+    transition: padding 0.7s ease;
+}
+.SignUpBtn:hover {
+    padding: 15px 25px; /* Increase the padding values as desired */
+}
