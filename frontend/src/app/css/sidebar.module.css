@@ -1,0 +1,52 @@
+/* Sidebar.module.css */
+.sidebar {
+    background-color: black;
+    width: 250px;
+    transition: margin-left ease-in-out 0.5s;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 40;
+  }
+  
+  .sidebarHidden {
+    margin-left: -250px;
+  }
+  
+  .sidebarVisible {
+    margin-left: 0;
+  }
+  
+  .menuItem {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    font-size: 1rem;
+    padding-left: 0.375rem;
+    padding-top: 0.1875rem;
+    padding-bottom: 0.1875rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: grey;
+    background-color: black;
+  }
+  
+  .menuItem:hover {
+    color: white;
+  }
+  
+  .activeMenuItem {
+    color: white;
+  }
+  
+  .modalOverlay {
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 30;
+  }
+  

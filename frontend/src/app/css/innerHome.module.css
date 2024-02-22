@@ -1,0 +1,46 @@
+.innerHome{
+    background-image: url("./images/bg.png");
+    background-size: 100% auto;
+    background-position:center;
+    background-size:center;
+    height:100vh;
+}
+
+.h1{
+    font-size: 20px; /* Increase font size */
+    font-weight: bold; /* Make the text bold */
+    text-decoration: underline; /* Underline the text */
+}
+.mainContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    justify-items: center;
+    align-items: center;
+    margin:2%;
+    border-radius: 20px;
+}
+
+.innerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    word-wrap: break-word; /* Wrap text onto multiple lines */
+    border: 25px ;
+    border-radius:15px;
+    margin-bottom:15px; 
+    margin-top:15px;
+    background-color: #171755;
+    font-family: "Campton", sans-serif;
+    text-align: center;
+    width:90%;
+    height:95%;
+}
+
+.innerContainer .priceUp {
+    color: rgb(3, 215, 3);
+}
+.innerContainer .priceDn {
+    color: rgb(255, 0, 0);
+}

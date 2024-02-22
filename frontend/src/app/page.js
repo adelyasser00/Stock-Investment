@@ -1,19 +1,34 @@
-import React from 'react';
+'use client'
+import React, { useState } from 'react';
 import './css/landing.css';
 import Navbar from './navbar.js';
+import Sidebar from './sidebar.js'; // Import the Sidebar component
 
 const HomePage = () => {
+  const [activeTab, setActiveTab] = useState('Home');
+
   return (
     <div>
       <Navbar />
-      <div><p>Welcome to our stock investment website! We provide comprehensive analysis, real-time market data, and expert insights to help you make informed investment decisions. Whether you're a beginner or an experienced investor, we've got you covered. Start exploring our platform today and take your investment journey to the next level.</p>
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <div>
+        {activeTab === 'Home' && (
+          <>
+            <p>
+              <h5>Find the advice you always wanted,</h5>
+              <h4>Take your investments to the next level!</h4>
+              <h1>FIND. INVEST. PROFIT! </h1>
+            </p>
+            <div> <a className='SignUpBtn' href="/signup">Sign Up Now!</a> </div>
+          </>
+        )}
+        {activeTab === 'Portfolio' && <p>Portfolio</p>}
+        {activeTab === 'Watchlist' && <p>Watchlist</p>}
+        {activeTab === 'About Us' && <p>About Us</p>}
+        {activeTab === 'Contact' && <p>Contact</p>}
       </div>
-      <div> <a className='SignUpBtn' href="/signup">Sign Up Now!</a> </div>
-
     </div>
-    
   );
 };
 
 export default HomePage;
-

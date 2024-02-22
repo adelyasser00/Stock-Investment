@@ -1,31 +1,33 @@
 body {
-    background-image: url("./images/home.png");
-    background-size: 100% auto;
+    background-image: none;
+    background-color: #DDD;
 }
+
 p {
     position: absolute;
-    left: 3em;
+    left: 27em;
     top: 50%;
     transform: translateY(-50%);
     max-width: 40%;
     font-weight: bold;
     font-family: "Campton", sans-serif;
     font-size: 1.5em;
+    color:black;
 }
 
 .SignUpBtn {
     background-color: green;
-    color: white;
+    color: black;
     font-weight: bold;
     font-family: "Campton", sans-serif;
-    font-size: 28;
+    font-size: 96;
     border-radius: 10px;
-    padding: 10px 20px;
+    padding: 50px 130px;
     position:absolute;
-    bottom:170px;
-    left:70px;
+    bottom:200px;
+    left:1000px;
     transition: padding 0.7s ease;
 }
 .SignUpBtn:hover {
-    padding: 15px 25px; /* Increase the padding values as desired */
+    padding: 40px 95px; /* Increase the padding values as desired */
 }
