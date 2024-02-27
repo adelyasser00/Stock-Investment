@@ -1,19 +1,29 @@
 body {
     background-image: none;
-    background-color: #DDD;
+    background-color: lightgrey;
+
 }
 
 p {
     position: absolute;
-    left: 27em;
-    top: 50%;
+    left: 10em;
+    top: 23%;
     transform: translateY(-50%);
-    max-width: 40%;
+    width: 82%;
+
     font-weight: bold;
     font-family: "Campton", sans-serif;
     font-size: 1.5em;
     color:black;
 }
+
+.pageContainer {
+    background-color: lightgrey;
+    border-radius: 10px;
+    padding:20px;
+    border-color:white;
+}
+
 
 .SignUpBtn {
     background-color: green;
@@ -30,4 +40,25 @@ p {
 }
 .SignUpBtn:hover {
     padding: 40px 95px; /* Increase the padding values as desired */
+}
+
+.bigSectionBG{
+    background-color:#FFF;
+    padding:30px;
+    border-radius:10px;
+    display:flex;
+    max-width:60%;
+    left:50%;
+    position:relative;
+    transform: translateX(-40%) translateY(5%);
+
+}
+.topChartClass{
+    left: 25%;
+    width: 700px;
+    height: 350px;
+    padding: 20px;
+    cursor: pointer;
+    position:relative;    
+
 }
