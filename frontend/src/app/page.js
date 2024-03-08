@@ -196,18 +196,39 @@ const HomePage = () => {
                 <div className="topChartClass">
                     <Line data={data} options={options}></Line>
                 </div>
-                <div className='bottomrightSectionBG'>
+                <div className='bottomRightSectionBG'>
                     <div className="bottomRightChartClass">
                         <h3>Stock Distribution</h3>
                         <Pie data={pieData} />
                     </div>
 
                 </div>
+                <div className='bottomLeftSectionBG'>
+                    <h3>Add your stocks</h3>
+                    <button className="submit-button"></button>
+                    <div className='form__group field'>
+                        <input type="text" className="form__field"/>
+                        <label htmlFor="name" className="form__label">Stock Name</label>
+                    </div>
+                    <div className='form__group field'>
+                        <input type="text" className="form__field"/>
+                        <label htmlFor="name" className="form__label">$ Stock Price </label>
+                    </div>
+                    <div className='form__group field'>
+                        <input type="text" className="form__field"/>
+                        <label htmlFor="name" className="form__label">Amount Purchased</label>
+                    </div>
+                    <div className='form__group field'>
+                        <input type="date" className="form__field"/>
+                        <label htmlFor="name" className="form__label">Purchase date</label>
+                    </div>
+
+                </div>
             </div>
         )}
           {activeTab === 'Watchlist' && <p>Watchlist</p>}
-        {activeTab === 'About Us' && <p>About Us</p>}
-        {activeTab === 'Contact' && <p>Contact</p>}
+          {activeTab === 'About Us' && <p>About Us</p>}
+          {activeTab === 'Contact' && <p>Contact</p>}
       </div>
     </div>
   );
