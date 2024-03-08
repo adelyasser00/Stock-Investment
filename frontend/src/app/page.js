@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import './css/landing.css';
 import Navbar from './navbar.js';
 import Sidebar from './sidebar.js'; // Import the Sidebar component
-import { Line } from "react-chartjs-2";
+import { Line, Pie } from "react-chartjs-2";
 
 import {
   Chart as ChartJS,
@@ -15,6 +15,7 @@ import {
   Legend,
   Tooltip,
   Filler,
+    ArcElement,
 } from "chart.js";
 
 ChartJS.register(
@@ -24,7 +25,8 @@ ChartJS.register(
   PointElement,
   Legend,
   Tooltip,
-  Filler
+  Filler,
+  ArcElement,
 );
 
 const salesData = {
@@ -58,6 +60,15 @@ const salesData = {
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState('Home');
   const [selectedStock, setSelectedStock] = useState('AAPL');
+    const pieData = {
+        labels: ['AAPL', 'MSFT', 'TSLA'],
+        datasets: [
+            {
+                data: [35, 45, 20],
+                backgroundColor: ['#7140DEFF', 'grey', 'black'],
+            },
+        ],
+    };
   const calculateColor = (stockData) => {
     const lastMonth = stockData[stockData.length - 1];
     const secondLastMonth = stockData[stockData.length - 2];
@@ -113,7 +124,7 @@ const HomePage = () => {
       y: {
         ticks: {
           font: {
-            size: 17,
+            size: 16,
             weight: "bold",
           },
         },
@@ -124,7 +135,7 @@ const HomePage = () => {
             bottom: 10,
           },
           font: {
-            size: 30,
+            size: 20,
             style: "italic",
             family: "Arial",
           },
@@ -134,7 +145,7 @@ const HomePage = () => {
       x: {
         ticks: {
           font: {
-            size: 17,
+            size: 14,
             weight: "bold",
           },
         },
@@ -145,7 +156,7 @@ const HomePage = () => {
             top: 10,
           },
           font: {
-            size: 30,
+            size: 20,
             style: "italic",
             family: "Arial",
           },
@@ -172,22 +183,29 @@ const HomePage = () => {
           </>
         )}
         {activeTab === 'Portfolio' && (
-          <div className='bigSectionBG'>
-            <p>Portfolio
+            <div className='bigSectionBG'>
+                <p>Your Stocks
+                </p>
+                <p className='stockDisplayList'>
+                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>
+                    <br></br>
+                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>
+                    <br></br>
+                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
+                </p>
+                <div className="topChartClass">
+                    <Line data={data} options={options}></Line>
+                </div>
+                <div className='bottomrightSectionBG'>
+                    <div className="bottomRightChartClass">
+                        <h3>Stock Distribution</h3>
+                        <Pie data={pieData} />
+                    </div>
 
-            </p>
-            <p className='stockDisplayList'>
-              <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span> <br></br>
-              <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span> <br></br>
-              <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
-            </p>
-            <div className="topChartClass">
-        <Line data={data} options={options}></Line>
-      </div>
-            
-          </div>
+                </div>
+            </div>
         )}
-        {activeTab === 'Watchlist' && <p>Watchlist</p>}
+          {activeTab === 'Watchlist' && <p>Watchlist</p>}
         {activeTab === 'About Us' && <p>About Us</p>}
         {activeTab === 'Contact' && <p>Contact</p>}
       </div>
