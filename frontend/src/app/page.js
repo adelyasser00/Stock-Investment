@@ -27,33 +27,76 @@ ChartJS.register(
   Filler
 );
 
-const salesData = [
-  { month: "January", sales: 100 },
-  { month: "February", sales: 150 },
-  { month: "March", sales: 200 },
-  { month: "April", sales: 120 },
-  { month: "May", sales: 300 },
-  { month: "June", sales: 250 },
-];
+const salesData = {
+  AAPL: [
+ { month: "January"  , sales: 100 } ,
+ { month: "February" , sales: 150 } ,
+ { month: "March"    , sales: 200 } ,
+ { month: "April"    , sales: 120 } ,
+ { month: "May"      , sales: 300 } ,
+ { month: "June"     , sales: 250 } ,
+ ]                   ,
+ MSFT: [
+ { month: "January"  , sales: 110 } ,
+ { month: "February" , sales: 300 } ,
+ { month: "March"    , sales: 210 } ,
+ { month: "April"    , sales: 860 } ,
+ { month: "May"      , sales: 500 } ,
+ { month: "June"     , sales: 260 } ,
+ ]                   ,
+ TSLA: [
+ { month: "January"  , sales: 120 } ,
+ { month: "February" , sales: 170 } ,
+ { month: "March"    , sales: 220 } ,
+ { month: "April"    , sales: 140 } ,
+ { month: "May"      , sales: 320 } ,
+ { month: "June"     , sales: 390 } ,
+ ]                   ,
+
+};
 
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState('Home');
+  const [selectedStock, setSelectedStock] = useState('AAPL');
+  const calculateColor = (stockData) => {
+    const lastMonth = stockData[stockData.length - 1];
+    const secondLastMonth = stockData[stockData.length - 2];
+
+    if (lastMonth.sales > secondLastMonth.sales) {
+      // If the last change was an increase, return green
+      return {
+        borderColor: "#00ff00",
+        pointBorderColor: "#00dd00",
+        gradientColor: "#00dd00",
+      };
+    } else {
+      // If the last change was a decrease, return red
+      return {
+        borderColor: "#ff0000",
+        pointBorderColor: "#dd0000",
+        gradientColor: "#dd0000",
+      };
+    }
+  };
+
+  const color = calculateColor(salesData[selectedStock]);
+
   const data = {
-    labels: salesData.map((data) => data.month),
+    labels: salesData[selectedStock].map((data) => data.month),
     datasets: [
       {
-        label: "Revenue",
-        data: salesData.map((data) => data.sales),
-        borderColor: "#cb0c9f",
+        label: selectedStock,
+        data: salesData[selectedStock].map((data) => data.sales),
+        borderColor: color.borderColor,
         borderWidth: 3,
-        pointBorderColor: "#cb0c9f",
+        pointBorderColor: color.pointBorderColor,
         pointBorderWidth: 3,
         tension: 0.5,
         fill: true,
         backgroundColor: (context) => {
           const ctx = context.chart.ctx;
           const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-          gradient.addColorStop(0, "#f797e1");
+          gradient.addColorStop(0, color.gradientColor);
           gradient.addColorStop(1, "white");
           return gradient;
         },
@@ -76,7 +119,7 @@ const HomePage = () => {
         },
         title: {
           display: true,
-          text: "Sales",
+          text: "Price",
           padding: {
             bottom: 10,
           },
@@ -109,6 +152,7 @@ const HomePage = () => {
         },
       },
     },
+    
   };
 
 
@@ -129,7 +173,14 @@ const HomePage = () => {
         )}
         {activeTab === 'Portfolio' && (
           <div className='bigSectionBG'>
-            <p>Portfolio</p>
+            <p>Portfolio
+
+            </p>
+            <p className='stockDisplayList'>
+              <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span> <br></br>
+              <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span> <br></br>
+              <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
+            </p>
             <div className="topChartClass">
         <Line data={data} options={options}></Line>
       </div>

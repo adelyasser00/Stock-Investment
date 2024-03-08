@@ -1,12 +1,14 @@
 body {
     background-image: none;
     background-color: lightgrey;
+    border-radius:200px;
+    border-color:white;
 
 }
 
 p {
     position: absolute;
-    left: 10em;
+    left: 3em;
     top: 23%;
     transform: translateY(-50%);
     width: 82%;
@@ -15,6 +17,20 @@ p {
     font-family: "Campton", sans-serif;
     font-size: 1.5em;
     color:black;
+}
+.stockDisplayList{
+    left: 4em;
+    top: 41%;
+    transform: translateY(-50%);
+    width: 82%;
+    font-family: "Campton", sans-serif;
+    font-size: 1.2em;
+    color:black;
+}
+
+.stockDisplayListItem:hover{
+    color:darkgray;
+    cursor:pointer;
 }
 
 .pageContainer {
