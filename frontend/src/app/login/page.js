@@ -1,5 +1,5 @@
 'use client'
-import '../css/loginsignup.css';
+import '../css/clerk.css';
 import { useState } from 'react';
 
 const mode = 'login';

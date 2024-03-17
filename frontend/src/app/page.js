@@ -5,6 +5,7 @@ import './css/landing.css';
 import Navbar from './navbar.js';
 import Sidebar from './sidebar.js'; // Import the Sidebar component
 import { Line, Pie } from "react-chartjs-2";
+import { UserButton } from "@clerk/nextjs";
 
 import {
   Chart as ChartJS,
@@ -171,23 +172,54 @@ const HomePage = () => {
     <div>
       <Navbar />
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+
       <div>
         {activeTab === 'Home' && (
-          <>
-            <p>
-              <h5>Find the advice you always wanted,</h5>
-              <h4>Take your investments to the next level!</h4>
-              <h1>FIND. INVEST. PROFIT! </h1>
-            </p>
-            {/* <div> <a className='SignUpBtn' href="/signup">Sign Up Now!</a> </div> */}
-          </>
-        )}
-        {activeTab === 'Portfolio' && (
             <div className='bigSectionBG'>
-                <p>Your Stocks
+                <p>My WatchList
                 </p>
-                <p className='stockDisplayList'>
-                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>
+                <div className='form__group__watchlist field'>
+                    <input type="text" className="form__field"/>
+                    <label htmlFor="name" className="form__label">Add a stock</label>
+                </div>
+                <p className='stockDisplayListWatchlist'>
+                    <span className='stockDisplayListItem'  onClick={() => setSelectedStock('AAPL')}>AAPL</span>
+                    <br></br>
+                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>
+                    <br></br>
+                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
+                </p>
+                <div className="topChartClassWatchlist">
+                    <Line data={data} options={options}></Line>
+                </div>
+                <div className='bottomRightSectionBGHome'>
+                    <h2>Trending stocks</h2>
+                    <ul>
+                        <li><p className='newsFont'>ACS </p> <p class='newsFont stockDecrease'>5.77 -0.02</p></li>
+                        <li><p className='newsFont'>NBD </p> <p class='newsFont stockIncrease'>3.86 +0.34</p></li>
+
+                        <li><p className='newsFont'>HSBC </p> <p class='newsFont stockDecrease'>0.77 +0.08</p></li>
+                    </ul>
+                </div>
+
+                <div className='bottomLeftSectionBGHome'>
+                <h2>Latest News</h2>
+                    <ul>
+                        <li><p className='newsFont'>'Excessive fragmentation': Vodafone in €8bn Italy exit as CEO
+                            ...</p></li>
+                        <li><p className='newsFont'>Nvidia GTC 2024: What to expect from the AI giant's big
+                            conference</p></li>
+                        <li><p className='newsFont'>All eyes on the Federal Reserve: What to know this week</p></li>
+                    </ul>
+                </div>
+            </div>
+        )}
+          {activeTab === 'Portfolio' && (
+              <div className='bigSectionBG'>
+                  <p>Your Stocks
+                  </p>
+                  <p className='stockDisplayList'>
+                      <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>
                     <br></br>
                     <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>
                     <br></br>
@@ -226,9 +258,55 @@ const HomePage = () => {
                 </div>
             </div>
         )}
-          {activeTab === 'Watchlist' && <p>Watchlist</p>}
-          {activeTab === 'About Us' && <p>About Us</p>}
-          {activeTab === 'Contact' && <p>Contact</p>}
+          {activeTab === 'Watchlist' && (
+              <div className='bigSectionBG'>
+                  <p>My WatchList
+                  </p>
+                  <div className='form__group__watchlist field'>
+                      <input type="text" className="form__field"/>
+                      <label htmlFor="name" className="form__label">Add a stock</label>
+                  </div>
+                  <p className='stockDisplayListWatchlist'>
+                      <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>
+                      <br></br>
+                      <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>
+                      <br></br>
+                      <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
+                  </p>
+                  <div className="topChartClassWatchlist">
+                      <Line data={data} options={options}></Line>
+                  </div>
+              </div>
+          )}
+          {activeTab === 'About Us' && (
+              <div className='bigSectionBG About-Us'>
+                  <p>
+                      Welcome to <strong>Stock Investment Platform</strong>, your number one source for all things related to stock investment. We're dedicated to providing you the very best of investment advice, with an emphasis on reliability, customer service, and uniqueness.
+                  </p>
+                  <p>
+                      Founded in 2023, <strong>Stock Investment Platform</strong> has come a long way from its beginnings. When we first started out, our passion for helping other investors be more eco-friendly, providing the best equipment for their trading drove us to start our own business.
+                  </p>
+                  <p>
+                      We hope you enjoy our services as much as we enjoy offering them to you. If you have any questions or comments, please don't hesitate to contact us.
+                  </p>
+              </div>
+          )}
+          {activeTab === 'Contact' && (
+              <div className='bigSectionBG Contact'>
+                  <h1>
+                      For further inquiries:
+                  </h1>
+                  <p>
+                      Email: es-adelyasser00@alexu.edu.eg
+                  </p>
+                  <p>
+                      Mobile: +20 1014066663
+                  </p>
+                  <p>
+                      Telephone: +20 1014066663
+                  </p>
+              </div>
+          )}
       </div>
     </div>
   );

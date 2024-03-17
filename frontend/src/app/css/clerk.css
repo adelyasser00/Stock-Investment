@@ -1,0 +1,38 @@
+
+body{
+    /*background: #433B7C;*/
+    background-image: url("./images/home.png");
+    /* make the background image scale fit the screen and not appear as a cropped view of it*/
+    background-size: 100% ;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    color: #fff;
+    margin: 0 !important;
+    position: absolute;
+    /*transform: translate(50%, 50%);*/
+    /*top:10%;*/
+    /*make the body fill the html page and the entire view completely and dont make the html element take up any space*/
+    width: 100%;
+    height: 100%;
+    /*overflow-y: scroll;*/
+
+}
+
+.cl-rootBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    transform: scale(0.9,0.9);
+    background: transparent;
+}
+
+.cl-card{
+    box-shadow: 10px 10px 16px 9px rgba(0,0,0,0.5);
+
+}
+
+/*div{*/
+/*    position:absolute;*/
+/*}*/
