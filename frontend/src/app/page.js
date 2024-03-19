@@ -176,14 +176,18 @@ const HomePage = () => {
       <div>
         {activeTab === 'Home' && (
             <div className='bigSectionBG'>
-                <p>My WatchList
+                <p>Recommendations, Just for you!
                 </p>
                 <div className='form__group__watchlist field'>
                     <input type="text" className="form__field"/>
-                    <label htmlFor="name" className="form__label">Add a stock</label>
+                    <label htmlFor="name" className="form__label">Search amongst recommendations</label>
                 </div>
                 <p className='stockDisplayListWatchlist'>
-                    <span className='stockDisplayListItem'  onClick={() => setSelectedStock('AAPL')}>AAPL</span>
+                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>
+                    <br></br>
+                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>ALDX</span>
+                    <br></br>
+                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>BASE</span>
                     <br></br>
                     <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>
                     <br></br>

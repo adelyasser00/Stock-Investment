@@ -1,7 +1,7 @@
 /* Sidebar.module.css */
 .sidebar {
   background-color: white;
-  width: 170px;
+  width: 210px;
   height:90%;
   transition: margin-left ease-in-out 0.5s;
   position: fixed;
@@ -15,7 +15,6 @@
   border-radius: 50px;
   font-family: "Campton", sans-serif;
   box-shadow: 10px 10px 10px 9px rgba(0,0,0,0.5);
-
 }
 
 .sidebarHidden {
@@ -32,7 +31,7 @@
   align-items: center;
   font-size: 1.2rem;
   font-weight: bolder;
-  padding-left: 1rem;
+  padding-left: 3rem;
   padding-right: 1rem;
   padding-top: 27%;
   padding-bottom: 27%;
