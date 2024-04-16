@@ -18,14 +18,19 @@ export default function Sidebar({ activeTab, setActiveTab }) {
     }
 
     return (
-        <div className={styles.sidebar}>
-            <div >
-                <MenuItem name="Home" icon="/css/icons/sdbar_home.png" />
-                <MenuItem name="Portfolio" icon="/css/icons/sdbar_portfolio.png" />
-                <MenuItem name="Watchlist" icon="/css/icons/sdbar_watchlist.png" />
-                <MenuItem name="About Us" icon="/css/icons/sdbar_aboutUs.png" />
-                <MenuItem name="Contact" icon="/css/icons/sdbar_contactUs.png" />
+        <aside>
+            <div className={styles.sidebar}>
+                <div >
+                    <MenuItem name="**Logo**" icon="/css/icons/sdbar_home.png" />
+                    <MenuItem name="Home" icon="/css/icons/sdbar_home.png" />
+                    <MenuItem name="Portfolio" icon="/css/icons/sdbar_portfolio.png" />
+                    <MenuItem name="Watchlist" icon="/css/icons/sdbar_watchlist.png" />
+                    <MenuItem name="About Us" icon="/css/icons/sdbar_aboutUs.png" />
+                    <MenuItem name="Contact" icon="/css/icons/sdbar_contactUs.png" />
+                </div>
             </div>
-        </div>
-    )
+        </aside>
+            )
+
+
 }

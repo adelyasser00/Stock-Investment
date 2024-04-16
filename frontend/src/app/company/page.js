@@ -176,7 +176,7 @@ const HomePage = () => {
       <div>
         {activeTab === 'Feed' && (
             <div>
-                <div className='bigSectionBG'>
+                <div className='bigSectionBG addPostSection'>
                     <p>Share some news!
                     </p>
                     <div className='form__group field'>
@@ -187,22 +187,65 @@ const HomePage = () => {
 
 
                 </div>
-                <div className='postContainer'>
-                    <p>This is a post</p>
+                <div className='postArea'>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
+                        <p>This is a post</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
+                        <p>This is another post</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
+                        <p>and Another post</p>
+                        <p>with multiple lines</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
+                        <p>and Another post</p>
+                        <p>with one,</p>
+                        <p>Two Three lines</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
+                        <p>This is a post</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
+                        <p>This is another post</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
+                        <p>and Another post</p>
+                        <p>with multiple lines</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
+                        <p>and Another post</p>
+                        <p>with one,</p>
+                        <p>Two Three lines</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
+                        <p>This is a post</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
+                        <p>This is another post</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
+                        <p>and Another post</p>
+                        <p>with multiple lines</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
+                        <p>and Another post</p>
+                        <p>with one,</p>
+                        <p>Two Three lines</p>
+                    </div>
                 </div>
-                <div className='postContainer'>
-                    <p>This is another post</p>
-                </div>
-                <div className='postContainer'>
-                    <p>and Another post</p>
-                    <p>with multiple lines</p>
-                </div>
-                <div className='postContainer'>
-                    <p>and Another post</p>
-                    <p>with one,</p>
-                    <p>Two Three lines</p>
-                </div>
-
 
             </div>
         )}
@@ -214,35 +257,20 @@ const HomePage = () => {
                       {/*<span style={{marginBottom    : '20px'}}></span>*/}
                       <br></br>
                       <p className='stockDetailsText'>Previous Close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 172.62</p>
-                      <br></br>
                       <p className='stockDetailsText'>Open     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 175.60</p>
-                      <br></br>
                       <p className='stockDetailsText'>Bid &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.05 x 1400</p>
-                      <br></br>
                       <p className='stockDetailsText'>Ask &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.07 x 1100</p>
-                      <br></br>
                       <p className='stockDetailsText'>Day's Range &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.52 - 177.71</p>
-                      <br></br>
                       <p className='stockDetailsText'>52 Week Range &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;155.98 - 199.62</p>
-                      <br></br>
                       <p className='stockDetailsText'>Volume&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 75,000,820</p>
-                      <br></br>
                       <p className='stockDetailsText'>Avg. Volume &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;59,125,448</p>
-                      <br></br>
                       <p className='stockDetailsText'>Market Cap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.683T</p>
-                      <br></br>
                       <p className='stockDetailsText'>Beta (5Y Monthly)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.29</p>
-                      <br></br>
                       <p className='stockDetailsText'>PE Ratio (TTM) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;27.02</p>
-                      <br></br>
                       <p className='stockDetailsText'>EPS (TTM) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.43</p>
-                      <br></br>
                       <p className='stockDetailsText'>Earnings Date May 02, 2024 - May 06, 2024</p>
-                      <br></br>
                       <p className='stockDetailsText'>Forward Dividend & Yield&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.96 (0.55%)</p>
-                      <br></br>
                       <p className='stockDetailsText'>Ex-Dividend Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Feb 09, 2024</p>
-                      <br></br>
                       <p className='stockDetailsText'>1y Target Est &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;184.96</p>
 
                       <div className="topChartClass">
@@ -293,26 +321,56 @@ const HomePage = () => {
                   </div>
               </div>
           )}
-          {/*{activeTab === 'Watchlist' && (*/}
-          {/*    <div className='bigSectionBG'>*/}
-          {/*        <p>My WatchList*/}
-          {/*        </p>*/}
-          {/*        <div className='form__group__watchlist field'>*/}
-          {/*            <input type="text" className="form__field"/>*/}
-          {/*            <label htmlFor="name" className="form__label">Add a stock</label>*/}
-          {/*        </div>*/}
-          {/*        <p className='stockDisplayListWatchlist'>*/}
-          {/*            <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>*/}
-          {/*            <br></br>*/}
-          {/*            <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>*/}
-          {/*            <br></br>*/}
-          {/*            <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>*/}
-          {/*        </p>*/}
-          {/*        <div className="topChartClassWatchlist">*/}
-          {/*            <Line data={data} options={options}></Line>*/}
-          {/*        </div>*/}
-          {/*    </div>*/}
-          {/*)}*/}
+          {activeTab === 'User Statistics' && (
+              <div>
+                  <div className='bigSectionBG'>
+                      <p>Statistics
+                      </p>
+                      <div className='form__group__watchlist field'>
+                          <input type="text" className="form__field"/>
+                          <label htmlFor="name" className="form__label">Search for a user</label>
+                      </div>
+                      <p className='stockDisplayListWatchlist'>
+                          <span className='stockDisplayListItem'>Peak number of investors: 300</span>
+                          <br></br>
+                          <span className='stockDisplayListItem'>Peak user profit: $335</span>
+                          <br></br>
+                          <span className='stockDisplayListItem'>Biggest stock amount purchased: 95</span>
+                      </p>
+                      <div className="topChartClassWatchlist">
+                          <Line data={data} options={options}></Line>
+                      </div>
+                  </div>
+                  <div className='bottomRightSectionBG'>
+                      <div className="bottomRightChartClass">
+                          <h3>User Distribution</h3>
+                          <Pie data={pieData}/>
+                      </div>
+
+                  </div>
+                  <div className='bottomLeftSectionBG'>
+                      <h3>Add your stocks</h3>
+                      <button className="submit-button"></button>
+                      <div className='form__group field'>
+                          <input type="text" className="form__field"/>
+                          <label htmlFor="name" className="form__label">Stock Name</label>
+                      </div>
+                      <div className='form__group field'>
+                          <input type="text" className="form__field"/>
+                          <label htmlFor="name" className="form__label">$ Stock Price </label>
+                      </div>
+                      <div className='form__group field'>
+                          <input type="text" className="form__field"/>
+                          <label htmlFor="name" className="form__label">Amount Purchased</label>
+                      </div>
+                      <div className='form__group field'>
+                          <input type="date" className="form__field"/>
+                          <label htmlFor="name" className="form__label">Purchase date</label>
+                      </div>
+
+                  </div>
+              </div>
+          )}
           {activeTab === 'About Us' && (
               <div className='bigSectionBG About-Us'>
                   <p>
@@ -322,10 +380,12 @@ const HomePage = () => {
                   </p>
                   <p>
                       Founded in 2023, <strong>Stock Investment Platform</strong> has come a long way from its
-                      beginnings. When we first started out, our passion for helping other investors be more eco-friendly, providing the best equipment for their trading drove us to start our own business.
+                      beginnings. When we first started out, our passion for helping other investors be more
+                      eco-friendly, providing the best equipment for their trading drove us to start our own business.
                   </p>
                   <p>
-                      We hope you enjoy our services as much as we enjoy offering them to you. If you have any questions or comments, please don't hesitate to contact us.
+                      We hope you enjoy our services as much as we enjoy offering them to you. If you have any questions
+                      or comments, please don't hesitate to contact us.
                   </p>
               </div>
           )}
@@ -338,7 +398,7 @@ const HomePage = () => {
                       Email: es-adelyasser00@alexu.edu.eg
                   </p>
                   <p>
-                      Mobile: +20 1014066663
+                  Mobile: +20 1014066663
                   </p>
                   <p>
                       Telephone: +20 1014066663

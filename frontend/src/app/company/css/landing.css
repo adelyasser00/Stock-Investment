@@ -34,6 +34,7 @@ h3, h2 {
 }
 .stockDetailsText{
     font-size:1em;
+    margin-bottom: 5px;
 }
 
 .form__group {
@@ -199,12 +200,11 @@ h3, h2 {
     display:flex;
     flex-direction:column;
     max-width:65%;
-    max-height: 55vh;
+    max-height: 70vh;
     left:50%;
     position:relative;
     transform: translateX(-40%) translateY(20%);
-    box-shadow: 10px 10px 10px 9px rgba(0,0,0,0.5);
-    /*max-height: 60%;*/
+    box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);    /*max-height: 60%;*/
 
 
 }
@@ -220,13 +220,13 @@ h3, h2 {
     width:65%;
     max-height: 30vh;
     left:50%;
-    transform: translateX(-40%) translateY(50%);
-    margin-top:50px;
+    transform: translateX(-40%) translateY(35px);
+    margin-top:30px;
     overflow: hidden;
-    box-shadow: 10px 10px 10px 9px rgba(0,0,0,0.5);
-    /*max-height: 60%;*/
+    box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);    /*max-height: 60%;*/
 
 }
+
 .bigSectionBGText{
     font-size: 1.5em;
     font-family: "Campton", sans-serif;
@@ -238,7 +238,7 @@ h3, h2 {
     flex:1;
     left: 40%;
     width: 500px;
-    height: 250px;
+    height: 350px;
     padding: 5px;
     cursor: pointer;
     position:absolute;
@@ -268,8 +268,7 @@ h3, h2 {
     position: relative;
     transform: translateX(25%) translateY(30%);
     max-width:30%;
-    box-shadow: 10px 10px 10px 9px rgba(0,0,0,0.5);
-
+    box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);
 
 }
 .bottomLeftSectionBG {
@@ -281,10 +280,9 @@ h3, h2 {
     max-width: 30%;
     left: 50%;
     position: relative;
-    transform: translateX(-85%) translateY(-68%);
+    transform: translateX(-85%) translateY(-72%);
     /*width:50%;*/
-    box-shadow: 10px 10px 10px 9px rgba(0,0,0,0.5);
-
+    box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);
 }
 
 .bottomRightSectionBGHome {
@@ -298,7 +296,7 @@ h3, h2 {
     position: relative;
     transform: translateX(19%) translateY(1%);
     width:45%;
-
+    box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);
 }
 
 .bottomLeftSectionBGHome {
@@ -312,6 +310,7 @@ h3, h2 {
     position: relative;
     transform: translateX(-107%) translateY(-90%);
     width:50%;
+    box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);
 }
 
 .bottomRightChartClass{
@@ -343,8 +342,7 @@ h3, h2 {
 
 .Contact{
     max-height: 100%;
-    transform: translateX(-50%) translateY(50%);
-    transform: ;
+    transform: translateX(-40%) translateY(50%);
 }
 
 /*section for posting*/
@@ -365,5 +363,15 @@ h3, h2 {
     transition: background 0.3s ease-in-out;
     transition: font-size 0.3s ease-in-out;
     transform: translateX(760%) translateY(20%);
-    box-shadow: 3px 3px 9px 3px rgba(0,0,0,0.5);
+    box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);
+    font-family: "Campton", sans-serif;
+    font-weight: bold;
+}
+.postBtn:hover {
+    background-color: #9373dc;
+    /*font-size: 28px;*/
+}
+
+.postArea{
+    margin-top:0;
 }

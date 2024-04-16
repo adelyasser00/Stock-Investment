@@ -11,7 +11,7 @@ const Navbar = () => {
             <div className={styles.navLink}>
                 <input type="text" className={styles.searchBar} placeholder="Search..."/>
             </div>
-            <div className={styles.navLink}>
+            <div className={`${styles.navLink} ${styles.switchBtn}`}>
                 <a href="/">Investor</a>
             </div>
             <div className={styles.navLinkUserButton}>

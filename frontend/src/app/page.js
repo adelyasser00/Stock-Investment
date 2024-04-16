@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import './css/landing.css';
 import Navbar from './navbar.js';
 import Sidebar from './sidebar.js'; // Import the Sidebar component
+import ChatComponent from './chatComponent.js';
 import { Line, Pie } from "react-chartjs-2";
 import { UserButton } from "@clerk/nextjs";
 
@@ -173,29 +174,41 @@ const HomePage = () => {
       <Navbar />
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
+
       <div>
         {activeTab === 'Home' && (
-            <div className='bigSectionBG'>
-                <p>Recommendations, Just for you!
-                </p>
-                <div className='form__group__watchlist field'>
-                    <input type="text" className="form__field"/>
-                    <label htmlFor="name" className="form__label">Search amongst recommendations</label>
+            <div>
+                <div className='bigSectionBG' style={{transform: 'translateX(-40%) translateY(15%)'}}>
+                    <p>Recommendations, Just for you!
+                    </p>
+                    <div className='form__group__watchlist field'>
+                        <input type="text" className="form__field"/>
+                        <label htmlFor="name" className="form__label">Search amongst recommendations</label>
+                    </div>
+                    <p className='stockDisplayListWatchlist'>
+                        <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>
+                        <br></br>
+                        <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>ALDX</span>
+                        <br></br>
+                        <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>BASE</span>
+                        <br></br>
+                        <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>
+                        <br></br>
+                        <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
+                        <br></br>
+                        <br></br>
+                        <span
+                            className='stockDisplayListItem'>Previous Close: 172.62  &emsp;&emsp;    Open: 175.60&emsp;&emsp;    Bid 173.05 x 1400&emsp;&emsp; Volume: 75,000,820</span>
+                        <br></br>
+                        <span className='stockDisplayListItem'> Ask: 173.07 x 1100&emsp;&emsp; Day's Range: 173.52 - 177.71 &emsp;&emsp;52 Week Range: 155.98 - 199.62</span>
+
+                    </p>
+                    <div className="topChartClassWatchlist">
+                        <Line data={data} options={options}></Line>
+                    </div>
+
                 </div>
-                <p className='stockDisplayListWatchlist'>
-                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>
-                    <br></br>
-                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>ALDX</span>
-                    <br></br>
-                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>BASE</span>
-                    <br></br>
-                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>
-                    <br></br>
-                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
-                </p>
-                <div className="topChartClassWatchlist">
-                    <Line data={data} options={options}></Line>
-                </div>
+
                 <div className='bottomRightSectionBGHome'>
                     <h2>Trending stocks</h2>
                     <ul>
@@ -207,7 +220,7 @@ const HomePage = () => {
                 </div>
 
                 <div className='bottomLeftSectionBGHome'>
-                <h2>Latest News</h2>
+                    <h2>Latest News</h2>
                     <ul>
                         <li><p className='newsFont'>'Excessive fragmentation': Vodafone in €8bn Italy exit as CEO
                             ...</p></li>
@@ -215,6 +228,65 @@ const HomePage = () => {
                             conference</p></li>
                         <li><p className='newsFont'>All eyes on the Federal Reserve: What to know this week</p></li>
                     </ul>
+                </div>
+                <div className='postArea'>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
+                        <p>This is a post</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
+                        <p>This is another post</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
+                        <p>and Another post</p>
+                        <p>with multiple lines</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
+                        <p>and Another post</p>
+                        <p>with one,</p>
+                        <p>Two Three lines</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
+                        <p>This is a post</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
+                        <p>This is another post</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
+                        <p>and Another post</p>
+                        <p>with multiple lines</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
+                        <p>and Another post</p>
+                        <p>with one,</p>
+                        <p>Two Three lines</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
+                        <p>This is a post</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
+                        <p>This is another post</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
+                        <p>and Another post</p>
+                        <p>with multiple lines</p>
+                    </div>
+                    <div className='postContainer'>
+                        <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
+                        <p>and Another post</p>
+                        <p>with one,</p>
+                        <p>Two Three lines</p>
+                    </div>
                 </div>
             </div>
         )}
@@ -224,23 +296,23 @@ const HomePage = () => {
                   </p>
                   <p className='stockDisplayList'>
                       <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>
-                    <br></br>
-                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>
-                    <br></br>
-                    <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
-                </p>
-                <div className="topChartClass">
-                    <Line data={data} options={options}></Line>
-                </div>
-                <div className='bottomRightSectionBG'>
-                    <div className="bottomRightChartClass">
-                        <h3>Stock Distribution</h3>
-                        <Pie data={pieData} />
-                    </div>
+                      <br></br>
+                      <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>
+                      <br></br>
+                      <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
+                  </p>
+                  <div className="topChartClass">
+                      <Line data={data} options={options}></Line>
+                  </div>
+                  <div className='bottomRightSectionBG'>
+                      <div className="bottomRightChartClass">
+                      <h3>Stock Distribution</h3>
+                          <Pie data={pieData}/>
+                      </div>
 
-                </div>
-                <div className='bottomLeftSectionBG'>
-                    <h3>Add your stocks</h3>
+                  </div>
+                  <div className='bottomLeftSectionBG'>
+                      <h3>Add your stocks</h3>
                     <button className="submit-button"></button>
                     <div className='form__group field'>
                         <input type="text" className="form__field"/>
@@ -312,6 +384,7 @@ const HomePage = () => {
               </div>
           )}
       </div>
+        <ChatComponent />
     </div>
   );
 };
