@@ -34,18 +34,6 @@ const UserSchema = new Schema({
     type: Number,
     default: 10,
   },
-  watchlist: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Company'
-  }],
-  followedCompanies: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Company'
-  }],
-  investedStocks: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Company'
-  }],
 });
 
 const User = models?.User || model("User", UserSchema);
