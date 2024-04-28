@@ -2,9 +2,18 @@
 
 import { revalidatePath } from "next/cache";
 
-import Company from "../database/models/comapny.model";
+import Company from "../database/models/company.model";
 import { connectToDatabase } from "../database/mongoose";
 import { handleError } from "../utils";
+
+/**
+ * functionalities of company
+ * 1- update/cretae/delete company
+ * 
+ * 2- create a post
+ * 3- search by category/ticker/name 
+ * 
+ **/
 
 // CREATE
 export async function createCompany(company: CreateCompanyParams) {
@@ -35,7 +44,7 @@ export async function getCompanyById(companyId: string) {
 }
 
 // UPDATE
-export async function updateCompany(clerkId: string, Company: UpdateCompanyParams) {
+export async function updateCompany(clerkId: string, company: UpdateCompanyParams) {
   try {
     await connectToDatabase();
 
@@ -73,21 +82,21 @@ export async function deleteCompany(clerkId: string) {
   }
 }
 
-// USE CREDITS
-export async function updateCredits(companyId: string, creditFee: number) {
-  try {
-    await connectToDatabase();
+// // USE CREDITS
+// export async function updateCredits(companyId: string, creditFee: number) {
+//   try {
+//     await connectToDatabase();
 
-    const updatedCompanyCredits = await Company.findOneAndUpdate(
-      { _id: companyId },
-      { $inc: { creditBalance: creditFee }},
-      { new: true }
-    )
+//     const updatedCompanyCredits = await Company.findOneAndUpdate(
+//       { _id: companyId },
+//       { $inc: { creditBalance: creditFee }},
+//       { new: true }
+//     )
 
-    if(!updatedCompanyCredits) throw new Error("Company credits update failed");
+//     if(!updatedCompanyCredits) throw new Error("Company credits update failed");
 
-    return JSON.parse(JSON.stringify(updatedCompanyCredits));
-  } catch (error) {
-    handleError(error);
-  }
-}
+//     return JSON.parse(JSON.stringify(updatedCompanyCredits));
+//   } catch (error) {
+//     handleError(error);
+//   }
+// }

@@ -1,39 +1,53 @@
 import { Schema, model, models } from "mongoose";
 
 const UserSchema = new Schema({
-  clerkId: {
+ clerkId: {
     type: String,
     required: true,
     unique: true,
-  },
-  email: {
+ },
+ email: {
     type: String,
     required: true,
     unique: true,
-  },
-  username: {
+ },
+ username: {
     type: String,
     required: true,
     unique: true,
-  },
-  photo: {
+ },
+ photo: {
     type: String,
-    required: true,
-  },
-  firstName: {
+ },
+ firstName: {
     type: String,
-  },
-  lastName: {
+ },
+ lastName: {
     type: String,
-  },
-  planId: {
+ },
+ planId: {
     type: Number,
     default: 1,
-  },
-  creditBalance: {
+ },
+ creditBalance: {
     type: Number,
     default: 10,
-  },
+ },
+ watchlist: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Company'
+ }],
+ followedCompanies: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Company'
+ }],
+ investedStocks: [{
+   type:Schema.Types.ObjectId,
+   ref:'Stock'
+}],
+ preferences: [{
+    type: String
+ }] 
 });
 
 const User = models?.User || model("User", UserSchema);

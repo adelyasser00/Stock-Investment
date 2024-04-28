@@ -1,11 +1,5 @@
-import mongoose from 'mongoose';
+import mongoose, { model,models } from 'mongoose';
 const { Schema } = mongoose;
-
-const PostSchema = new Schema({
- content: String,
- upvotes: { type: Number, default: 0 },
- downvotes: { type: Number, default: 0 }
-});
 
 const CompanySchema = new Schema({
    companyName: {
@@ -36,7 +30,9 @@ const CompanySchema = new Schema({
    article: String,
    stockClosingPrice: Number, //should be list of historical data
    ticker: String,
-   posts: [PostSchema]
+   posts: [{
+      type:Schema.Types.ObjectId,
+      ref:'Post'}]
 });
 
 const Company = models?.Company || mongoose.model("Company", CompanySchema);

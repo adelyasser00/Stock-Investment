@@ -4,7 +4,7 @@ const MONGODB_URL = process.env.MONGODB_URL
 
 interface MongooseConnection {
 	conn: Mongoose | null
-	promise: Promise<Mongoose> | null 
+	promise: Promise<Mongoose> | null;
 
 }
 
@@ -24,7 +24,7 @@ export const connectToDatabase=async () =>{
 	cached.promise = 
 	 cached.promise ||
 	 mongoose.connect(MONGODB_URL, {
-	 	dbName:'imaginify',bufferCommands:false
+	 	dbName:'GradFinal',bufferCommands:false
 	 })
 
 	 cached.conn = await cached.promise
