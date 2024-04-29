@@ -426,8 +426,13 @@ const HomePage = () => {
                   </p>
               </div>
           )}
+          {activeTab === 'Chatbot' && (
+              <div className='bigSectionBG chatbot'>
+                  <ChatComponent />
+              </div>
+          )}
       </div>
-        <ChatComponent />
+
     </div>
   );
 };

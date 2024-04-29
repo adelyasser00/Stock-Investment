@@ -406,3 +406,56 @@ td:nth-last-child{
     max-height:none
 
 }
+.chatbot {
+    /*display: flex;*/
+    flex-direction: column;
+    /*justify-content: flex-start;*/
+    align-items: stretch;
+    padding: 20px; /* Adjust padding as needed */
+    background-color: #fff; /* Ensure background consistency */
+    border-radius: 10px; /* Style as needed */
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.2); /* Optional */
+    overflow: hidden; /* Adjust as needed */
+    width: 80%; /* Ensure it fills the tab */
+    max-width: none; /* Remove max-width constraints */
+    height:87vh;
+    max-height: none; /* Remove max-height constraints */
+    transform:translateX(-480px) translateY(70px);
+}
+
+/* Adapt the chat tab to fill the space */
+.chat-tab {
+    width: 100%; /* Full width within the container */
+    margin: 0; /* Remove margin for full-width use */
+    flex-grow: 1; /* Allow it to expand to fill space */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Adjust chat body to handle more content */
+.chat-body {
+    flex-grow: 1; /* Allow the chat body to expand */
+    overflow-y: auto;
+    height:450px;
+    /* Ensure it scrolls internally */
+}
+
+/* Ensure the chat header and footer fit nicely */
+.chat-header, .chat-footer {
+    padding: 10px; /* Adjust padding */
+}
+
+/* Adjust chat container for better space utilization */
+.chat-container {
+    padding: 10px; /* Adjust padding for internal spacing */
+}
+
+/* Make sure the form and other elements are visually appropriate */
+.message-form {
+    width: 100%; /* Full width for the input */
+}
+.message {
+    width: 100%; /* Full width */
+    padding: 8px; /* Comfortable typing area */
+    transform: translateY(200px);
+}
