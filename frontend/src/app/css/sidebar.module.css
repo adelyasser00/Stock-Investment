@@ -49,8 +49,8 @@
   margin-top: 50px; /* Push the fourth item and the ones after it to the bottom */
 }
 
-.menuItem:nth-child(5) {
-  margin-top: 350px; /* Push the fifth item and the ones after it to the bottom */
+.menuItem:nth-child(7) {
+  margin-top: 250px; /* Push the fifth item and the ones after it to the bottom */
 }
 
 .menuItem:hover {

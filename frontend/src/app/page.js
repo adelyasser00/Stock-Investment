@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import './css/landing.css';
 import Navbar from './navbar.js';
-import Sidebar from './sidebar.js'; // Import the Sidebar component
+import Sidebar from './sidebar.js';
 import ChatComponent from './chatComponent.js';
 import { Line, Pie } from "react-chartjs-2";
 import { UserButton } from "@clerk/nextjs";
@@ -19,6 +19,18 @@ import {
   Filler,
     ArcElement,
 } from "chart.js";
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import { Input } from "@/components/ui/input"
+
+
 
 ChartJS.register(
   LineElement,
@@ -352,6 +364,37 @@ const HomePage = () => {
                   <div className="topChartClassWatchlist">
                       <Line data={data} options={options}></Line>
                   </div>
+              </div>
+          )}
+          {activeTab === 'Search' && (
+              <div className={'bigSectionBG searchContainer'}>
+                  <Input className="searchBar" />
+                  <Table className="SearchResultsTable">
+                      {/*<TableCaption>Search Results</TableCaption>*/}
+                      <TableHeader>
+                          <TableRow>
+                              <TableHead >Search Results</TableHead>
+
+                          </TableRow>
+                      </TableHeader>
+                      <TableRow >
+                          <TableCell className="font-medium SearchCompanyName">Quantum Solutions</TableCell>
+                          <TableCell>A leading provider of cutting-edge IT solutions, specializing in cloud services, data analytics, and cybersecurity for global enterprises.</TableCell>
+                      </TableRow>
+                      <TableRow >
+                          <TableCell className="font-medium SearchCompanyName">GreenLeaf Renewables</TableCell>
+                          <TableCell>Dedicated to sustainable energy solutions, GreenLeaf Renewables develops innovative solar and wind technologies to power a cleaner, greener planet.</TableCell>
+                      </TableRow>
+                      <TableRow >
+                          <TableCell className="font-medium SearchCompanyName">TechBridge Communications</TableCell>
+                          <TableCell>TechBridge Communications offers state-of-the-art telecommunications infrastructure and services, including fiber optics and 5G networks for urban and rural areas.</TableCell>
+                      </TableRow>
+                      <TableRow >
+                          <TableCell className="font-medium SearchCompanyName">HealthPath Diagnostics</TableCell>
+                          <TableCell>Revolutionizing the healthcare industry by providing advanced diagnostic tools and AI-driven analysis to improve patient outcomes and enhance preventive care strategies.</TableCell>
+                      </TableRow>
+                  </Table>
+
               </div>
           )}
           {activeTab === 'About Us' && (

@@ -25,6 +25,8 @@ export default function Sidebar({ activeTab, setActiveTab }) {
                     <MenuItem name="Home" icon="/css/icons/sdbar_home.png" />
                     <MenuItem name="Portfolio" icon="/css/icons/sdbar_portfolio.png" />
                     <MenuItem name="Watchlist" icon="/css/icons/sdbar_watchlist.png" />
+                    <MenuItem name="Search" icon="/css/icons/sdbar_search.png" />
+                    <MenuItem name="Chatbot" icon="/css/icons/sdbar_chatbot.png" />
                     <MenuItem name="About Us" icon="/css/icons/sdbar_aboutUs.png" />
                     <MenuItem name="Contact" icon="/css/icons/sdbar_contactUs.png" />
                 </div>
