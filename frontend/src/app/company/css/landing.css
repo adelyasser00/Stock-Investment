@@ -375,3 +375,78 @@ h3, h2 {
 .postArea{
     margin-top:0;
 }
+.searchBar {
+    height: 15%;
+    min-height: 15%;
+    border: 1px solid grey;
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    padding: 8px 40px 8px 32px; /* Adjust padding to make space for the icon */
+    outline: none;
+    border-radius: 20px; /* Rounded corners */
+    transition: all 0.3s ease;
+    background-image: url('../../../../public/css/icons/sdbar_search.png'); /* URL of your search icon */
+    background-position: 10px center; /* Positioning the icon on the left inside */
+    background-repeat: no-repeat; /* Prevent the icon from repeating */
+    background-size: 20px 20px; /* Icon size */
+}
+
+.searchBar::placeholder {
+    color: #ccc; /* Placeholder text color */
+    opacity: 1; /* Ensure consistent placeholder opacity across browsers */
+}
+
+.searchBar:hover {
+    border-color: #aaa; /* Lighter grey border on hover */
+}
+
+.searchBar:focus, .searchBar:active {
+    border-color: #333; /* Darker grey border when active/focused */
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* More prominent shadow for depth */
+}
+.SearchResultsTable{
+    width: 95%;
+}
+
+td .SearchResults{
+    border-bottom: 3px black solid;
+    font-size: 36px;
+}
+.font-medium {
+    padding: 8px 20px; /* Adequate padding for content within cells */
+    font-size: 22px; /* Standard font size for cell content */
+    color: #000; /* Medium grey for text, ensuring readability */
+    text-align: left; /* Text aligned to the left */
+}
+.SearchCompanyName{
+    color:blue;
+    font-weight: bold;
+    text-underline: blue;
+}
+.searchCompanyName:hover{
+    cursor: pointer;
+    color:lightblue;
+}
+td {
+    vertical-align: middle; /* Vertically center content within cells */
+    border-bottom: 1px solid black;
+}
+td:hover, tr:hover{
+    cursor: pointer;
+    color:lightblue;
+}
+td:nth-last-child{
+    border-bottom: none;
+}
+.searchContainer{
+    max-height:none
+
+}
+.stockIncrease {
+    color: green;
+}
+
+.stockDecrease {
+    color: red;
+}

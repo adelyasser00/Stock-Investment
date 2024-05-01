@@ -1,6 +1,6 @@
 // HomePage.js
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './css/landing.css';
 import Navbar from './navbar.js';
 import Sidebar from './sidebar.js';
@@ -29,6 +29,9 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
+
+
+
 
 
 
@@ -74,6 +77,32 @@ const salesData = {
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState('Home');
   const [selectedStock, setSelectedStock] = useState('AAPL');
+
+    // Stock companies data and stock price updater
+    const [companies, setCompanies] = useState([
+        // Initial stock data
+        { name: "Quantum Solutions", description: "Leading IT solutions.", currentStockPrice: 150, stockChange: 0 },
+        { name: "GreenLeaf Renewables", description: "Sustainable energy.", currentStockPrice: 120, stockChange: 0 },
+        { name: "TechBridge Communications", description: "Telecommunications.", currentStockPrice: 135, stockChange: 0 },
+        { name: "HealthPath Diagnostics", description: "Healthcare diagnostics.", currentStockPrice: 160, stockChange: 0 }
+    ]);
+
+    // Use effect to simulate stock price updates
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCompanies(companies => companies.map(company => {
+                const change = Math.random() < 0.5 ? -1 : 1; // Randomly decide direction
+                const fluctuation = Math.floor(Math.random() * 10); // Random price change
+                return {
+                    ...company,
+                    currentStockPrice: company.currentStockPrice + fluctuation * change,
+                    stockChange: change
+                };
+            }));
+        }, 5000); // Update every 5 seconds
+
+        return () => clearInterval(interval);
+    }, []);
     const pieData = {
         labels: ['AAPL', 'MSFT', 'TSLA'],
         datasets: [
@@ -370,33 +399,29 @@ const HomePage = () => {
               <div className={'bigSectionBG searchContainer'}>
                   <Input className="searchBar" />
                   <Table className="SearchResultsTable">
-                      {/*<TableCaption>Search Results</TableCaption>*/}
+                      <TableCaption>Recommendations, Just for you</TableCaption>
                       <TableHeader>
                           <TableRow>
-                              <TableHead >Search Results</TableHead>
-
+                              <TableHead>Name</TableHead>
+                              <TableHead>Description</TableHead>
+                              <TableHead>Stock Price</TableHead>
                           </TableRow>
                       </TableHeader>
-                      <TableRow >
-                          <TableCell className="font-medium SearchCompanyName">Quantum Solutions</TableCell>
-                          <TableCell>A leading provider of cutting-edge IT solutions, specializing in cloud services, data analytics, and cybersecurity for global enterprises.</TableCell>
-                      </TableRow>
-                      <TableRow >
-                          <TableCell className="font-medium SearchCompanyName">GreenLeaf Renewables</TableCell>
-                          <TableCell>Dedicated to sustainable energy solutions, GreenLeaf Renewables develops innovative solar and wind technologies to power a cleaner, greener planet.</TableCell>
-                      </TableRow>
-                      <TableRow >
-                          <TableCell className="font-medium SearchCompanyName">TechBridge Communications</TableCell>
-                          <TableCell>TechBridge Communications offers state-of-the-art telecommunications infrastructure and services, including fiber optics and 5G networks for urban and rural areas.</TableCell>
-                      </TableRow>
-                      <TableRow >
-                          <TableCell className="font-medium SearchCompanyName">HealthPath Diagnostics</TableCell>
-                          <TableCell>Revolutionizing the healthcare industry by providing advanced diagnostic tools and AI-driven analysis to improve patient outcomes and enhance preventive care strategies.</TableCell>
-                      </TableRow>
+                      <TableBody>
+                          {companies.map((company, index) => (
+                              <TableRow key={index}>
+                                  <TableCell className="font-medium SearchCompanyName">{company.name}</TableCell>
+                                  <TableCell>{company.description}</TableCell>
+                                  <TableCell className={`font-medium ${company.stockChange > 0 ? 'stockIncrease' : 'stockDecrease'}`}>
+                                      ${company.currentStockPrice.toFixed(2)} {company.stockChange > 0 ? '↑' : '↓'}
+                                  </TableCell>
+                              </TableRow>
+                          ))}
+                      </TableBody>
                   </Table>
-
               </div>
           )}
+
           {activeTab === 'About Us' && (
               <div className='bigSectionBG About-Us'>
                   <p>

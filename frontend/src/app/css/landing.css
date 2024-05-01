@@ -459,3 +459,10 @@ td:nth-last-child{
     padding: 8px; /* Comfortable typing area */
     transform: translateY(200px);
 }
+.stockIncrease {
+    color: green;
+}
+
+.stockDecrease {
+    color: red;
+}

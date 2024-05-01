@@ -1,6 +1,6 @@
 // HomePage.js
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './css/landing.css';
 import Navbar from './navbar.js';
 import Sidebar from './sidebar.js'; // Import the Sidebar component
@@ -29,6 +29,16 @@ ChartJS.register(
   Filler,
   ArcElement,
 );
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import { Input } from "@/components/ui/input"
 
 const salesData = {
   AAPL: [
@@ -61,6 +71,31 @@ const salesData = {
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState('Feed');
   const [selectedStock, setSelectedStock] = useState('AAPL');
+    // Stock companies data and stock price updater
+    const [companies, setCompanies] = useState([
+        // Initial stock data
+        { name: "Quantum Solutions", description: "Leading IT solutions.", currentStockPrice: 150, stockChange: 0 },
+        { name: "GreenLeaf Renewables", description: "Sustainable energy.", currentStockPrice: 120, stockChange: 0 },
+        { name: "TechBridge Communications", description: "Telecommunications.", currentStockPrice: 135, stockChange: 0 },
+        { name: "HealthPath Diagnostics", description: "Healthcare diagnostics.", currentStockPrice: 160, stockChange: 0 }
+    ]);
+
+    // Use effect to simulate stock price updates
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCompanies(companies => companies.map(company => {
+                const change = Math.random() < 0.5 ? -1 : 1; // Randomly decide direction
+                const fluctuation = Math.floor(Math.random() * 10); // Random price change
+                return {
+                    ...company,
+                    currentStockPrice: company.currentStockPrice + fluctuation * change,
+                    stockChange: change
+                };
+            }));
+        }, 5000); // Update every 5 seconds
+
+        return () => clearInterval(interval);
+    }, []);
     const pieData = {
         labels: ['AAPL', 'MSFT', 'TSLA'],
         datasets: [
@@ -369,6 +404,32 @@ const HomePage = () => {
                       </div>
 
                   </div>
+              </div>
+          )}
+          {activeTab === 'Search' && (
+              <div className={'bigSectionBG searchContainer'}>
+                  <Input className="searchBar" />
+                  <Table className="SearchResultsTable">
+                      <TableCaption>Search Results</TableCaption>
+                      <TableHeader>
+                          <TableRow>
+                              <TableHead>Name</TableHead>
+                              <TableHead>Description</TableHead>
+                              <TableHead>Stock Price</TableHead>
+                          </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                          {companies.map((company, index) => (
+                              <TableRow key={index}>
+                                  <TableCell className="font-medium SearchCompanyName">{company.name}</TableCell>
+                                  <TableCell>{company.description}</TableCell>
+                                  <TableCell className={`font-medium ${company.stockChange > 0 ? 'stockIncrease' : 'stockDecrease'}`}>
+                                      ${company.currentStockPrice.toFixed(2)} {company.stockChange > 0 ? '↑' : '↓'}
+                                  </TableCell>
+                              </TableRow>
+                          ))}
+                      </TableBody>
+                  </Table>
               </div>
           )}
           {activeTab === 'About Us' && (
