@@ -349,7 +349,7 @@ h3, h2 {
     outline: none;
     border-radius: 20px; /* Rounded corners */
     transition: all 0.3s ease;
-    background-image: url('../../../public/css/icons/sdbar_search.png'); /* URL of your search icon */
+    background-image: url('../../public/css/icons/sdbar_search.png'); /* URL of your search icon */
     background-position: 10px center; /* Positioning the icon on the left inside */
     background-repeat: no-repeat; /* Prevent the icon from repeating */
     background-size: 20px 20px; /* Icon size */
