@@ -6,6 +6,7 @@ import Navbar from './navbar.js';
 import Sidebar from './sidebar.js';
 import ChatComponent from './chatComponent.js';
 import { Line, Pie } from "react-chartjs-2";
+import Modal from './components/Modal';
 import { UserButton } from "@clerk/nextjs";
 
 import {
@@ -73,19 +74,71 @@ const salesData = {
  ]                   ,
 
 };
+// Function to open modal with company details
+
+
+
 
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState('Home');
   const [selectedStock, setSelectedStock] = useState('AAPL');
+    const [selectedCompany, setSelectedCompany] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);  // State to control modal visibility
+    const [watchlist, setWatchlist] = useState([]);
+    const handleCompanyClick = (company) => {
+        if (company && company.name && company.currentStockPrice != null) {
+            setSelectedCompany(company);
+            setIsModalOpen(true);
+        } else {
+            console.error("Invalid company data");
+            // Optionally, display an error message to the user
+        }
+    };
+
+// When closing the modal, clear the selected company
+    const handleCloseModal = () => {
+        console.log("Closing modal");
+        setIsModalOpen(false);
+        setSelectedCompany(null);
+    };
+    const addToWatchlist = (company) => {
+        if (!watchlist.find(item => item.name === company.name)) {
+            setWatchlist([...watchlist, company]);
+            alert(`${company.name} added to your watchlist!`);
+        } else {
+            alert(`${company.name} is already in your watchlist.`);
+        }
+    };
+
 
     // Stock companies data and stock price updater
     const [companies, setCompanies] = useState([
         // Initial stock data
-        { name: "Quantum Solutions", description: "Leading IT solutions.", currentStockPrice: 150, stockChange: 0 },
-        { name: "GreenLeaf Renewables", description: "Sustainable energy.", currentStockPrice: 120, stockChange: 0 },
-        { name: "TechBridge Communications", description: "Telecommunications.", currentStockPrice: 135, stockChange: 0 },
-        { name: "HealthPath Diagnostics", description: "Healthcare diagnostics.", currentStockPrice: 160, stockChange: 0 }
-    ]);
+        {
+            name: "Quantum Solutions",
+            description: "Quantum Solutions stands at the forefront of technology innovation, providing robust IT solutions that drive efficiency and growth. Specializing in cloud services, cybersecurity, and custom software development, we empower businesses to thrive in a digital-first world. Our commitment to excellence and innovation ensures that our clients receive the most advanced and reliable services available.",
+            currentStockPrice: 150,
+            stockChange: 0
+        },
+        {
+            name: "GreenLeaf Renewables",
+            description: "GreenLeaf Renewables is dedicated to advancing the adoption of sustainable energy solutions. We specialize in the development of cutting-edge solar and wind technology projects that reduce carbon footprints and foster sustainable development. Our mission is to make renewable energy accessible and efficient for all, ensuring a greener, more sustainable future.",
+            currentStockPrice: 120,
+            stockChange: 0
+        },
+        {
+            name: "TechBridge Communications",
+            description: "TechBridge Communications is a leader in telecommunications, offering a wide range of services including fiber optics installation, 5G network services, and comprehensive infrastructure management. We are committed to bridging the digital divide by enhancing connectivity in both urban and remote areas, thus facilitating seamless communication and business operations.",
+            currentStockPrice: 135,
+            stockChange: 0
+        },
+        {
+            name: "HealthPath Diagnostics",
+            description: "HealthPath Diagnostics revolutionizes the healthcare industry by providing cutting-edge diagnostic tools and AI-driven analysis. Our technologies improve patient outcomes and enhance preventive care strategies through innovative, accurate, and accessible diagnostic solutions. We are dedicated to transforming healthcare with technology, making high-quality care achievable for everyone.",
+            currentStockPrice: 160,
+            stockChange: 0
+        }
+        ]);
 
     // Use effect to simulate stock price updates
     useEffect(() => {
@@ -396,20 +449,14 @@ const HomePage = () => {
               </div>
           )}
           {activeTab === 'Search' && (
+              <div>
               <div className={'bigSectionBG searchContainer'}>
                   <Input className="searchBar" />
                   <Table className="SearchResultsTable">
-                      <TableCaption>Recommendations, Just for you</TableCaption>
-                      <TableHeader>
-                          <TableRow>
-                              <TableHead>Name</TableHead>
-                              <TableHead>Description</TableHead>
-                              <TableHead>Stock Price</TableHead>
-                          </TableRow>
-                      </TableHeader>
+                      {/* Table content */}
                       <TableBody>
                           {companies.map((company, index) => (
-                              <TableRow key={index}>
+                              <TableRow key={index} onClick={() => handleCompanyClick(company)}>
                                   <TableCell className="font-medium SearchCompanyName">{company.name}</TableCell>
                                   <TableCell>{company.description}</TableCell>
                                   <TableCell className={`font-medium ${company.stockChange > 0 ? 'stockIncrease' : 'stockDecrease'}`}>
@@ -419,8 +466,21 @@ const HomePage = () => {
                           ))}
                       </TableBody>
                   </Table>
+
+              </div>
+                  <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+                      <div style={{ position: 'relative' }}>
+                          <button style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={handleCloseModal}>X</button>
+                          <h2>{selectedCompany?.name}</h2>
+                          <p>{selectedCompany?.description}</p>
+                          <p>Current Stock Price: ${selectedCompany?.currentStockPrice?.toFixed(2)} {selectedCompany?.stockChange > 0 ? '↑' : '↓'}</p>
+                          <button onClick={() => addToWatchlist(selectedCompany)}>Add to Watchlist</button>
+                      </div>
+                  </Modal>
+
               </div>
           )}
+
 
           {activeTab === 'About Us' && (
               <div className='bigSectionBG About-Us'>
