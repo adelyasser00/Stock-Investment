@@ -1,9 +1,9 @@
 // HomePage.js
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import './css/landing.css';
-import Navbar from './navbar.js';
-import Sidebar from './sidebar.js'; // Import the Sidebar component
+import Navbar from './navbar';
+import Sidebar from './sidebar'; // Import the Sidebar component
 import { Line, Pie } from "react-chartjs-2";
 import { UserButton } from "@clerk/nextjs";
 
@@ -18,6 +18,7 @@ import {
   Filler,
     ArcElement,
 } from "chart.js";
+import { ChartOptions } from 'chart.js';
 
 ChartJS.register(
   LineElement,
@@ -38,7 +39,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Input } from "@/components/ui/input"
+import { Input } from '@/components/ui/input'
+
 
 const salesData = {
   AAPL: [
@@ -128,82 +130,85 @@ const HomePage = () => {
 
   const color = calculateColor(salesData[selectedStock]);
 
-  const data = {
-    labels: salesData[selectedStock].map((data) => data.month),
-    datasets: [
-      {
-        label: selectedStock,
-        data: salesData[selectedStock].map((data) => data.sales),
-        borderColor: color.borderColor,
-        borderWidth: 3,
-        pointBorderColor: color.pointBorderColor,
-        pointBorderWidth: 3,
-        tension: 0.5,
-        fill: true,
-        backgroundColor: (context) => {
-          const ctx = context.chart.ctx;
-          const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-          gradient.addColorStop(0, color.gradientColor);
-          gradient.addColorStop(1, "white");
-          return gradient;
-        },
-      },
-    ],
-  };
+    const data = {
+        labels: salesData[selectedStock].map(data => data.month),
+        datasets: [
+            {
+                label: selectedStock,
+                data: salesData[selectedStock].map(data => data.sales),
+                borderColor: color.borderColor,
+                borderWidth: 3,
+                pointBorderColor: color.pointBorderColor,
+                pointBorderWidth: 3,
+                tension: 0.5,
+                fill: true,
+                backgroundColor: (context) => {
+                    const ctx = context.chart.ctx;
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                    gradient.addColorStop(0, color.gradientColor);
+                    gradient.addColorStop(1, "white");
+                    return gradient;
+                },
+            },
+        ],
+    };
 
-  const options = {
-    plugins: {
-      legend: true,
-    },
-    responsive: true,
-    scales: {
-      y: {
-        ticks: {
-          font: {
-            size: 16,
-            weight: "bold",
-          },
+    const options: ChartOptions<"line"> = {
+        plugins: {
+            legend: {
+                display: true,
+            },
         },
-        title: {
-          display: true,
-          text: "Price",
-          padding: {
-            bottom: 10,
-          },
-          font: {
-            size: 20,
-            style: "italic",
-            family: "Arial",
-          },
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    font: {
+                        size: 16,
+                        weight: 'bold',
+                    },
+                },
+                title: {
+                    display: true,
+                    text: "Price",
+                    padding: {
+                        bottom: 10,
+                    },
+                    font: {
+                        size: 20,
+                        style: 'italic',
+                        family: 'Arial',
+                    },
+                },
+                min: 50,
+            },
+            x: {
+                ticks: {
+                    font: {
+                        size: 14,
+                        weight: 'bold',
+                    },
+                },
+                title: {
+                    display: true,
+                    text: "Month",
+                    padding: {
+                        top: 10,
+                    },
+                    font: {
+                        size: 20,
+                        style: 'italic',
+                        family: 'Arial',
+                    },
+                },
+            },
         },
-        min: 50,
-      },
-      x: {
-        ticks: {
-          font: {
-            size: 14,
-            weight: "bold",
-          },
-        },
-        title: {
-          display: true,
-          text: "Month",
-          padding: {
-            top: 10,
-          },
-          font: {
-            size: 20,
-            style: "italic",
-            family: "Arial",
-          },
-        },
-      },
-    },
-    
-  };
+    };
 
 
-  return (
+
+    return (
     <div>
       <Navbar />
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../css/innerHome.module.css';
-import Navbar from '../navbar.js';
+import Navbar from '../navbar.tsx';
 
 function InnerHome() {
     return (   

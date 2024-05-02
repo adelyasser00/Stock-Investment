@@ -2,11 +2,11 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import './css/landing.css';
-import Navbar from './navbar.js';
-import Sidebar from './sidebar.js';
-import ChatComponent from './chatComponent.js';
+import Navbar from './navbar';
+import Sidebar from './sidebar';
+import ChatComponent from './chatComponent';
 import { Line, Pie } from "react-chartjs-2";
-import Modal from './components/Modal';
+import Modal from './components/modal';
 import { UserButton } from "@clerk/nextjs";
 
 import {
@@ -20,6 +20,7 @@ import {
   Filler,
     ArcElement,
 } from "chart.js";
+import { ChartOptions } from 'chart.js';
 import {
     Table,
     TableBody,
@@ -188,82 +189,84 @@ const HomePage = () => {
 
   const color = calculateColor(salesData[selectedStock]);
 
-  const data = {
-    labels: salesData[selectedStock].map((data) => data.month),
-    datasets: [
-      {
-        label: selectedStock,
-        data: salesData[selectedStock].map((data) => data.sales),
-        borderColor: color.borderColor,
-        borderWidth: 3,
-        pointBorderColor: color.pointBorderColor,
-        pointBorderWidth: 3,
-        tension: 0.5,
-        fill: true,
-        backgroundColor: (context) => {
-          const ctx = context.chart.ctx;
-          const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-          gradient.addColorStop(0, color.gradientColor);
-          gradient.addColorStop(1, "white");
-          return gradient;
-        },
-      },
-    ],
-  };
+    const data = {
+        labels: salesData[selectedStock].map(data => data.month),
+        datasets: [
+            {
+                label: selectedStock,
+                data: salesData[selectedStock].map(data => data.sales),
+                borderColor: color.borderColor,
+                borderWidth: 3,
+                pointBorderColor: color.pointBorderColor,
+                pointBorderWidth: 3,
+                tension: 0.5,
+                fill: true,
+                backgroundColor: (context) => {
+                    const ctx = context.chart.ctx;
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                    gradient.addColorStop(0, color.gradientColor);
+                    gradient.addColorStop(1, "white");
+                    return gradient;
+                },
+            },
+        ],
+    };
 
-  const options = {
-    plugins: {
-      legend: true,
-    },
-    responsive: true,
-    scales: {
-      y: {
-        ticks: {
-          font: {
-            size: 16,
-            weight: "bold",
-          },
+    const options: ChartOptions<"line"> = {
+        plugins: {
+            legend: {
+                display: true,
+            },
         },
-        title: {
-          display: true,
-          text: "Price",
-          padding: {
-            bottom: 10,
-          },
-          font: {
-            size: 20,
-            style: "italic",
-            family: "Arial",
-          },
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    font: {
+                        size: 16,
+                        weight: 'bold',
+                    },
+                },
+                title: {
+                    display: true,
+                    text: "Price",
+                    padding: {
+                        bottom: 10,
+                    },
+                    font: {
+                        size: 20,
+                        style: 'italic',
+                        family: 'Arial',
+                    },
+                },
+                min: 50,
+            },
+            x: {
+                ticks: {
+                    font: {
+                        size: 14,
+                        weight: 'bold',
+                    },
+                },
+                title: {
+                    display: true,
+                    text: "Month",
+                    padding: {
+                        top: 10,
+                    },
+                    font: {
+                        size: 20,
+                        style: 'italic',
+                        family: 'Arial',
+                    },
+                },
+            },
         },
-        min: 50,
-      },
-      x: {
-        ticks: {
-          font: {
-            size: 14,
-            weight: "bold",
-          },
-        },
-        title: {
-          display: true,
-          text: "Month",
-          padding: {
-            top: 10,
-          },
-          font: {
-            size: 20,
-            style: "italic",
-            family: "Arial",
-          },
-        },
-      },
-    },
-    
-  };
+    };
 
 
-  return (
+    return (
     <div>
       <Navbar />
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -306,10 +309,10 @@ const HomePage = () => {
                 <div className='bottomRightSectionBGHome'>
                     <h2>Trending stocks</h2>
                     <ul>
-                        <li><p className='newsFont'>ACS </p> <p class='newsFont stockDecrease'>5.77 -0.02</p></li>
-                        <li><p className='newsFont'>NBD </p> <p class='newsFont stockIncrease'>3.86 +0.34</p></li>
+                        <li><p className='newsFont'>ACS </p> <p className='newsFont stockDecrease'>5.77 -0.02</p></li>
+                        <li><p className='newsFont'>NBD </p> <p className='newsFont stockIncrease'>3.86 +0.34</p></li>
 
-                        <li><p className='newsFont'>HSBC </p> <p class='newsFont stockDecrease'>0.77 +0.08</p></li>
+                        <li><p className='newsFont'>HSBC </p> <p className='newsFont stockDecrease'>0.77 +0.08</p></li>
                     </ul>
                 </div>
 
@@ -453,7 +456,7 @@ const HomePage = () => {
               <div className={'bigSectionBG searchContainer'}>
                   <Input className="searchBar" />
                   <Table className="SearchResultsTable">
-                      {/* Table content */}
+                      {/* Tabletjsx content */}
                       <TableBody>
                           {companies.map((company, index) => (
                               <TableRow key={index} onClick={() => handleCompanyClick(company)}>
