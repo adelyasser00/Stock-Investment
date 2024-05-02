@@ -485,8 +485,8 @@ td:nth-last-child{
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: relative;
-    max-width: 80%;
-    max-height: 80vh;
+    width: 80%;
+    height: 80vh;
     overflow-y: auto;
 }
 
@@ -494,8 +494,42 @@ td:nth-last-child{
     position: absolute;
     top: 10px;
     right: 10px;
-    background: none;
-    border: none;
+    background-color: white;
+    color: black;
     font-size: 16px;
-    cursor: pointer;
+    padding: 8px 40px 8px 32px; /* Adjust padding to make space for the icon */
+    outline: none;
+    border-radius: 20px; /* Rounded corners */
+    transition: all 0.3s ease;
+    cursor:pointer;
+    /*background-image: url('../../../public/css/icons/sdbar_search.png'); !* URL of your search icon *!*/
+    /*background-position: 10px center; !* Positioning the icon on the left inside *!*/
+    /*background-repeat: no-repeat; !* Prevent the icon from repeating *!*/
+    background-size: 20px 20px; /* Icon size */
+}
+.modal-close:hover{
+    background-color: #aaa;
+    color: white;
+}
+
+.addWatchlistBtn{
+    position: absolute;
+    bottom:-310px;
+    left:10px;
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    padding: 8px 40px 8px 32px; /* Adjust padding to make space for the icon */
+    outline: none;
+    border-radius: 20px; /* Rounded corners */
+    transition: all 0.3s ease;
+    cursor:pointer;
+    /*background-image: url('../../../public/css/icons/sdbar_search.png'); !* URL of your search icon *!*/
+    /*background-position: 10px center; !* Positioning the icon on the left inside *!*/
+    /*background-repeat: no-repeat; !* Prevent the icon from repeating *!*/
+    background-size: 20px 20px; /* Icon size */
+}
+.addWatchlistBtn:hover {
+    background-color: #aaa;
+    color: white;
 }
