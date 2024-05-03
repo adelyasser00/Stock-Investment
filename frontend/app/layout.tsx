@@ -12,14 +12,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    <ClerkProvider >
       <html lang="en">
-      <ClerkProvider>
       <body>{children}</body>
+      </html>
     </ClerkProvider>
-<<<<<<< HEAD:frontend/app/layout.tsx
 
-=======
-     </html>
->>>>>>> backend:frontend/src/app/layout.js
   );
 }

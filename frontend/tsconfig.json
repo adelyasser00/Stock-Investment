@@ -5,12 +5,9 @@
       "dom.iterable",
       "esnext"
     ],
-<<<<<<< HEAD
     "paths": {
       "@/*": ["./app/*"]
     },
-=======
->>>>>>> backend
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
