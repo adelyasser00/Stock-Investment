@@ -212,10 +212,10 @@ const HomePage = () => {
                 <div className='bottomRightSectionBGHome'>
                     <h2>Trending stocks</h2>
                     <ul>
-                        <li><p className='newsFont'>ACS </p> <p class='newsFont stockDecrease'>5.77 -0.02</p></li>
-                        <li><p className='newsFont'>NBD </p> <p class='newsFont stockIncrease'>3.86 +0.34</p></li>
+                        <li><p className='newsFont'>ACS </p> <p className='newsFont stockDecrease'>5.77 -0.02</p></li>
+                        <li><p className='newsFont'>NBD </p> <p className='newsFont stockIncrease'>3.86 +0.34</p></li>
 
-                        <li><p className='newsFont'>HSBC </p> <p class='newsFont stockDecrease'>0.77 +0.08</p></li>
+                        <li><p className='newsFont'>HSBC </p> <p className='newsFont stockDecrease'>0.77 +0.08</p></li>
                     </ul>
                 </div>
 

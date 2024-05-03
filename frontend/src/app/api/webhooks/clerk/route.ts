@@ -8,6 +8,7 @@ import { Webhook } from "svix";
 import { createUser, deleteUser, updateUser } from "@/../../src/app/api/lib/actions/user.actions";
 
 export async function POST(req: Request) {
+  console.log("inside webhooks")
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 

@@ -1,5 +1,6 @@
 import { authMiddleware } from "@clerk/nextjs";
 
+console.log("inside middleware")
 export default authMiddleware({
     // Routes that can always be accessed, and have
     // no authentication information
