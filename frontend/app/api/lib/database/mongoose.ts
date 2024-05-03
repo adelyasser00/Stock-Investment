@@ -24,7 +24,7 @@ export const connectToDatabase=async () =>{
 	cached.promise = 
 	 cached.promise ||
 	 mongoose.connect(MONGODB_URL, {
-	 	dbName:'Stock-Investment',bufferCommands:false
+	 	dbName:'stock-investment',bufferCommands:false
 	 })
 
 	 cached.conn = await cached.promise
