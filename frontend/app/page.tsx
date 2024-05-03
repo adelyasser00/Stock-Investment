@@ -472,12 +472,25 @@ const HomePage = () => {
 
               </div>
                   <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-                      <div style={{ position: 'relative' }}>
+                      <div style={{position: 'relative'}}>
                           {/*<button style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={handleCloseModal}>X</button>*/}
-                          <h2>{selectedCompany?.name}</h2>
+                          <h2 style={{fontSize: '32px'}}>{selectedCompany?.name}</h2>
+                          <br></br><br></br>
                           <p>{selectedCompany?.description}</p>
-                          <p>Current Stock Price: ${selectedCompany?.currentStockPrice?.toFixed(2)} {selectedCompany?.stockChange > 0 ? '↑' : '↓'}</p>
-                          <button className="addWatchlistBtn" onClick={() => addToWatchlist(selectedCompany)}>Add to Watchlist</button>
+                          <br></br><br></br><br></br><br></br>
+                          <p className="profileStockValue">
+                              Current Stock Price:
+                              <span
+                                  className={`${selectedCompany?.stockChange > 0 ? 'stockIncrease' : 'stockDecrease'}`}>&nbsp;
+    ${selectedCompany?.currentStockPrice?.toFixed(2)}
+                                  {selectedCompany?.stockChange > 0 ? '↑' : '↓'}
+  </span>
+                          </p>
+
+
+                          <button className="addWatchlistBtn" onClick={() => addToWatchlist(selectedCompany)}>Add to
+                              Watchlist
+                          </button>
                       </div>
                   </Modal>
 

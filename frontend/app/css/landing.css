@@ -514,7 +514,7 @@ td:nth-last-child{
 
 .addWatchlistBtn{
     position: absolute;
-    bottom:-310px;
+    bottom:-110px;
     left:10px;
     background-color: white;
     color: black;
@@ -532,4 +532,18 @@ td:nth-last-child{
 .addWatchlistBtn:hover {
     background-color: #aaa;
     color: white;
+}
+
+.profileStockValue{
+    /*position: absolute;*/
+    left: 3em;
+    top: 23%;
+    /*transform: translateY(-50%);*/
+    width: 82%;
+
+    font-weight: bold;
+    font-family: "Campton", sans-serif;
+    font-size: 1.5em;
+    /*color:black;*/
+    z-index: 1;
 }
