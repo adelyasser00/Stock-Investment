@@ -1,6 +1,5 @@
-import React from 'react'
 import { SignUp } from '@clerk/nextjs'
-
+import '../../css/clerk.css';
 const SignUpPage = () => {
         console.log("inside sign-up")
 

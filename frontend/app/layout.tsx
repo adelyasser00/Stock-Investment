@@ -12,11 +12,11 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   return (
+     <html lang="en">
     <ClerkProvider >
-      <html lang="en">
       <body>{children}</body>
-      </html>
     </ClerkProvider>
+    </html>
 
   );
 }
