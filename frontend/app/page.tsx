@@ -8,6 +8,8 @@ import ChatComponent from './chatComponent';
 import { Line, Pie } from "react-chartjs-2";
 import Modal from './components/modal';
 import { UserButton } from "@clerk/nextjs";
+import Page from './onboarding/page';
+import { useRouter } from 'next/navigation';
 
 import {
   Chart as ChartJS,
@@ -86,6 +88,33 @@ const HomePage = () => {
     const [selectedCompany, setSelectedCompany] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);  // State to control modal visibility
     const [watchlist, setWatchlist] = useState([]);
+    // Inside HomePage function component
+    const [isFirstLogin, setIsFirstLogin] = useState(() => {
+        // Initialize state based on localStorage
+        return localStorage.getItem('hasCompletedOnboarding') !== 'true';
+    });
+    const router = useRouter();
+
+    useEffect(() => {
+        if (isFirstLogin) {
+            router.push('/onboarding');
+        }
+    }, [isFirstLogin, router]);
+
+    // Assuming onboarding sets this in localStorage when completed
+    useEffect(() => {
+        const handleStorageChange = () => {
+            if (localStorage.getItem('hasCompletedOnboarding') === 'true') {
+                setIsFirstLogin(false);
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        return () => window.removeEventListener('storage', handleStorageChange);
+    }, []);
+
+
     const handleCompanyClick = (company) => {
         if (company && company.name && company.currentStockPrice != null) {
             setSelectedCompany(company);
