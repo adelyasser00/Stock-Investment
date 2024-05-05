@@ -2,21 +2,23 @@ import { Schema, model, models } from "mongoose";
 
 // Define a subdocument schema for invested stocks
 const InvestedStockSchema = new Schema({
-   investor:{
-      type: Schema.Types.ObjectId,
-      ref: 'User',
+    _id: {
+    type: Schema.Types.ObjectId,
+    auto: true, // Automatically generate an ObjectId for each document
+  },
+   investorClerkId:{
+      type: String,
       required: true
    },
-   stockId: {
-      type: Schema.Types.ObjectId,
-      ref: 'Company',
+   companyClerkId: {
+      type: String,
       required: true
    },
-   numberOfStocks: {
+   numOfUnits: {
       type: Number,
       required: true
    },
-   priceOfBuying: {
+   price: {
       type: Number,
       required: true
    }

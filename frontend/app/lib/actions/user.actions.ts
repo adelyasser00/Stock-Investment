@@ -2,13 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 
-import User from "../database/models/user.model";
-import Post from "../database/models/post.model";
+import User from "@/lib/database/models/user.model";
+import Post from "@/lib/database/models/post.model";
 import { connectToDatabase } from "../database/mongoose";
 import { handleError } from "../utils";
-import { Schema } from "mongoose";
-import Company from "../database/models/company.model";
-
+import { ObjectId, Schema } from "mongoose";
+import Company from "@/lib/database/models/company.model";
+import Stock from "@/lib/database/models/stock.model"
+import mongoose from "mongoose";
 /**
  * functionalities of user
  * 1- update/cretae/delete user
@@ -19,6 +20,7 @@ import Company from "../database/models/company.model";
  * 5- upvote/downvote a post
  * 6- search by category/ticker/name and enhance results by recommendation system
  * 7- talk to chatbot
+ * 8- fetch user newsfeed/profile data
  * 
  **/
 // CREATE
@@ -92,8 +94,8 @@ export async function addToWatchlist(clerkId: string, companyId: string) {
  try {
     await connectToDatabase();
 
-    const updatedUser = await User.findByIdAndUpdate(
-      clerkId,
+    const updatedUser = await User.findOneAndUpdate(
+      {clerkId:clerkId},
       {
         $push: { watchlist: companyId }
       },
@@ -110,62 +112,74 @@ export async function addToWatchlist(clerkId: string, companyId: string) {
  }
 }
 
-export async function removeFromWatchlist(clerkId: string,  companyId:string) {
-  try {
-    await connectToDatabase(); // Ensure this function connects to your MongoDB database
+export async function removeFromWatchlist(clerkId: string, companyId: string) {
+ try {
+    await connectToDatabase();
 
-    const updatedUser = await User.findByIdAndUpdate(
-      clerkId,
-      { $pull: { watchlist: companyId }
+    const updatedUser = await User.findOneAndUpdate(
+      {clerkId:clerkId},
+      {
+        $pull: { watchlist: companyId }
       },
-      { new: true }
+      {new: true}
     );
 
     if (!updatedUser) {
       throw new Error('User not found');
     }
 
-    return updatedUser;
+    return  JSON.parse(JSON.stringify(updatedUser));
  } catch (error) {
-    handleError(error); // Implement your error handling logic here
+    handleError(error);
  }
 }
 
-export async function addInvestment(clerkId: string, investment:AddInvestedStock) {
+export async function addInvestment(userClerkId: string, investment: AddInvestedStock) {
   try {
-    await connectToDatabase(); // Ensure this function connects to your MongoDB database
+    await connectToDatabase(); 
 
-    const updatedUser = await User.findByIdAndUpdate(
-      clerkId,
-      {
-        $push: {
-          investedStocks: investment
-        }
-      },
-      {
-        new: true // This option returns the updated document
-      }
-    );
+    const user = await User.findOne({ clerkId : userClerkId });
 
-    if (!updatedUser) {
+    if (!user) {
       throw new Error('User not found');
     }
 
-    return updatedUser;
- } catch (error) {
-    handleError(error); // Implement your error handling logic here
- }
+    const company_clerkId = await Company.findOne({ ticker: investment.companyTicker }).select('clerkId');
+
+    if (!company_clerkId) {
+      throw new Error('Company not found');
+    }
+
+    const newStock = new Stock({
+     ...investment,
+      investorClerkId: userClerkId,
+      companyClerkId: company_clerkId.clerkId
+    });
+
+    await newStock.save(); 
+
+    user.investedStocks.push(newStock._id);
+    await user.save(); 
+
+  } catch (error) {
+    handleError(error); 
+  }
 }
 
-export async function removeInvestment(clerkId: string,  stockId:Schema.Types.ObjectId) {
-  try {
-    await connectToDatabase(); // Ensure this function connects to your MongoDB database
 
-    const updatedUser = await User.findByIdAndUpdate(
-      clerkId,
+export async function removeInvestment(userClerkId: string, stockId: string) {
+  try {
+    await connectToDatabase(); 
+
+    const user = await User.findOne({ clerkId: userClerkId });
+
+    const objectIdStockId = new mongoose.Types.ObjectId(stockId);
+
+    const updatedUser = await User.findOneAndUpdate(
+      { clerkId: userClerkId },
       {
         $pull: {
-          investedStocks: { stockId: stockId }
+          investedStocks: objectIdStockId // Use the ObjectId directly
         }
       },
       {
@@ -176,44 +190,36 @@ export async function removeInvestment(clerkId: string,  stockId:Schema.Types.Ob
     if (!updatedUser) {
       throw new Error('User not found');
     }
+    
+    const deletedUser = await Stock.findByIdAndDelete(objectIdStockId);
 
-    return updatedUser;
- } catch (error) {
-    handleError(error); // Implement your error handling logic here
- }
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 export async function followCompany(clerkId: string,  companyId:string) {
   try {
-    await connectToDatabase(); // Ensure this function connects to your MongoDB database
+    await connectToDatabase(); 
 
-    // Use findByIdAndUpdate to add the companyId to the followedCompanies array of the user
-    const updatedUser = await User.findByIdAndUpdate(
-      clerkId,
+    const updatedUser = await User.findOneAndUpdate(
+      {clerkId:clerkId},
       {
-        $push: {
-          followedCompanies: companyId
-        }
+        $push: { followedCompanies: companyId }
       },
-      {
-        new: true // This option returns the updated document
-      }
+      { new: true }
     );
 
     if (!updatedUser) {
       throw new Error('User not found');
     }
 
-     const updatedCompany = await Company.findByIdAndUpdate(
-      companyId,
-      {
-        $push: {
-          userFollowers: clerkId
-        }
+     const updatedCompany = await Company.findOneAndUpdate(
+      {clerkId:companyId},
+      { 
+        $push: { userFollowers: clerkId }
       },
-      {
-        new: true // This option returns the updated document
-      }
+      { new: true }
     );
 
     if (!updatedCompany) {
@@ -223,42 +229,34 @@ export async function followCompany(clerkId: string,  companyId:string) {
     console.log('Company followed successfully');
     return updatedUser;
  } catch (error) {
-    console.error('Error following company:', error);
-    // handleError(error); // Implement your error handling logic here
+    handleError(error);
  }
 }
 
 export async function unfollowCompany(clerkId: string,  companyId:string) {
    try {
-    await connectToDatabase(); // Ensure this function connects to your MongoDB database
+    await connectToDatabase(); 
 
-    // Use findByIdAndUpdate to remove the companyId from the followedCompanies array of the user
-    const updatedUser = await User.findByIdAndUpdate(
-      clerkId,
+    const updatedUser = await User.findOneAndUpdate(
+      {clerkId:clerkId},
       {
-        $pull: {
-          followedCompanies: companyId
-        }
+        $pull: { followedCompanies: companyId }
       },
-      {
-        new: true // This option returns the updated document
-      }
+      { new: true }
     );
 
     if (!updatedUser) {
       throw new Error('User not found');
     }
 
-     const updatedCompany = await Company.findByIdAndUpdate(
-      companyId,
+     const updatedCompany = await Company.findOneAndUpdate(
+      {clerkId:companyId},
       {
         $pull: {
           userFollowers: clerkId
         }
       },
-      {
-        new: true // This option returns the updated document
-      }
+      { new: true }
     );
 
     if (!updatedCompany) {
@@ -276,7 +274,7 @@ export async function upvotepost(clerkId: string,  postId:Schema.Types.ObjectId)
     await connectToDatabase(); // Ensure this function connects to your MongoDB database
 
     // Use findByIdAndUpdate to increment the upvotes of the post
-    const updatedPost = await Post.findByIdAndUpdate(
+    const updatedPost = await Post.findOneAndUpdate(
       postId,
       {
         $inc: {
@@ -303,7 +301,7 @@ export async function downvotePost(clerkId: string,  postId:Schema.Types.ObjectI
     await connectToDatabase(); // Ensure this function connects to your MongoDB database
 
     // Use findByIdAndUpdate to increment the downvotes of the post
-    const updatedPost = await Post.findByIdAndUpdate(
+    const updatedPost = await Post.findOneAndUpdate(
       postId,
       {
         $inc: {

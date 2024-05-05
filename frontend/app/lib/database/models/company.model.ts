@@ -2,6 +2,10 @@ import mongoose, { model,models } from 'mongoose';
 const { Schema } = mongoose;
 
 const CompanySchema = new Schema({
+    _id: {
+    type: Schema.Types.ObjectId,
+    auto: true, // Automatically generate an ObjectId for each document
+  },
    companyName: {
       type: String,
       required: true, 

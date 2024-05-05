@@ -1,6 +1,10 @@
 import { Schema, model, models } from "mongoose";
 
 const UserSchema = new Schema({
+   _id: {
+    type: Schema.Types.ObjectId,
+    auto: true, // Automatically generate an ObjectId for each document
+  },
  clerkId: {
     type: String,
     required: true,
@@ -34,11 +38,11 @@ const UserSchema = new Schema({
     default: 10,
  },
  watchlist: [{
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'Company'
  }],
  followedCompanies: [{
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'Company'
  }],
  investedStocks: [{
