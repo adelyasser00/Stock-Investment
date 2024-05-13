@@ -1,4 +1,5 @@
 // pages/onboarding.js
+// ngrok: ngrok http http://localhost:3000
 'use client'
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation'; // Ensure the import is correct based on your project setup

@@ -101,7 +101,7 @@ h3, h2 {
     &:required,&:invalid { box-shadow:none; }
 }
 .submit-button {
-    position:fixed;
+    position:relative;
     background-color: #7140DEFF;
     border: none;
     color: white;
@@ -111,9 +111,11 @@ h3, h2 {
     width: 150px;
     height: 50px;
     border-radius: 5%;
+    left:160px;
+    top:-40px;
     transition: background 0.3s ease-in-out;
     transition: font-size 0.3s ease-in-out;
-    transform: translateX(150%) translateY(-10%);
+    /*transform: translateX(150%) translateY(-10%);*/
 }
 
 .submit-button:hover {
@@ -184,14 +186,18 @@ h3, h2 {
     position: relative;
     background-color:#FFF;
     padding:30px;
+    padding-bottom:50px;
     border-radius:10px;
     display:flex;
     flex-direction:column;
     max-width:75%;
     max-height: 50vh;
-    left:50%;
-    position:relative;
-    transform: translateX(-40%) translateY(20%);
+    margin-left:300px;
+    top: 70px;
+    margin-bottom:50px;
+    /*left:50%;*/
+    /*position:relative;*/
+    /*transform: translateX(-40%) translateY(20%);*/
     box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);    /*max-height: 60%;*/
     overflow-y: hidden;
     overflow-x: hidden;
@@ -235,23 +241,25 @@ h3, h2 {
     display: flex;
     flex-direction: column;
     /*max-width: 50%;*/
-    left: 50%;
+    left: 600px;
     position: relative;
     transform: translateX(33.5%) translateY(38%);
-    max-width:40%;
+    max-width:280px;
     box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);
 
 }
 .bottomLeftSectionBG {
+    top:250px;
     background-color: #FFF;
     padding: 30px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    max-width: 50%;
-    left: 50%;
+    max-width: 400px;
+    left: 400px;
+    top: 100px;
     position: relative;
-    transform: translateX(-106.5%) translateY(-55%);
+    /*transform: translateX(-106.5%) translateY(-55%);*/
     /*width:50%;*/
     box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);
     margin-bottom:50px;
@@ -259,6 +267,7 @@ h3, h2 {
 }
 
 .bottomRightSectionBGHome {
+    top:250px;
     background-color: #FFF;
     padding: 30px;
     border-radius: 10px;
@@ -316,7 +325,7 @@ h3, h2 {
 
 .Contact{
     max-height: 100%;
-    transform: translateX(-40%) translateY(50%);
+    /*transform: translateX(-40%) translateY(50%);*/
     /*transform: ;*/
 }
 .postContainer{
@@ -331,8 +340,8 @@ h3, h2 {
     /*width:65%;*/
     max-height: 30vh;
     max-width: 48.5%;
-    left:50%;
-    transform: translateX(-62%) translateY(-485px);
+    /*left:50%;*/
+    /*transform: translateX(-62%) translateY(-485px);*/
     margin-top:30px;
     /*overflow: hidden;*/
     box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);    /*max-height: 60%;*/
@@ -420,7 +429,7 @@ td:nth-last-child{
     max-width: none; /* Remove max-width constraints */
     height:87vh;
     max-height: none; /* Remove max-height constraints */
-    transform:translateX(-480px) translateY(70px);
+    /*transform:translateX(-480px) translateY(70px);*/
 }
 
 /* Adapt the chat tab to fill the space */
@@ -494,12 +503,12 @@ td:nth-last-child{
     position: absolute;
     top: 10px;
     right: 10px;
-    background-color: white;
-    color: black;
+    background-color: #7140DEFF;
+    color: white;
     font-size: 16px;
-    padding: 8px 40px 8px 32px; /* Adjust padding to make space for the icon */
+    padding: 2px 8px 2px 8px ; /* Adjust padding to make space for the icon */
     outline: none;
-    border-radius: 20px; /* Rounded corners */
+    border-radius: 80px; /* Rounded corners */
     transition: all 0.3s ease;
     cursor:pointer;
     /*background-image: url('../../../public/css/icons/sdbar_search.png'); !* URL of your search icon *!*/
@@ -516,8 +525,8 @@ td:nth-last-child{
     position: absolute;
     bottom:-110px;
     left:10px;
-    background-color: white;
-    color: black;
+    background-color: #7140DEFF;
+    color: white;
     font-size: 16px;
     padding: 8px 40px 8px 32px; /* Adjust padding to make space for the icon */
     outline: none;
@@ -546,4 +555,33 @@ td:nth-last-child{
     font-size: 1.5em;
     /*color:black;*/
     z-index: 1;
+}
+
+.userButton{
+    position: absolute;
+    right:10px;
+    top:10px;
+
+}
+.bottomOfHomeChart{
+    display:flex;
+    flex-direction: row;
+    height:auto;
+}
+.sideBlocks{
+    /*max-width:50vw;*/
+    right:-500px;
+    max-width:50vw;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.postArea{
+    max-width: 70vw;
+    left: -300px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width:1000px;
+
 }

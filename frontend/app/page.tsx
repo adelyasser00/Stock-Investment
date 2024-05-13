@@ -297,14 +297,17 @@ const HomePage = () => {
 
     return (
     <div>
-      <Navbar />
+
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+        <div className='userButton'>
+            <UserButton  />
+        </div>
 
 
       <div>
         {activeTab === 'Home' && (
             <div>
-                <div className='bigSectionBG' style={{transform: 'translateX(-40%) translateY(15%)'}}>
+                <div className='bigSectionBG'>
                     <p>Recommendations, Just for you!
                     </p>
                     <div className='form__group__watchlist field'>
@@ -334,7 +337,8 @@ const HomePage = () => {
                     </div>
 
                 </div>
-
+                <div className='bottomOfHomeChart'>
+                    <div className='sideBlocks'>
                 <div className='bottomRightSectionBGHome'>
                     <h2>Trending stocks</h2>
                     <ul>
@@ -355,6 +359,7 @@ const HomePage = () => {
                         <li><p className='newsFont'>All eyes on the Federal Reserve: What to know this week</p></li>
                     </ul>
                 </div>
+                    </div>
                 <div className='postArea'>
                     <div className='postContainer'>
                         <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
@@ -414,52 +419,57 @@ const HomePage = () => {
                         <p>Two Three lines</p>
                     </div>
                 </div>
+                </div>
             </div>
         )}
           {activeTab === 'Portfolio' && (
-              <div className='bigSectionBG'>
-                  <p>Your Stocks
-                  </p>
-                  <p className='stockDisplayList'>
-                      <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>
-                      <br></br>
-                      <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>
-                      <br></br>
-                      <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
-                  </p>
-                  <div className="topChartClass">
-                      <Line data={data} options={options}></Line>
+              <div>
+                  <div className='bigSectionBG'>
+                      <p>Your Stocks
+                      </p>
+                      <p className='stockDisplayList'>
+                          <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>
+                          <br></br>
+                          <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>
+                          <br></br>
+                          <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
+                      </p>
+                      <div className="topChartClass">
+                          <Line data={data} options={options}></Line>
+                      </div>
+
                   </div>
+                  <div className='bottomOfHomeChart'>
                   <div className='bottomRightSectionBG'>
                       <div className="bottomRightChartClass">
-                      <h3>Stock Distribution</h3>
+                          <h3>Stock Distribution</h3>
                           <Pie data={pieData}/>
                       </div>
 
                   </div>
                   <div className='bottomLeftSectionBG'>
                       <h3>Add your stocks</h3>
-                    <button className="submit-button"></button>
-                    <div className='form__group field'>
-                        <input type="text" className="form__field"/>
-                        <label htmlFor="name" className="form__label">Stock Name</label>
-                    </div>
-                    <div className='form__group field'>
-                        <input type="text" className="form__field"/>
-                        <label htmlFor="name" className="form__label">$ Stock Price </label>
-                    </div>
-                    <div className='form__group field'>
-                        <input type="text" className="form__field"/>
-                        <label htmlFor="name" className="form__label">Amount Purchased</label>
-                    </div>
-                    <div className='form__group field'>
-                        <input type="date" className="form__field"/>
-                        <label htmlFor="name" className="form__label">Purchase date</label>
-                    </div>
-
-                </div>
-            </div>
-        )}
+                      <button className="submit-button"></button>
+                      <div className='form__group field'>
+                          <input type="text" className="form__field"/>
+                          <label htmlFor="name" className="form__label">Stock Name</label>
+                      </div>
+                      <div className='form__group field'>
+                          <input type="text" className="form__field"/>
+                          <label htmlFor="name" className="form__label">$ Stock Price </label>
+                      </div>
+                      <div className='form__group field'>
+                          <input type="text" className="form__field"/>
+                          <label htmlFor="name" className="form__label">Amount Purchased</label>
+                      </div>
+                      <div className='form__group field'>
+                          <input type="date" className="form__field"/>
+                          <label htmlFor="name" className="form__label">Purchase date</label>
+                      </div>
+                  </div>
+                  </div>
+              </div>
+          )}
           {activeTab === 'Watchlist' && (
               <div className='bigSectionBG'>
                   <p>My WatchList
@@ -482,12 +492,12 @@ const HomePage = () => {
           )}
           {activeTab === 'Search' && (
               <div>
-              <div className={'bigSectionBG searchContainer'}>
-                  <Input className="searchBar" />
-                  <Table className="SearchResultsTable">
-                      {/* Tabletjsx content */}
-                      <TableBody>
-                          {companies.map((company, index) => (
+                  <div className={'bigSectionBG searchContainer'}>
+                      <Input className="searchBar"/>
+                      <Table className="SearchResultsTable">
+                          {/* Tabletjsx content */}
+                          <TableBody>
+                              {companies.map((company, index) => (
                               <TableRow key={index} onClick={() => handleCompanyClick(company)}>
                                   <TableCell className="font-medium SearchCompanyName">{company.name}</TableCell>
                                   <TableCell>{company.description}</TableCell>
@@ -502,26 +512,35 @@ const HomePage = () => {
               </div>
                   <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
                       <div style={{position: 'relative'}}>
-                          {/*<button style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={handleCloseModal}>X</button>*/}
-                          <h2 style={{fontSize: '32px'}}>{selectedCompany?.name}</h2>
-                          <br></br><br></br>
+
+                          {/* Adding an image below the close button but aligned to the top right corner */}
+                          <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" style={{
+                              position: 'absolute',
+                              right: '10px',
+                              top: '40px',
+                              width: '150px',
+                              height: '150px'
+                          }}/>
+                          <br/><br/><br/>
+                          <h1 style={{fontSize: '48px'}}>{selectedCompany?.name}</h1>
+                          <br/><br/>
                           <p>{selectedCompany?.description}</p>
-                          <br></br><br></br><br></br><br></br>
+                          <br/><br/><br/><br/>
                           <p className="profileStockValue">
                               Current Stock Price:
                               <span
-                                  className={`${selectedCompany?.stockChange > 0 ? 'stockIncrease' : 'stockDecrease'}`}>&nbsp;
-    ${selectedCompany?.currentStockPrice?.toFixed(2)}
+                                  className={`${selectedCompany?.stockChange > 0 ? 'stockIncrease' : 'stockDecrease'}`}>
+                &nbsp;${selectedCompany?.currentStockPrice?.toFixed(2)}
                                   {selectedCompany?.stockChange > 0 ? '↑' : '↓'}
-  </span>
+            </span>
                           </p>
-
 
                           <button className="addWatchlistBtn" onClick={() => addToWatchlist(selectedCompany)}>Add to
                               Watchlist
                           </button>
                       </div>
                   </Modal>
+
 
               </div>
           )}
