@@ -324,14 +324,18 @@ const HomePage = () => {
                         <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>
                         <br></br>
                         <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
-                        <br></br>
-                        <br></br>
-                        <span
-                            className='stockDisplayListItem'>Previous Close: 172.62  &emsp;&emsp;    Open: 175.60&emsp;&emsp;    Bid 173.05 x 1400&emsp;&emsp; Volume: 75,000,820</span>
-                        <br></br>
-                        <span className='stockDisplayListItem'> Ask: 173.07 x 1100&emsp;&emsp; Day's Range: 173.52 - 177.71 &emsp;&emsp;52 Week Range: 155.98 - 199.62</span>
 
                     </p>
+                    <br></br>
+                    <br></br>
+                    <p className='stockDisplayListWatchlist'>
+                        <div className='StockDisplayWatchlistStats'>
+                            <span>Previous Close: 172.62  &emsp;&emsp;    Open: 175.60&emsp;&emsp;    Bid 173.05 x 1400&emsp;&emsp; Volume: 75,000,820</span>
+                            <br></br>
+                            <span> Ask: 173.07 x 1100&emsp;&emsp; Day's Range: 173.52 - 177.71 &emsp;&emsp;52 Week Range: 155.98 - 199.62</span>
+                        </div>
+                    </p>
+
                     <div className="topChartClassWatchlist">
                         <Line data={data} options={options}></Line>
                     </div>
@@ -363,60 +367,104 @@ const HomePage = () => {
                 <div className='postArea'>
                     <div className='postContainer'>
                         <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
-                        <p>This is a post</p>
+                        <p className={'post-text'}>Tech Innovations Inc. has outperformed market expectations in the latest financial quarter, registering a significant increase in revenue. This growth is attributed primarily to robust sales in their innovative consumer technology sector.</p>
+                        <p className={'post-text'}>However, despite the increase in revenue, the company's profit margins have faced pressures due to rising raw material costs and increased expenditures on research and development.</p>
+                        <p className={'post-text'}>The company's executive team remains optimistic about future prospects, citing strong pre-orders for upcoming products and a stable increase in market share across key regions.</p>
+                        <p className={'post-text'}>In response to financial results, Tech Innovations Inc. has announced plans to expand into new international markets, aiming to capitalize on emerging consumer trends and increase global reach.</p>
+                        <p className={'post-text'}>Analysts have adjusted their forecasts for the company’s stock, with several major firms upgrading their ratings, reflecting confidence in the company’s strategic direction and its potential for sustained growth.</p>
+
+                        <div className='post-imageContainer'>
+                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
+                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
+                        </div>
                     </div>
                     <div className='postContainer'>
                         <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
-                        <p>This is another post</p>
+                        <p className={'post-text'}>Global Pharma Co. reported a mixed financial performance this quarter, with revenue slightly below expectations due to disruptions in the supply chain. The impact was notably significant in overseas markets.</p>
+                        <p className={'post-text'}>Despite the revenue shortfall, the company achieved a higher profit margin thanks to cost-saving measures implemented in the previous year.</p>
+                        <p className={'post-text'}>The firm has successfully launched two new blockbuster drugs, which are expected to contribute significantly to future revenues, as confirmed by the early strong market acceptance.</p>
+                        <p className={'post-text'}>In an effort to boost investor confidence, Global Pharma Co. has announced an increase in their quarterly dividend and a new share buyback program.</p>
+                        <p className={'post-text'}>Market analysts remain cautiously optimistic about the company’s trajectory, citing the need for continued innovation and market expansion to sustain growth.</p>
+                        <div className='post-imageContainer'>
+                            <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
+                            <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
+                            <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
+
+                        </div>
                     </div>
                     <div className='postContainer'>
                         <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
-                        <p>and Another post</p>
-                        <p>with multiple lines</p>
+                        <p className={'post-text'}>EcoEnergy Solutions has exceeded analyst predictions with a
+                            record-breaking revenue this quarter, driven by a surge in demand for renewable energy
+                            solutions.</p>
+                        <p className={'post-text'}>Operating expenses have risen in tandem with sales, reflecting the
+                            company's investment in scaling up production capabilities and enhancing their supply
+                            chain.</p>
+                        <p className={'post-text'}>The company's strategic partnerships with major industrial players
+                            have been instrumental in achieving these results, positioning EcoEnergy as a leader in
+                            sustainable energy technologies.</p>
+                        <p className={'post-text'}>Looking forward, EcoEnergy is expanding its R&D department to focus
+                            on next-generation solar panels and energy storage systems.</p>
+                        <p className={'post-text'}>With government subsidies expected to bolster the renewable sector,
+                            analysts are revising their growth projections upwards for EcoEnergy Solutions.</p>
+
+                        <div className='post-imageContainer'>
+                            <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
+                        </div>
                     </div>
                     <div className='postContainer'>
                         <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
-                        <p>and Another post</p>
-                        <p>with one,</p>
-                        <p>Two Three lines</p>
+                        <p className={'post-text'}>Luxury Living Furnishings reported a decline in quarterly revenue,
+                            attributing the downturn to a sluggish luxury goods market and decreased consumer spending
+                            in key demographics.</p>
+                        <p className={'post-text'}>Despite lower sales, the company has managed to maintain
+                            profitability through stringent cost controls and inventory management.</p>
+                        <p className={'post-text'}>In response to current market conditions, Luxury Living is pivoting
+                            towards more online sales channels and enhancing their digital marketing efforts.</p>
+                        <p className={'post-text'}>The company also announced a new designer partnership aimed at
+                            rejuvenating its product line and attracting a younger clientele.</p>
+                        <p className={'post-text'}>Analysts are closely watching Luxury Living's strategic shifts, with
+                            some expressing concerns about the brand's ability to adapt to rapidly changing consumer
+                            preferences.</p>
+
                     </div>
                     <div className='postContainer'>
                         <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
-                        <p>This is a post</p>
+                        <p className={'post-text'}>This is a post</p>
                     </div>
                     <div className='postContainer'>
                         <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
-                        <p>This is another post</p>
+                        <p className={'post-text'}>This is another post</p>
                     </div>
                     <div className='postContainer'>
                         <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
-                        <p>and Another post</p>
-                        <p>with multiple lines</p>
+                        <p className={'post-text'}>and Another post</p>
+                        <p className={'post-text'}>with multiple lines</p>
                     </div>
                     <div className='postContainer'>
                         <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
-                        <p>and Another post</p>
-                        <p>with one,</p>
-                        <p>Two Three lines</p>
+                        <p className={'post-text'}>and Another post</p>
+                        <p className={'post-text'}>with one,</p>
+                        <p className={'post-text'}>Two Three lines</p>
                     </div>
                     <div className='postContainer'>
                         <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
-                        <p>This is a post</p>
+                        <p className={'post-text'}>This is a post</p>
                     </div>
                     <div className='postContainer'>
                         <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
-                        <p>This is another post</p>
+                        <p className={'post-text'}>This is another post</p>
                     </div>
                     <div className='postContainer'>
                         <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
-                        <p>and Another post</p>
-                        <p>with multiple lines</p>
+                        <p className={'post-text'}>and Another post</p>
+                        <p className={'post-text'}>with multiple lines</p>
                     </div>
                     <div className='postContainer'>
                         <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
-                        <p>and Another post</p>
-                        <p>with one,</p>
-                        <p>Two Three lines</p>
+                        <p className={'post-text'}>and Another post</p>
+                        <p className={'post-text'}>with one,</p>
+                        <p className={'post-text'}>Two Three lines</p>
                     </div>
                 </div>
                 </div>
@@ -427,7 +475,7 @@ const HomePage = () => {
                   <div className='bigSectionBG'>
                       <p>Your Stocks
                       </p>
-                      <p className='stockDisplayList'>
+                      <p className='stockDisplayListWatchlist'>
                           <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>
                           <br></br>
                           <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>
@@ -485,6 +533,15 @@ const HomePage = () => {
                       <br></br>
                       <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
                   </p>
+                  <br></br>
+                  <br></br>
+                  <p className='stockDisplayListWatchlist'>
+                      <div className='StockDisplayWatchlistStats'>
+                          <span>Previous Close: 172.62  &emsp;&emsp;    Open: 175.60&emsp;&emsp;    Bid 173.05 x 1400&emsp;&emsp; Volume: 75,000,820</span>
+                          <br></br>
+                          <span> Ask: 173.07 x 1100&emsp;&emsp; Day's Range: 173.52 - 177.71 &emsp;&emsp;52 Week Range: 155.98 - 199.62</span>
+                      </div>
+                  </p>
                   <div className="topChartClassWatchlist">
                       <Line data={data} options={options}></Line>
                   </div>
@@ -498,8 +555,8 @@ const HomePage = () => {
                           {/* Tabletjsx content */}
                           <TableBody>
                               {companies.map((company, index) => (
-                              <TableRow key={index} onClick={() => handleCompanyClick(company)}>
-                                  <TableCell className="font-medium SearchCompanyName">{company.name}</TableCell>
+                                  <TableRow key={index} onClick={() => handleCompanyClick(company)}>
+                                      <TableCell className="font-medium SearchCompanyName">{company.name}</TableCell>
                                   <TableCell>{company.description}</TableCell>
                                   <TableCell className={`font-medium ${company.stockChange > 0 ? 'stockIncrease' : 'stockDecrease'}`}>
                                       ${company.currentStockPrice.toFixed(2)} {company.stockChange > 0 ? '↑' : '↓'}

@@ -8,12 +8,12 @@ import {color} from "chart.js/helpers";
 const Navbar = () => {
     return (
         <nav className={styles.navbar}>
-            <div className={styles.navLink}>
-                <input type="text" className={styles.searchBar} placeholder="Search..."/>
-            </div>
-            <div className={`${styles.navLink} ${styles.switchBtn}`}>
-                <a href="/">Investor</a>
-            </div>
+            {/*<div className={styles.navLink}>*/}
+            {/*    <input type="text" className={styles.searchBar} placeholder="Search..."/>*/}
+            {/*</div>*/}
+            {/*<div className={`${styles.navLink} ${styles.switchBtn}`}>*/}
+            {/*    <a href="/company">Company</a>*/}
+            {/*</div>*/}
             <div className={styles.navLinkUserButton}>
                 <UserButton/>
             </div>
