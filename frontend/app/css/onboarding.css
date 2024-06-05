@@ -1,0 +1,247 @@
+@import url('https://fonts.googleapis.com/css?family=Abril+Fatface|Anonymous+Pro|Merriweather|Roboto|Shadows+Into+Light|Material+Icons');
+
+html {
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+.serif {
+    font-family: 'Merriweather', serif;
+}
+
+.sans-serif {
+    font-family: 'Roboto', sans-serif;
+}
+
+.monospace {
+    font-family: 'Anonymous Pro', monospace;
+}
+
+.display {
+    font-family: 'Abril Fatface', serif;
+}
+
+.handwriting {
+    font-family: 'Shadows Into Light', cursive;
+}
+
+body {
+    font-family: sans-serif;
+    color: #dfe6e9;
+    background: #6c5ce7;
+}
+
+.wrapper {
+    margin: 10vh auto;
+    width: 100%;
+    max-width: 1090px;
+    padding: 0 10px;
+}
+
+header {
+    width: 100%;
+    text-align: center;
+    padding: 1.5rem 0;
+}
+
+header a {
+    color: rgba(223, 230, 233, .7);
+    border-bottom: 1px solid rgba(223, 230, 233, .2);
+    padding-bottom: 2px;
+    text-decoration: none;
+}
+
+header a:hover, header a:focus {
+    color: #dfe6e9;
+    border-color: #dfe6e9;
+    padding-bottom: 4px;
+    transition: 100ms ease;
+}
+
+.c-title {
+    text-shadow: 5px 10px 25px rgba(45, 52, 54, .4);
+}
+
+.c-type-select {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+/*    center the items*/
+    align-items: center;
+    max-width:95vh;
+}
+
+
+@media screen and (max-width: 800px) {
+    .c-type-select {
+        flex-direction: column;
+    }
+}
+
+.o-type-item {
+    width: 100%;
+    max-width: 200px;
+    padding: 1.5rem;
+    background: #dfe6e9;
+    border: 3px solid transparent;
+    color: #2d3436;
+    border-radius: 6px;
+    text-decoration: none;
+    position: relative;
+    box-shadow: 0px 10px 20px rgba(45, 52, 54, .2);
+    margin-bottom: 3rem;
+}
+.o-type-item.selected {
+    background-color: #a29bfe; /* Light purple for selected items */
+    color: white;
+}
+
+.o-type-item.selected::after {
+    content: '\e5ca';
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Material Icons';
+    font-size: 32px;
+    color: #55efc4; /* Light green for the checkmark */
+    opacity: 1; /* Ensure it's fully visible */
+    animation: fadeDown 750ms;
+}
+
+@media screen and (max-width: 1035px) {
+    .o-type-item {
+        max-width: 150px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .o-type-item {
+        max-width: 100%;
+    }
+}
+
+.o-type-item__example {
+    height: 80px;
+    width: 80px;
+    font-size: 72px;
+    text-shadow: 0px 2px 4px rgba(45, 52, 54, .12);
+}
+
+.o-type-item__title {
+    font-weight: 700;
+    text-transform: capitalize;
+    margin: .3rem 0 .3rem;
+}
+
+.o-type-item__subtitle {
+    color: rgba(45, 52, 54, .5);
+    font-size: .8em;
+}
+
+.o-type-item:hover {
+    box-shadow: 0px 20px 30px rgba(45, 52, 54, .2);
+    border-color: #a29bfe;
+    top: -8px;
+    transition: 250ms ease;
+}
+
+.o-type-item:focus, .o-type-item:active {
+    border-color: #00b894;
+}
+
+.o-type-item:focus::after, .o-type-item:active::after {
+    content: '\e5ca';
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Material Icons';
+    font-size: 32px;
+    color: #55efc4;
+    animation: fadeDown 750ms;
+}
+
+@media screen and (max-width: 800px) {
+    .o-type-item:focus::after, .o-type-item:active::after {
+        animation: fadeRight 250ms;
+        right: 10px;
+        top: 50%;
+        transform: translate(80%, -50%);
+        color: #00b894;
+    }
+}
+
+@keyframes fadeDown {
+    from {
+        bottom: 0px;
+        opacity: 0;
+    }
+
+    to {
+        bottom: -40px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadeRight {
+    from {
+        right: 60px;
+        opacity: 0;
+    }
+
+    to {
+        right: 10px;
+        opacity: 1;
+    }
+}
+
+.o-type-item__icon {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    color: #55efc4; /* Light green for the checkmark */
+    font-size: 24px; /* Adjust size as necessary */
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.o-type-item {
+    animation: slideInDown 0.5s ease-out forwards;
+}
+
+@keyframes slideOutDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+.o-type-item.removing {
+    animation: slideOutDown 0.5s ease-out forwards;
+}
