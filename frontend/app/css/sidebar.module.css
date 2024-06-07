@@ -91,9 +91,10 @@
 .toggleButton {
   margin: 10px;
   padding: 5px 10px;
-  background-color: #ccc;
+  background-color: white;
   border: none;
   cursor: pointer;
+  visibility: hidden;
 }
 .sidebarCollapsed {
   width: 70px; /* Even narrower if fully collapsed */

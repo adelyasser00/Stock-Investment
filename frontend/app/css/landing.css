@@ -9,6 +9,7 @@ html,body {
     color:black;
 
 }
+
 body{
     overflow-y:hidden;
     height:auto;
@@ -269,15 +270,16 @@ h3, h2 {
     display: flex;
     flex-direction: column;
     /*max-width: 50%;*/
-    left: 910px;
-    top:50px;
+    left: 885px;
+    top:30px;
     width:570px;
     position: relative;
     /*transform: translateX(33.5%) translateY(38%);*/
-    /*max-width:400px;*/
+    max-width:360px;
     box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);
 
 }
+
 .bottomLeftSectionBG {
     /*top:250px;*/
     position: relative;
@@ -287,8 +289,8 @@ h3, h2 {
     display: flex;
     flex-direction: column;
     width: 570px;
-    left: -270px;
-    top: 50px;
+    left: 300px;
+    top: -355px;
 
     /*transform: translateX(-106.5%) translateY(-55%);*/
     /*width:50%;*/
@@ -595,7 +597,7 @@ td:nth-last-child{
 
 }
 .bottomOfHomeChart{
-    display:flex;
+    /*display:flex;*/
     flex-direction: row;
     height:auto;
 }
@@ -629,4 +631,18 @@ td:nth-last-child{
 .post-imageContainer{
     display:flex;
     flex-direction: row;
+}
+@media (max-width: 768px){
+    .bigSectionBG{
+        margin-left:100px;
+    }
+    .postArea{
+        left:100px;
+    }
+    .bottomLeftSectionBG{
+        left:100px
+    }
+    .bottomRightSectionBG{
+        left:685px;
+    }
 }
