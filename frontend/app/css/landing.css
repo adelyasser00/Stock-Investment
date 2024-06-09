@@ -632,6 +632,12 @@ td:nth-last-child{
     display:flex;
     flex-direction: row;
 }
+.bigWatchlist{
+    top:120px;
+}
+.watchlistChart{
+    top:50px;
+}
 @media (max-width: 768px){
     .bigSectionBG{
         margin-left:100px;

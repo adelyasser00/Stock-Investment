@@ -482,23 +482,32 @@ const HomePage = () => {
                           <br></br>
                           <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
                       </p>
-                      <div className="topChartClass">
+                      <div className="topChartClassWatchlist watchlistChart">
                           <Line data={data} options={options}></Line>
                       </div>
+                      <br></br>
+                      <br></br>
+                      <p className='stockDisplayListWatchlist bigWatchlist'>
+                          <div className='StockDisplayWatchlistStats'>
+                              <span>Previous Close: 172.62  &emsp;&emsp;    Open: 175.60&emsp;&emsp;    Bid 173.05 x 1400&emsp;&emsp; Volume: 75,000,820</span>
+                              <br></br>
+                              <span> Ask: 173.07 x 1100&emsp;&emsp; Day's Range: 173.52 - 177.71 &emsp;&emsp;52 Week Range: 155.98 - 199.62</span>
+                          </div>
+                      </p>
 
                   </div>
                   <div className='bottomOfHomeChart'>
-                  <div className='bottomRightSectionBG'>
-                      <div className="bottomRightChartClass">
-                          <h3>Stock Distribution</h3>
-                          <Pie data={pieData}/>
-                      </div>
+                      <div className='bottomRightSectionBG'>
+                          <div className="bottomRightChartClass">
+                              <h3>Stock Distribution</h3>
+                              <Pie data={pieData}/>
+                          </div>
 
-                  </div>
-                  <div className='bottomLeftSectionBG'>
-                      <h3>Add your stocks</h3>
-                      <button className="submit-button"></button>
-                      <div className='form__group field'>
+                      </div>
+                      <div className='bottomLeftSectionBG'>
+                          <h3>Add your stocks</h3>
+                          <button className="submit-button"></button>
+                          <div className='form__group field'>
                           <input type="text" className="form__field"/>
                           <label htmlFor="name" className="form__label">Stock Name</label>
                       </div>
