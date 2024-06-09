@@ -342,28 +342,6 @@ const HomePage = () => {
 
                 </div>
                 <div className='bottomOfHomeChart'>
-                {/*    <div className='sideBlocks'>*/}
-                {/*<div className='bottomRightSectionBGHome'>*/}
-                {/*    <h2>Trending stocks</h2>*/}
-                {/*    <ul>*/}
-                {/*        <li><p className='newsFont'>ACS </p> <p className='newsFont stockDecrease'>5.77 -0.02</p></li>*/}
-                {/*        <li><p className='newsFont'>NBD </p> <p className='newsFont stockIncrease'>3.86 +0.34</p></li>*/}
-
-                {/*        <li><p className='newsFont'>HSBC </p> <p className='newsFont stockDecrease'>0.77 +0.08</p></li>*/}
-                {/*    </ul>*/}
-                {/*</div>*/}
-
-                {/*<div className='bottomLeftSectionBGHome'>*/}
-                {/*    <h2>Latest News</h2>*/}
-                {/*    <ul>*/}
-                {/*        <li><p className='newsFont'>'Excessive fragmentation': Vodafone in €8bn Italy exit as CEO*/}
-                {/*            ...</p></li>*/}
-                {/*        <li><p className='newsFont'>Nvidia GTC 2024: What to expect from the AI giant's big*/}
-                {/*            conference</p></li>*/}
-                {/*        <li><p className='newsFont'>All eyes on the Federal Reserve: What to know this week</p></li>*/}
-                {/*    </ul>*/}
-                {/*</div>*/}
-                {/*    </div>*/}
                 <div className='postArea'>
                     <div className='postContainer'>
                         <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
@@ -482,7 +460,7 @@ const HomePage = () => {
                           <br></br>
                           <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
                       </p>
-                      <div className="topChartClassWatchlist watchlistChart">
+                      <div className="topChartClassWatchlist">
                           <Line data={data} options={options}></Line>
                       </div>
                       <br></br>

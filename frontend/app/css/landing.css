@@ -159,6 +159,7 @@ h3, h2 {
     padding:5px;
     border-radius:10px;
     box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.6);
+    overflow-y: visible;
 }
 .StockDisplayWatchlistStats{
     position:absolute;
@@ -211,6 +212,7 @@ h3, h2 {
 }
 
 .bigSectionBG{
+    flex-grow:1;
     position: relative;
     background-color:#FFF;
     padding:30px;
@@ -219,7 +221,7 @@ h3, h2 {
     display:flex;
     flex-direction:column;
     max-width:1180px;
-    max-height: 500px;
+    max-height: 1500px;
     margin-left:300px;
     top: 70px;
     margin-bottom:50px;
@@ -251,14 +253,17 @@ h3, h2 {
 }
 
 .topChartClassWatchlist{
+    flex-grow: 1;
+    position:relative;
     flex:1;
-    left: 40%;
+    left: 500px;
+    top:-50px;
     width: 500px;
     height: 250px;
     padding: 5px;
     cursor: pointer;
-    position:relative;
-    transform:translateY(-30%);
+
+    /*transform:translateY(-30%);*/
     z-index: 2000;
 
 }
@@ -635,9 +640,59 @@ td:nth-last-child{
 .bigWatchlist{
     top:120px;
 }
+.postBtn{
+    cursor:pointer;
+    /*make the button on the right*/
+    /*position: absolute;*/
+    position:relative;
+
+    background-color: #7140DEFF;
+    border: none;
+    color: white;
+    text-align: center;
+    display: inline-block;
+    font-size: 24px;
+    width: 100px;
+    height: 50px;
+    border-radius: 5%;
+    transition: background 0.3s ease-in-out;
+    transition: font-size 0.3s ease-in-out;
+    /*transform: translateX(760%) translateY(20%);*/
+    top:20px;
+    left:1020px;
+
+    box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);
+    font-family: "Campton", sans-serif;
+    font-weight: bold;
+}
 .watchlistChart{
     top:50px;
 }
+.companyProfileChart{
+    top:10px;
+    left:650px;
+}
+
+.userStatistics{
+    left:20px;
+    max-width:500px;
+}
+.bottomRightCompanyProfile{
+    max-width:none;
+}
+.bottomLeftCompanyProfile{
+    top:-300px;
+}
+.profileStats{
+    top:25px;
+    left:20px;
+    max-width:600px;
+}
+.stockDetailsText{
+    font-size:1em;
+    margin-bottom: 5px;
+}
+
 @media (max-width: 768px){
     .bigSectionBG{
         margin-left:100px;

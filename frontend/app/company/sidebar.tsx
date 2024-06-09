@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styles from './css/sidebar.module.css';
+import styles from '../css/sidebar.module.css';
 
 export default function Sidebar({ activeTab, setActiveTab }) {
     const [isCollapsed, setIsCollapsed] = useState(false);

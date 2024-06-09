@@ -1,8 +1,8 @@
 // HomePage.js
 'use client'
 import React, { useState, useEffect, ReactNode } from 'react';
-import './css/landing.css';
-import Navbar from './navbar';
+import '../css/landing.css';
+import Navbar from '../navbar';
 import Sidebar from './sidebar'; // Import the Sidebar component
 import { Line, Pie } from "react-chartjs-2";
 import { UserButton } from "@clerk/nextjs";
@@ -289,299 +289,408 @@ const HomePage = () => {
 
 
     return (
-    <div>
-      <Navbar />
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+        <div>
 
-      <div>
-        {activeTab === 'Feed' && (
-            <div>
-                <div className='bigSectionBG addPostSection'>
-                    <p>Share some news!
-                    </p>
-                    <div className='form__group field'>
-                        <input type="text" className="form__field form__fieldBIO"/>
-                        <label htmlFor="name" className="form__label">Type something...</label>
-                        <button className='postBtn'>post</button>
-                    </div>
-
-
-                </div>
-                <div className='postArea'>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
-                        <p>This is a post</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
-                        <p>This is another post</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
-                        <p>and Another post</p>
-                        <p>with multiple lines</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
-                        <p>and Another post</p>
-                        <p>with one,</p>
-                        <p>Two Three lines</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
-                        <p>This is a post</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
-                        <p>This is another post</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
-                        <p>and Another post</p>
-                        <p>with multiple lines</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
-                        <p>and Another post</p>
-                        <p>with one,</p>
-                        <p>Two Three lines</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
-                        <p>This is a post</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
-                        <p>This is another post</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
-                        <p>and Another post</p>
-                        <p>with multiple lines</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
-                        <p>and Another post</p>
-                        <p>with one,</p>
-                        <p>Two Three lines</p>
-                    </div>
-                </div>
-
+            <Sidebar activeTab={activeTab} setActiveTab={setActiveTab}/>
+            <div className='userButton'>
+                <UserButton/>
             </div>
-        )}
-          {activeTab === 'Profile' && (
-              <div>
-                  <div className='bigSectionBG'>
-                      <p>Track your stock price
-                      </p>
-                      {/*<span style={{marginBottom    : '20px'}}></span>*/}
-                      <br></br>
-                      <p className='stockDetailsText'>Previous Close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 172.62</p>
-                      <p className='stockDetailsText'>Open     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 175.60</p>
-                      <p className='stockDetailsText'>Bid &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.05 x 1400</p>
-                      <p className='stockDetailsText'>Ask &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.07 x 1100</p>
-                      <p className='stockDetailsText'>Day's Range &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.52 - 177.71</p>
-                      <p className='stockDetailsText'>52 Week Range &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;155.98 - 199.62</p>
-                      <p className='stockDetailsText'>Volume&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 75,000,820</p>
-                      <p className='stockDetailsText'>Avg. Volume &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;59,125,448</p>
-                      <p className='stockDetailsText'>Market Cap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.683T</p>
-                      <p className='stockDetailsText'>Beta (5Y Monthly)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.29</p>
-                      <p className='stockDetailsText'>PE Ratio (TTM) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;27.02</p>
-                      <p className='stockDetailsText'>EPS (TTM) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.43</p>
-                      <p className='stockDetailsText'>Earnings Date May 02, 2024 - May 06, 2024</p>
-                      <p className='stockDetailsText'>Forward Dividend & Yield&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.96 (0.55%)</p>
-                      <p className='stockDetailsText'>Ex-Dividend Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Feb 09, 2024</p>
-                      <p className='stockDetailsText'>1y Target Est &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;184.96</p>
 
-                      <div className="topChartClass">
-                          <Line data={data} options={options}></Line>
-                      </div>
-
-                  </div>
-                  <div className='bottomRightSectionBG'>
-                      <p className='stockDetailsText'>Bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                          do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                          nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                          dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
-                          id est laborum.</p>
-                      <p className='stockDetailsText'>Address: 55599 st. Alexandria, Egypt</p>
-                      <p className='stockDetailsText'>Website: www.aapl.com</p>
-                      <p className='stockDetailsText'>Phone: 01014066663</p>
+            <div>
+                {activeTab === 'Feed' && (
+                    <div>
+                        <div className='bigSectionBG addPostSection'>
+                            <p>Share some news!
+                            </p>
+                            <div className='form__group field'>
+                                <input type="text" className="form__field form__fieldBIO"/>
+                                <label htmlFor="name" className="form__label">Type something...</label>
+                                <button className='postBtn'>post</button>
+                            </div>
 
 
+                        </div>
+                        <div className='postArea'>
+                            <div className='postContainer'>
+                                <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
+                                <p className={'post-text'}>Tech Innovations Inc. has outperformed market expectations in
+                                    the
+                                    latest financial quarter, registering a significant increase in revenue. This growth
+                                    is
+                                    attributed primarily to robust sales in their innovative consumer technology
+                                    sector.</p>
+                                <p className={'post-text'}>However, despite the increase in revenue, the company's
+                                    profit
+                                    margins have faced pressures due to rising raw material costs and increased
+                                    expenditures on
+                                    research and development.</p>
+                                <p className={'post-text'}>The company's executive team remains optimistic about future
+                                    prospects, citing strong pre-orders for upcoming products and a stable increase in
+                                    market
+                                    share across key regions.</p>
+                                <p className={'post-text'}>In response to financial results, Tech Innovations Inc. has
+                                    announced
+                                    plans to expand into new international markets, aiming to capitalize on emerging
+                                    consumer
+                                    trends and increase global reach.</p>
+                                <p className={'post-text'}>Analysts have adjusted their forecasts for the company’s
+                                    stock, with
+                                    several major firms upgrading their ratings, reflecting confidence in the company’s
+                                    strategic direction and its potential for sustained growth.</p>
+
+                                <div className='post-imageContainer'>
+                                    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
+                                    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
+                                </div>
+                            </div>
+                            <div className='postContainer'>
+                                <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
+                                <p className={'post-text'}>Global Pharma Co. reported a mixed financial performance this
+                                    quarter, with revenue slightly below expectations due to disruptions in the supply
+                                    chain.
+                                    The impact was notably significant in overseas markets.</p>
+                                <p className={'post-text'}>Despite the revenue shortfall, the company achieved a higher
+                                    profit
+                                    margin thanks to cost-saving measures implemented in the previous year.</p>
+                                <p className={'post-text'}>The firm has successfully launched two new blockbuster drugs,
+                                    which
+                                    are expected to contribute significantly to future revenues, as confirmed by the
+                                    early
+                                    strong market acceptance.</p>
+                                <p className={'post-text'}>In an effort to boost investor confidence, Global Pharma Co.
+                                    has
+                                    announced an increase in their quarterly dividend and a new share buyback
+                                    program.</p>
+                                <p className={'post-text'}>Market analysts remain cautiously optimistic about the
+                                    company’s
+                                    trajectory, citing the need for continued innovation and market expansion to sustain
+                                    growth.</p>
+                                <div className='post-imageContainer'>
+                                    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
+                                    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
+                                    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
+
+                                </div>
+                            </div>
+                            <div className='postContainer'>
+                                <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
+                                <p className={'post-text'}>EcoEnergy Solutions has exceeded analyst predictions with a
+                                    record-breaking revenue this quarter, driven by a surge in demand for renewable
+                                    energy
+                                    solutions.</p>
+                                <p className={'post-text'}>Operating expenses have risen in tandem with sales,
+                                    reflecting the
+                                    company's investment in scaling up production capabilities and enhancing their
+                                    supply
+                                    chain.</p>
+                                <p className={'post-text'}>The company's strategic partnerships with major industrial
+                                    players
+                                    have been instrumental in achieving these results, positioning EcoEnergy as a leader
+                                    in
+                                    sustainable energy technologies.</p>
+                                <p className={'post-text'}>Looking forward, EcoEnergy is expanding its R&D department to
+                                    focus
+                                    on next-generation solar panels and energy storage systems.</p>
+                                <p className={'post-text'}>With government subsidies expected to bolster the renewable
+                                    sector,
+                                    analysts are revising their growth projections upwards for EcoEnergy Solutions.</p>
+
+                                <div className='post-imageContainer'>
+                                    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
+                                </div>
+                            </div>
+                            <div className='postContainer'>
+                                <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
+                                <p className={'post-text'}>Luxury Living Furnishings reported a decline in quarterly
+                                    revenue,
+                                    attributing the downturn to a sluggish luxury goods market and decreased consumer
+                                    spending
+                                    in key demographics.</p>
+                                <p className={'post-text'}>Despite lower sales, the company has managed to maintain
+                                    profitability through stringent cost controls and inventory management.</p>
+                                <p className={'post-text'}>In response to current market conditions, Luxury Living is
+                                    pivoting
+                                    towards more online sales channels and enhancing their digital marketing
+                                    efforts.</p>
+                                <p className={'post-text'}>The company also announced a new designer partnership aimed
+                                    at
+                                    rejuvenating its product line and attracting a younger clientele.</p>
+                                <p className={'post-text'}>Analysts are closely watching Luxury Living's strategic
+                                    shifts, with
+                                    some expressing concerns about the brand's ability to adapt to rapidly changing
+                                    consumer
+                                    preferences.</p>
+
+                            </div>
+                            <div className='postContainer'>
+                                <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
+                                <p className={'post-text'}>This is a post</p>
+                            </div>
+                            <div className='postContainer'>
+                                <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
+                                <p className={'post-text'}>This is another post</p>
+                            </div>
+                            <div className='postContainer'>
+                                <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
+                                <p className={'post-text'}>and Another post</p>
+                                <p className={'post-text'}>with multiple lines</p>
+                            </div>
+                            <div className='postContainer'>
+                                <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
+                                <p className={'post-text'}>and Another post</p>
+                                <p className={'post-text'}>with one,</p>
+                                <p className={'post-text'}>Two Three lines</p>
+                            </div>
+                            <div className='postContainer'>
+                                <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
+                                <p className={'post-text'}>This is a post</p>
+                            </div>
+                            <div className='postContainer'>
+                                <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
+                                <p className={'post-text'}>This is another post</p>
+                            </div>
+                            <div className='postContainer'>
+                                <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
+                                <p className={'post-text'}>and Another post</p>
+                                <p className={'post-text'}>with multiple lines</p>
+                            </div>
+                            <div className='postContainer'>
+                                <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
+                                <p className={'post-text'}>and Another post</p>
+                                <p className={'post-text'}>with one,</p>
+                                <p className={'post-text'}>Two Three lines</p>
+                            </div>
+                        </div>
+
+                    </div>
+                )}
+                {activeTab === 'Profile' && (
+                    <div>
+                        <div className='bigSectionBG'>
+                            <div className="topChartClassWatchlist companyProfileChart ">
+                                <Line data={data} options={options}></Line>
+                            </div>
+                            <br></br>
+                            <br></br>
+                            {/*<p className='stockDisplayListWatchlist bigWatchlist'>*/}
+                                <div className='StockDisplayWatchlistStats profileStats'>
+                                    <p>Track your stock price
+                                    </p>
+                                    {/*<span style={{marginBottom    : '20px'}}></span>*/}
+                                    <br></br>
+                                    <p className='stockDetailsText'>
+                                        Previous Close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 172.62
+                                        <br></br>Open &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 175.60
+                                        <br></br>Bid &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.05 x 1400
+                                        <br></br>Ask &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.07 x 1100
+                                        <br></br>Day's Range &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.52 - 177.71
+                                        <br></br>52 Week Range &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;155.98 - 199.62
+                                        <br></br>Volume&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 75,000,820
+                                        <br></br>Avg. Volume &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;59,125,448
+                                        <br></br>Market Cap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.683T
+                                        <br></br>Beta (5Y Monthly)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.29
+                                        <br></br>PE Ratio (TTM) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;27.02
+                                        {/*<br></br>EPS (TTM) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.43*/}
+                                        {/*<br></br>Earnings Date May 02, 2024 - May 06, 2024*/}
+                                        {/*<br></br>Forward Dividend & Yield&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.96 (0.55%)*/}
+                                        {/*<br></br>Ex-Dividend Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Feb 09, 2024*/}
+                                        {/*<br></br>1y Target Est &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;184.96*/}
+                                    </p>
+
+                                </div>
+                            {/*</p>*/}
+
+                        </div>
+                        <div className='bottomRightSectionBG bottomRightCompanyProfile'>
+                            <p className='stockDetailsText'>Bio: Lorem ipsum dolor sit amet, consectetur adipiscing
+                                elit, sed
+                                do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                quis
+                                nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                                irure
+                                dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+                                mollit anim
+                                id est laborum.</p>
+                            <p className='stockDetailsText'>Address: 55599 st. Alexandria, Egypt</p>
+                            <p className='stockDetailsText'>Website: www.aapl.com</p>
+                            <p className='stockDetailsText'>Phone: 01014066663</p>
 
 
+                        </div>
+                        <div className='bottomLeftSectionBG bottomLeftCompanyProfile'>
+                            <h3>Edit your information</h3>
+                            <button className="submit-button"></button>
+                            <div className='form__group field'>
+                                <input type="text" className="form__field form__fieldBIO"/>
+                                <label htmlFor="name" className="form__label">Bio</label>
+                            </div>
+                            <div className='form__group field'>
+                                <input type="text" className="form__field"/>
+                                <label htmlFor="name" className="form__label">Address</label>
+                            </div>
+                            <div className='form__group field'>
+                                <input type="text" className="form__field"/>
+                                <label htmlFor="name" className="form__label">Website</label>
+                            </div>
+                            <div className='form__group field'>
+                                <input type="text" className="form__field"/>
+                                <label htmlFor="name" className="form__label">Phone</label>
+                            </div>
+                            <div className='form__group field'>
+                                <input type="date" className="form__field"/>
+                                <label htmlFor="name" className="form__label">Next Event</label>
+                            </div>
 
-                  </div>
-                  <div className='bottomLeftSectionBG'>
-                      <h3>Edit your information</h3>
-                      <button className="submit-button"></button>
-                      <div className='form__group field'>
-                          <input type="text" className="form__field form__fieldBIO"/>
-                          <label htmlFor="name" className="form__label">Bio</label>
-                      </div>
-                      <div className='form__group field'>
-                          <input type="text" className="form__field"/>
-                          <label htmlFor="name" className="form__label">Address</label>
-                      </div>
-                      <div className='form__group field'>
-                          <input type="text" className="form__field"/>
-                          <label htmlFor="name" className="form__label">Website</label>
-                      </div>
-                      <div className='form__group field'>
-                          <input type="text" className="form__field"/>
-                          <label htmlFor="name" className="form__label">Phone</label>
-                      </div>
-                      <div className='form__group field'>
-                          <input type="date" className="form__field"/>
-                          <label htmlFor="name" className="form__label">Next Event</label>
-                      </div>
+                        </div>
+                    </div>
+                )}
+                {activeTab === 'User Statistics' && (
+                    <div>
+                        <div className='bigSectionBG'>
+                            <p>Statistics
+                            </p>
+                            <div className='form__group__watchlist field'>
+                                <input type="text" className="form__field"/>
+                                <label htmlFor="name" className="form__label">Search for a user</label>
+                            </div>
+                            <p className='stockDisplayListWatchlist StockDisplayWatchlistStats userStatistics'>
+                                <p>Peak number of investors: 300</p>
+                                <br></br>
+                                <p>Peak user profit: $335</p>
+                                <br></br>
+                                <p>Biggest amount purchased: 95</p>
+                            </p>
+                            <div className="topChartClassWatchlist">
+                                <Line data={data} options={options}></Line>
+                            </div>
+                        </div>
+                        <div className='bottomRightSectionBG'>
+                            <div className="bottomRightChartClass">
+                                <h3>User Distribution</h3>
+                                <Pie data={pieData}/>
+                            </div>
 
-                  </div>
-              </div>
-          )}
-          {activeTab === 'User Statistics' && (
-              <div>
-                  <div className='bigSectionBG'>
-                      <p>Statistics
-                      </p>
-                      <div className='form__group__watchlist field'>
-                          <input type="text" className="form__field"/>
-                          <label htmlFor="name" className="form__label">Search for a user</label>
-                      </div>
-                      <p className='stockDisplayListWatchlist'>
-                          <span className='stockDisplayListItem'>Peak number of investors: 300</span>
-                          <br></br>
-                          <span className='stockDisplayListItem'>Peak user profit: $335</span>
-                          <br></br>
-                          <span className='stockDisplayListItem'>Biggest stock amount purchased: 95</span>
-                      </p>
-                      <div className="topChartClassWatchlist">
-                          <Line data={data} options={options}></Line>
-                      </div>
-                  </div>
-                  <div className='bottomRightSectionBG'>
-                      <div className="bottomRightChartClass">
-                          <h3>User Distribution</h3>
-                          <Pie data={pieData}/>
-                      </div>
+                        </div>
+                        <div className='bottomLeftSectionBG'>
+                            <h3>Add your stocks</h3>
+                            <button className="submit-button"></button>
+                            <div className='form__group field'>
+                                <input type="text" className="form__field"/>
+                                <label htmlFor="name" className="form__label">Stock Name</label>
+                            </div>
+                            <div className='form__group field'>
+                                <input type="text" className="form__field"/>
+                                <label htmlFor="name" className="form__label">$ Stock Price </label>
+                            </div>
+                            <div className='form__group field'>
+                                <input type="text" className="form__field"/>
+                                <label htmlFor="name" className="form__label">Amount Purchased</label>
+                            </div>
+                            <div className='form__group field'>
+                                <input type="date" className="form__field"/>
+                                <label htmlFor="name" className="form__label">Purchase date</label>
+                            </div>
 
-                  </div>
-                  <div className='bottomLeftSectionBG'>
-                      <h3>Add your stocks</h3>
-                      <button className="submit-button"></button>
-                      <div className='form__group field'>
-                          <input type="text" className="form__field"/>
-                          <label htmlFor="name" className="form__label">Stock Name</label>
-                      </div>
-                      <div className='form__group field'>
-                          <input type="text" className="form__field"/>
-                          <label htmlFor="name" className="form__label">$ Stock Price </label>
-                      </div>
-                      <div className='form__group field'>
-                          <input type="text" className="form__field"/>
-                          <label htmlFor="name" className="form__label">Amount Purchased</label>
-                      </div>
-                      <div className='form__group field'>
-                          <input type="date" className="form__field"/>
-                          <label htmlFor="name" className="form__label">Purchase date</label>
-                      </div>
+                        </div>
+                    </div>
+                )}
+                {activeTab === 'Search' && (
+                    <div>
+                        <div className={'bigSectionBG searchContainer'}>
+                            <Input className="searchBar"/>
+                            <Table className="SearchResultsTable">
+                                {/* Tabletjsx content */}
+                                <TableBody>
+                                    {companies.map((company, index) => (
+                                        <TableRow key={index} onClick={() => handleCompanyClick(company)}>
+                                            <TableCell
+                                                className="font-medium SearchCompanyName">{company.name}</TableCell>
+                                            <TableCell>{company.description}</TableCell>
+                                            <TableCell
+                                                className={`font-medium ${company.stockChange > 0 ? 'stockIncrease' : 'stockDecrease'}`}>
+                                                ${company.currentStockPrice.toFixed(2)} {company.stockChange > 0 ? '↑' : '↓'}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
 
-                  </div>
-              </div>
-          )}
-          {activeTab === 'Search' && (
-              <div>
-                  <div className={'bigSectionBG searchContainer'}>
-                      <Input className="searchBar"/>
-                      <Table className="SearchResultsTable">
-                          {/* Tabletjsx content */}
-                          <TableBody>
-                              {companies.map((company, index) => (
-                                  <TableRow key={index} onClick={() => handleCompanyClick(company)}>
-                                      <TableCell className="font-medium SearchCompanyName">{company.name}</TableCell>
-                                      <TableCell>{company.description}</TableCell>
-                                      <TableCell className={`font-medium ${company.stockChange > 0 ? 'stockIncrease' : 'stockDecrease'}`}>
-                                          ${company.currentStockPrice.toFixed(2)} {company.stockChange > 0 ? '↑' : '↓'}
-                                      </TableCell>
-                                  </TableRow>
-                              ))}
-                          </TableBody>
-                      </Table>
+                        </div>
+                        <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+                            <div style={{position: 'relative'}}>
 
-                  </div>
-                  <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-                      <div style={{position: 'relative'}}>
-
-                          {/* Adding an image below the close button but aligned to the top right corner */}
-                          <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" style={{
-                              position: 'absolute',
-                              right: '10px',
-                              top: '40px',
-                              width: '150px',
-                              height: '150px'
-                          }}/>
-                          <br/><br/><br/>
-                          <h1 style={{fontSize: '48px'}}>{selectedCompany?.name}</h1>
-                          <br/><br/>
-                          <p>{selectedCompany?.description}</p>
-                          <br/><br/><br/><br/>
-                          <p className="profileStockValue">
-                              Current Stock Price:
-                              <span
-                                  className={`${selectedCompany?.stockChange > 0 ? 'stockIncrease' : 'stockDecrease'}`}>
+                                {/* Adding an image below the close button but aligned to the top right corner */}
+                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" style={{
+                                    position: 'absolute',
+                                    right: '10px',
+                                    top: '40px',
+                                    width: '150px',
+                                    height: '150px'
+                                }}/>
+                                <br/><br/><br/>
+                                <h1 style={{fontSize: '48px'}}>{selectedCompany?.name}</h1>
+                                <br/><br/>
+                                <p>{selectedCompany?.description}</p>
+                                <br/><br/><br/><br/>
+                                <p className="profileStockValue">
+                                    Current Stock Price:
+                                    <span
+                                        className={`${selectedCompany?.stockChange > 0 ? 'stockIncrease' : 'stockDecrease'}`}>
                 &nbsp;${selectedCompany?.currentStockPrice?.toFixed(2)}
-                                  {selectedCompany?.stockChange > 0 ? '↑' : '↓'}
+                                        {selectedCompany?.stockChange > 0 ? '↑' : '↓'}
             </span>
-                          </p>
+                                </p>
 
-                          {/*<button className="addWatchlistBtn" onClick={() => addToWatchlist(selectedCompany)}>Add to*/}
-                          {/*    Watchlist*/}
-                          {/*</button>*/}
-                      </div>
-                  </Modal>
+                                {/*<button className="addWatchlistBtn" onClick={() => addToWatchlist(selectedCompany)}>Add to*/}
+                                {/*    Watchlist*/}
+                                {/*</button>*/}
+                            </div>
+                        </Modal>
 
 
-              </div>
-          )}
-          {activeTab === 'About Us' && (
-              <div className='bigSectionBG About-Us'>
-                  <p>
-                      Welcome to <strong>Stock Investment Platform</strong>, your number one source for all things
-                      related to stock investment. We're dedicated to providing you the very best of investment advice,
-                      with an emphasis on reliability, customer service, and uniqueness.
-                  </p>
-                  <p>
-                      Founded in 2023, <strong>Stock Investment Platform</strong> has come a long way from its
-                      beginnings. When we first started out, our passion for helping other investors be more
-                      eco-friendly, providing the best equipment for their trading drove us to start our own business.
-                  </p>
-                  <p>
-                      We hope you enjoy our services as much as we enjoy offering them to you. If you have any questions
-                      or comments, please don't hesitate to contact us.
-                  </p>
-              </div>
-          )}
-          {activeTab === 'Contact' && (
-              <div className='bigSectionBG Contact'>
-                  <h1>
-                      For further inquiries:
-                  </h1>
-                  <p>
-                      Email: es-adelyasser00@alexu.edu.eg
-                  </p>
-                  <p>
-                  Mobile: +20 1014066663
-                  </p>
-                  <p>
-                      Telephone: +20 1014066663
-                  </p>
-              </div>
-          )}
-      </div>
-    </div>
-  );
+                    </div>
+                )}
+                {activeTab === 'About Us' && (
+                    <div className='bigSectionBG About-Us'>
+                        <p>
+                            Welcome to <strong>Stock Investment Platform</strong>, your number one source for all things
+                            related to stock investment. We're dedicated to providing you the very best of investment
+                            advice,
+                            with an emphasis on reliability, customer service, and uniqueness.
+                        </p>
+                        <p>
+                            Founded in 2023, <strong>Stock Investment Platform</strong> has come a long way from its
+                            beginnings. When we first started out, our passion for helping other investors be more
+                            eco-friendly, providing the best equipment for their trading drove us to start our own
+                            business.
+                        </p>
+                        <p>
+                            We hope you enjoy our services as much as we enjoy offering them to you. If you have any
+                            questions
+                            or comments, please don't hesitate to contact us.
+                        </p>
+                    </div>
+                )}
+                {activeTab === 'Contact' && (
+                    <div className='bigSectionBG Contact'>
+                        <h1>
+                            For further inquiries:
+                        </h1>
+                        <p>
+                            Email: es-adelyasser00@alexu.edu.eg
+                        </p>
+                        <p>
+                            Mobile: +20 1014066663
+                        </p>
+                        <p>
+                            Telephone: +20 1014066663
+                        </p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
 };
 
 export default HomePage;
