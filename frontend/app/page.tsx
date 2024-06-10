@@ -344,7 +344,9 @@ const HomePage = () => {
                 <div className='bottomOfHomeChart'>
                 <div className='postArea'>
                     <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
+                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                        <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;HSBC CO.</p>
+                        <p><br></br></p>
                         <p className={'post-text'}>Tech Innovations Inc. has outperformed market expectations in the latest financial quarter, registering a significant increase in revenue. This growth is attributed primarily to robust sales in their innovative consumer technology sector.</p>
                         <p className={'post-text'}>However, despite the increase in revenue, the company's profit margins have faced pressures due to rising raw material costs and increased expenditures on research and development.</p>
                         <p className={'post-text'}>The company's executive team remains optimistic about future prospects, citing strong pre-orders for upcoming products and a stable increase in market share across key regions.</p>
@@ -357,12 +359,22 @@ const HomePage = () => {
                         </div>
                     </div>
                     <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
-                        <p className={'post-text'}>Global Pharma Co. reported a mixed financial performance this quarter, with revenue slightly below expectations due to disruptions in the supply chain. The impact was notably significant in overseas markets.</p>
-                        <p className={'post-text'}>Despite the revenue shortfall, the company achieved a higher profit margin thanks to cost-saving measures implemented in the previous year.</p>
-                        <p className={'post-text'}>The firm has successfully launched two new blockbuster drugs, which are expected to contribute significantly to future revenues, as confirmed by the early strong market acceptance.</p>
-                        <p className={'post-text'}>In an effort to boost investor confidence, Global Pharma Co. has announced an increase in their quarterly dividend and a new share buyback program.</p>
-                        <p className={'post-text'}>Market analysts remain cautiously optimistic about the company’s trajectory, citing the need for continued innovation and market expansion to sustain growth.</p>
+                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                        <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Ezz Steel Company Ltd.</p>
+                        <p><br></br></p>
+                        <p className={'post-text'}>Global Pharma Co. reported a mixed financial performance this
+                            quarter, with revenue slightly below expectations due to disruptions in the supply chain.
+                            The impact was notably significant in overseas markets.</p>
+                        <p className={'post-text'}>Despite the revenue shortfall, the company achieved a higher profit
+                            margin thanks to cost-saving measures implemented in the previous year.</p>
+                        <p className={'post-text'}>The firm has successfully launched two new blockbuster drugs, which
+                            are expected to contribute significantly to future revenues, as confirmed by the early
+                            strong market acceptance.</p>
+                        <p className={'post-text'}>In an effort to boost investor confidence, Global Pharma Co. has
+                            announced an increase in their quarterly dividend and a new share buyback program.</p>
+                        <p className={'post-text'}>Market analysts remain cautiously optimistic about the company’s
+                            trajectory, citing the need for continued innovation and market expansion to sustain
+                            growth.</p>
                         <div className='post-imageContainer'>
                             <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
                             <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
@@ -371,7 +383,9 @@ const HomePage = () => {
                         </div>
                     </div>
                     <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
+                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                        <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Allianz Bank</p>
+                        <p><br></br></p>
                         <p className={'post-text'}>EcoEnergy Solutions has exceeded analyst predictions with a
                             record-breaking revenue this quarter, driven by a surge in demand for renewable energy
                             solutions.</p>
@@ -391,7 +405,9 @@ const HomePage = () => {
                         </div>
                     </div>
                     <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
+                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                        <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Fathallah Gomla Market</p>
+                        <p><br></br></p>
                         <p className={'post-text'}>Luxury Living Furnishings reported a decline in quarterly revenue,
                             attributing the downturn to a sluggish luxury goods market and decreased consumer spending
                             in key demographics.</p>
@@ -407,39 +423,28 @@ const HomePage = () => {
 
                     </div>
                     <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
+                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                        <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;HSBC CO.</p>
+                        <p><br></br></p>
                         <p className={'post-text'}>This is a post</p>
                     </div>
                     <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
+                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                        <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Ezz Steel Company Ltd.</p>
+                        <p><br></br></p>
                         <p className={'post-text'}>This is another post</p>
                     </div>
                     <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
+                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                        <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Allianz Bank</p>
+                        <p><br></br></p>
                         <p className={'post-text'}>and Another post</p>
                         <p className={'post-text'}>with multiple lines</p>
                     </div>
                     <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
-                        <p className={'post-text'}>and Another post</p>
-                        <p className={'post-text'}>with one,</p>
-                        <p className={'post-text'}>Two Three lines</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
-                        <p className={'post-text'}>This is a post</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
-                        <p className={'post-text'}>This is another post</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
-                        <p className={'post-text'}>and Another post</p>
-                        <p className={'post-text'}>with multiple lines</p>
-                    </div>
-                    <div className='postContainer'>
-                        <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
+                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                        <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Allianz Bank</p>
+                        <p><br></br></p>
                         <p className={'post-text'}>and Another post</p>
                         <p className={'post-text'}>with one,</p>
                         <p className={'post-text'}>Two Three lines</p>

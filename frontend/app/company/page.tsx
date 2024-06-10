@@ -312,31 +312,25 @@ const HomePage = () => {
                         </div>
                         <div className='postArea'>
                             <div className='postContainer'>
-                                <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
+                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;HSBC CO.</p>
+                                <p><br></br></p>
                                 <p className={'post-text'}>Tech Innovations Inc. has outperformed market expectations in
-                                    the
-                                    latest financial quarter, registering a significant increase in revenue. This growth
-                                    is
-                                    attributed primarily to robust sales in their innovative consumer technology
-                                    sector.</p>
+                                    the latest financial quarter, registering a significant increase in revenue. This
+                                    growth is attributed primarily to robust sales in their innovative consumer
+                                    technology sector.</p>
                                 <p className={'post-text'}>However, despite the increase in revenue, the company's
-                                    profit
-                                    margins have faced pressures due to rising raw material costs and increased
-                                    expenditures on
-                                    research and development.</p>
+                                    profit margins have faced pressures due to rising raw material costs and increased
+                                    expenditures on research and development.</p>
                                 <p className={'post-text'}>The company's executive team remains optimistic about future
                                     prospects, citing strong pre-orders for upcoming products and a stable increase in
-                                    market
-                                    share across key regions.</p>
+                                    market share across key regions.</p>
                                 <p className={'post-text'}>In response to financial results, Tech Innovations Inc. has
-                                    announced
-                                    plans to expand into new international markets, aiming to capitalize on emerging
-                                    consumer
-                                    trends and increase global reach.</p>
+                                    announced plans to expand into new international markets, aiming to capitalize on
+                                    emerging consumer trends and increase global reach.</p>
                                 <p className={'post-text'}>Analysts have adjusted their forecasts for the company’s
-                                    stock, with
-                                    several major firms upgrading their ratings, reflecting confidence in the company’s
-                                    strategic direction and its potential for sustained growth.</p>
+                                    stock, with several major firms upgrading their ratings, reflecting confidence in
+                                    the company’s strategic direction and its potential for sustained growth.</p>
 
                                 <div className='post-imageContainer'>
                                     <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
@@ -344,7 +338,9 @@ const HomePage = () => {
                                 </div>
                             </div>
                             <div className='postContainer'>
-                                <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
+                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Ezz Steel Company Ltd.</p>
+                                <p><br></br></p>
                                 <p className={'post-text'}>Global Pharma Co. reported a mixed financial performance this
                                     quarter, with revenue slightly below expectations due to disruptions in the supply
                                     chain.
@@ -373,7 +369,9 @@ const HomePage = () => {
                                 </div>
                             </div>
                             <div className='postContainer'>
-                                <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
+                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Allianz Bank</p>
+                                <p><br></br></p>
                                 <p className={'post-text'}>EcoEnergy Solutions has exceeded analyst predictions with a
                                     record-breaking revenue this quarter, driven by a surge in demand for renewable
                                     energy
@@ -400,7 +398,9 @@ const HomePage = () => {
                                 </div>
                             </div>
                             <div className='postContainer'>
-                                <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
+                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Fathallah Gomla Market</p>
+                                <p><br></br></p>
                                 <p className={'post-text'}>Luxury Living Furnishings reported a decline in quarterly
                                     revenue,
                                     attributing the downturn to a sluggish luxury goods market and decreased consumer
@@ -423,39 +423,28 @@ const HomePage = () => {
 
                             </div>
                             <div className='postContainer'>
-                                <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
+                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;HSBC CO.</p>
+                                <p><br></br></p>
                                 <p className={'post-text'}>This is a post</p>
                             </div>
                             <div className='postContainer'>
-                                <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
+                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Ezz Steel Company Ltd.</p>
+                                <p><br></br></p>
                                 <p className={'post-text'}>This is another post</p>
                             </div>
                             <div className='postContainer'>
-                                <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
+                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Allianz Bank</p>
+                                <p><br></br></p>
                                 <p className={'post-text'}>and Another post</p>
                                 <p className={'post-text'}>with multiple lines</p>
                             </div>
                             <div className='postContainer'>
-                                <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
-                                <p className={'post-text'}>and Another post</p>
-                                <p className={'post-text'}>with one,</p>
-                                <p className={'post-text'}>Two Three lines</p>
-                            </div>
-                            <div className='postContainer'>
-                                <p style={{color: '#7140DEFF'}}>HSBC CO.</p>
-                                <p className={'post-text'}>This is a post</p>
-                            </div>
-                            <div className='postContainer'>
-                                <p style={{color: '#7140DEFF'}}>Ezz Steel Company Ltd.</p>
-                                <p className={'post-text'}>This is another post</p>
-                            </div>
-                            <div className='postContainer'>
-                                <p style={{color: '#7140DEFF'}}>Allianz Bank</p>
-                                <p className={'post-text'}>and Another post</p>
-                                <p className={'post-text'}>with multiple lines</p>
-                            </div>
-                            <div className='postContainer'>
-                                <p style={{color: '#7140DEFF'}}>Fathallah Gomla Market</p>
+                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
+                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Allianz Bank</p>
+                                <p><br></br></p>
                                 <p className={'post-text'}>and Another post</p>
                                 <p className={'post-text'}>with one,</p>
                                 <p className={'post-text'}>Two Three lines</p>
@@ -473,31 +462,31 @@ const HomePage = () => {
                             <br></br>
                             <br></br>
                             {/*<p className='stockDisplayListWatchlist bigWatchlist'>*/}
-                                <div className='StockDisplayWatchlistStats profileStats'>
-                                    <p>Track your stock price
-                                    </p>
-                                    {/*<span style={{marginBottom    : '20px'}}></span>*/}
-                                    <br></br>
-                                    <p className='stockDetailsText'>
-                                        Previous Close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 172.62
-                                        <br></br>Open &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 175.60
-                                        <br></br>Bid &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.05 x 1400
-                                        <br></br>Ask &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.07 x 1100
-                                        <br></br>Day's Range &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.52 - 177.71
-                                        <br></br>52 Week Range &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;155.98 - 199.62
-                                        <br></br>Volume&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 75,000,820
-                                        <br></br>Avg. Volume &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;59,125,448
-                                        <br></br>Market Cap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.683T
-                                        <br></br>Beta (5Y Monthly)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.29
-                                        <br></br>PE Ratio (TTM) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;27.02
-                                        {/*<br></br>EPS (TTM) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.43*/}
-                                        {/*<br></br>Earnings Date May 02, 2024 - May 06, 2024*/}
-                                        {/*<br></br>Forward Dividend & Yield&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.96 (0.55%)*/}
-                                        {/*<br></br>Ex-Dividend Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Feb 09, 2024*/}
-                                        {/*<br></br>1y Target Est &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;184.96*/}
-                                    </p>
+                            <div className='StockDisplayWatchlistStats profileStats'>
+                                <p>Track your stock price
+                                </p>
+                                {/*<span style={{marginBottom    : '20px'}}></span>*/}
+                                <br></br>
+                                <p className='stockDetailsText'>
+                                    Previous Close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 172.62
+                                    <br></br>Open &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 175.60
+                                    <br></br>Bid &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.05 x 1400
+                                    <br></br>Ask &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.07 x 1100
+                                    <br></br>Day's Range &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;173.52 - 177.71
+                                    <br></br>52 Week Range &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;155.98 - 199.62
+                                    <br></br>Volume&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 75,000,820
+                                    <br></br>Avg. Volume &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;59,125,448
+                                    <br></br>Market Cap &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.683T
+                                    <br></br>Beta (5Y Monthly)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.29
+                                    <br></br>PE Ratio (TTM) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;27.02
+                                    {/*<br></br>EPS (TTM) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.43*/}
+                                    {/*<br></br>Earnings Date May 02, 2024 - May 06, 2024*/}
+                                    {/*<br></br>Forward Dividend & Yield&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.96 (0.55%)*/}
+                                    {/*<br></br>Ex-Dividend Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Feb 09, 2024*/}
+                                    {/*<br></br>1y Target Est &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;184.96*/}
+                                </p>
 
-                                </div>
+                            </div>
                             {/*</p>*/}
 
                         </div>
@@ -573,11 +562,11 @@ const HomePage = () => {
 
                         </div>
                         <div className='bottomLeftSectionBG'>
-                            <h3>Add your stocks</h3>
+                            <h3>Add an investment event!</h3>
                             <button className="submit-button"></button>
                             <div className='form__group field'>
                                 <input type="text" className="form__field"/>
-                                <label htmlFor="name" className="form__label">Stock Name</label>
+                                <label htmlFor="name" className="form__label">Investor Username</label>
                             </div>
                             <div className='form__group field'>
                                 <input type="text" className="form__field"/>
@@ -589,7 +578,7 @@ const HomePage = () => {
                             </div>
                             <div className='form__group field'>
                                 <input type="date" className="form__field"/>
-                                <label htmlFor="name" className="form__label">Purchase date</label>
+                                <label htmlFor="name" className="form__label">Investment date</label>
                             </div>
 
                         </div>
