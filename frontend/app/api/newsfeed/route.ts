@@ -1,5 +1,7 @@
 // import cors from "cors";
 // import express from "express";
+import Post from "@/lib/database/models/post.model";
+import User from "@/lib/database/models/user.model";
 import RSSParser from "rss-parser";
 
 let localStorage = {
@@ -66,21 +68,31 @@ export const checkAndUpdateFeed = async () => {
     }
     console.log(articles);
 }
-checkAndUpdateFeed();
-
-
-
-// export async function POST(request) {
-//   console.log(request);
-
-//   try {
-
-// // Run the check and update function on page load
 // checkAndUpdateFeed();
-//     return NextResponse.json("", { status: 200 });
-//   } catch (error) {
-//     console.error('Error updating user:', error);
-//     // Handle the error appropriately, e.g., return an error response
-//     return NextResponse.json({ message: 'Error updating user' }, { status: 500 });
-//   }
-// }
+
+async function savePostAndUser(postData, userId) {
+  try {
+    // Create a new post document.
+    const newPost = new Post({
+      author: postData.link,
+      title: postData.title,
+      content: postData.content,
+      image: postData.image
+    });
+
+    // Save the new post to the database.
+    const savedPost = await newPost.save();
+
+    // Update the user's saved posts (assuming you have such a field).
+    await User.findByIdAndUpdate(
+      userId,
+      { $push: { savedPosts: savedPost._id } },
+      { new: true, safe: true, upsert: false }
+    );
+
+    return savedPost;
+  } catch (error) {
+    console.error('Failed to save post or update user:', error);
+    throw error;
+  }
+}
