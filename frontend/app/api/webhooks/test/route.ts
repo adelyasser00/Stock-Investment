@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getUserById, addToWatchlist,removeFromWatchlist ,addInvestment, removeInvestment } from "@/lib/actions/user.actions"; // Adjust the path according to your project structure
 import mongoose, { Mongoose, Schema } from "mongoose";
-import {checkAndUpdateFeed} from "@/api/newsfeed"
+// import {checkAndUpdateFeed} from "@/api/newsfeed"
 export async function POST(request) {
   console.log(request);
 
@@ -15,7 +15,7 @@ export async function POST(request) {
   //   };
 
   try {
-    checkAndUpdateFeed()
+    // checkAndUpdateFeed()
 //     const added = await addToWatchlist(clerkId, companyId);
 //       console.log('User added:', added);
 
