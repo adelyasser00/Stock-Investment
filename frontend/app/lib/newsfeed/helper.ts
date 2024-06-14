@@ -1,7 +1,8 @@
 // import cors from "cors";
 // import express from "express";
-import Post from "@/lib/database/models/post.model";
-import User from "@/lib/database/models/user.model";
+import Post from "../database/models/post.model"
+import User from "../database/models/user.model"
+import { connectToDatabase } from "../database/mongoose";
 import RSSParser from "rss-parser";
 
 let localStorage = {
@@ -70,29 +71,4 @@ export const checkAndUpdateFeed = async () => {
 }
 // checkAndUpdateFeed();
 
-async function savePostAndUser(postData, userId) {
-  try {
-    // Create a new post document.
-    const newPost = new Post({
-      author: postData.link,
-      title: postData.title,
-      content: postData.content,
-      image: postData.image
-    });
 
-    // Save the new post to the database.
-    const savedPost = await newPost.save();
-
-    // Update the user's saved posts (assuming you have such a field).
-    await User.findByIdAndUpdate(
-      userId,
-      { $push: { savedPosts: savedPost._id } },
-      { new: true, safe: true, upsert: false }
-    );
-
-    return savedPost;
-  } catch (error) {
-    console.error('Failed to save post or update user:', error);
-    throw error;
-  }
-}

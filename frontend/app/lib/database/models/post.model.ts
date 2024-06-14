@@ -11,7 +11,8 @@ const PostSchema = new Schema({
     upvotes: { type: Number, default: 0 },
     downvotes: { type: Number, default: 0 },
     title:String,
-    image:String
+    image:String,
+    link:String
 });
 
 const Post = models?.Post || mongoose.model("Post", PostSchema);
