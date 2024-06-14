@@ -41,6 +41,10 @@ const UserSchema = new Schema({
     type: String,
     ref: 'Company'
  }],
+ savedlist: [{
+    type:Schema.Types.ObjectId,
+    ref:'Post'
+ }],
  followedCompanies: [{
     type: String,
     ref: 'Company'

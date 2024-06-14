@@ -323,12 +323,49 @@ export async function downvotePost(clerkId: string,  postId:Schema.Types.ObjectI
  }
 }
 
-export async function search(clerkId: string,  postId:Schema.Types.ObjectId) {
+export async function search(queryObj:SearchParamProps) {
   try {
-    
+    // Connect to the database if not already connected
+    await mongoose.connect(process.env.MONGODB_URI);
+
+    // Build a query based on the input object
+    const query: CompanyQuery  = {};
+    if (queryObj.companyName) query.companyName = new RegExp(queryObj.companyName, 'i');
+    if (queryObj.clerkId) query.clerkId = queryObj.clerkId;
+    if (queryObj.email) query.email = queryObj.email;
+    if (queryObj.ticker) query.ticker = queryObj.ticker;
+
+    // Full-text search handling
+    if (queryObj.searchText) {
+      query.$text = { $search: queryObj.searchText };
+    }
+
+    const page = parseInt(queryObj.page ? queryObj.page.toString() : '1');
+    const limit = parseInt(queryObj.limit ? queryObj.limit.toString() : '10');
+
+
+    // Execute the query with pagination
+    const results = await Company.find(query)
+      .select('companyName email ticker photo')
+      .limit(limit)
+      .skip(limit * (page - 1))
+      .lean();
+
+    // Count total documents to calculate total pages
+    const totalCount = await Company.countDocuments(query);
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return {
+      data: results,
+      currentPage: page,
+      totalPages,
+      totalCount
+    };
   } catch (error) {
-    handleError(error);
+    console.error('Error searching companies:', error);
+    throw error;
   }
+
 }
 
 export async function chatbot(clerkId: string,  postId:Schema.Types.ObjectId) {
@@ -336,6 +373,39 @@ export async function chatbot(clerkId: string,  postId:Schema.Types.ObjectId) {
     
   } catch (error) {
     handleError(error);
+  }
+}
+
+export async function savePostToUser(postData: PostParams, userId) {
+  console.log("moved to actions")
+  try {
+    await connectToDatabase(); 
+
+    const user = await User.findOne({ clerkId : userId });
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // console.log(user)
+    const newPost = new Post({
+      title: postData.title,
+      content: postData.content,
+      image: postData.image,
+      link: postData.link
+    });
+
+    // Save the new post to the database.
+    const savedPost = await newPost.save();
+
+    // await savedPost.save();  
+
+    user.savedlist.push(savedPost._id);
+    await user.save(); 
+
+    return savedPost;
+  } catch (error) {
+    console.error('Failed to save post or update user:', error);
+    throw error;
   }
 }
 

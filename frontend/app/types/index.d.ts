@@ -56,6 +56,28 @@ declare type RemoveUrlQueryParams = {
 };
 
 declare type SearchParamProps = {
-  params: { id: string; type: TransformationTypeKey };
-  searchParams: { [key: string]: string | string[] | undefined };
+  companyName?: string;  // Optional, search by company name, supports partial matches
+  clerkId?: string;      // Optional, search by clerk ID
+  email?: string;        // Optional, search by email
+  ticker?: string;       // Optional, search by ticker symbol
+  searchText?: string;   // Optional, for full-text search on indexed fields like description and article
+  page?: string| number;         // Optional, for specifying the page number in pagination
+  limit?: string | number;         // Optional, for specifying the number of items per page
 };
+
+declare type CompanyQuery = {
+    companyName?: RegExp;
+    clerkId?: string;
+    email?: string;
+    ticker?: string;
+    $text?: { $search: string };
+};
+
+
+// ====== POST PARAMS
+declare type PostParams = {
+  title: string,
+  content: string,
+  image: string,
+  link: string
+}

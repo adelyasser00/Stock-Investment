@@ -9,7 +9,10 @@ const PostSchema = new Schema({
 	author:Schema.Types.ObjectId,
     content: String,
     upvotes: { type: Number, default: 0 },
-    downvotes: { type: Number, default: 0 }
+    downvotes: { type: Number, default: 0 },
+    title:String,
+    image:String,
+    link:String
 });
 
 const Post = models?.Post || mongoose.model("Post", PostSchema);
