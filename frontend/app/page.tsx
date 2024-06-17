@@ -10,6 +10,9 @@ import Modal from './components/modal';
 import { UserButton } from "@clerk/nextjs";
 import Page from './onboarding/page';
 import { useRouter } from 'next/navigation';
+import {checkAndUpdateFeed} from "@/lib/newsfeed/helper";
+// import type { GetServerSideProps, NextPage } from 'next';
+// import {handler} from '@/api/rss/rss'
 
 import {
   Chart as ChartJS,
@@ -33,6 +36,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
+import {flushAndExit} from "next/dist/telemetry/flush-and-exit";
 
 
 
@@ -78,11 +82,58 @@ const salesData = {
 
 };
 // Function to open modal with company details
+// type Article = {
+//     title: string;
+//     link: string;
+//     pubDate: string;
+//     content: string;
+//     contentSnippet: string;
+// };
 
+// Define the getServerSideProps function
+// async function fetchRSS() {
+//     try {
+//         const response = await fetch('/api/rss/');  // Ensuring the correct API endpoint
+//         if (!response.ok) {
+//             throw new Error(`Failed to fetch articles: ${response.status} ${response.statusText}`);
+//         }
+//         console.log("Fetching RSS successfully");
+//         return await response.json();
+//     } catch (error) {
+//         console.error("Error fetching RSS:", error);
+//         throw error;  // Rethrowing the error after logging
+//     }
+// }
 
+async function fetchRSS() {
+    try {
+        const response = await checkAndUpdateFeed()
+        if (response.length==0) {
+            throw new Error(`Failed to fetch articles`);
+        }
+        console.log("RSS received in fetchRSS()");
+        return response;
+    } catch (error) {
+        console.error("Error fetching RSS:", error);
+        throw error;  // Rethrowing the error after logging
+    }
+}
 
+function extractImageUrl(content) {
+    // const imgTagMatch = content.match(/<img[^>]+src="([^">]+)"/);
+    const imgTagMatch = content.slice(content.indexOf("src='") + 5).split("'")[0];
+    console.log("=======================================")
+    console.log("extraced image source:",imgTagMatch)
+
+    return imgTagMatch ;
+}
 
 const HomePage = () => {
+    const [articles, setArticles] = useState([]);
+    // const [isLoading, setIsLoading] = useState(true);
+    // const [error, setError] = useState(null);
+
+    // const articles = await fetchRSS();
   const [activeTab, setActiveTab] = useState('Home');
   const [selectedStock, setSelectedStock] = useState('AAPL');
     const [selectedCompany, setSelectedCompany] = useState(null);
@@ -113,7 +164,28 @@ const HomePage = () => {
 
         return () => window.removeEventListener('storage', handleStorageChange);
     }, []);
+    useEffect(() => {
+        fetchRSS()
+            .then(articles => {
+                console.log("articles received in frontend")
+                setArticles(articles);
+                // setIsLoading(false);  // Set loading to false once data is fetched
+                console.log("loading done")
+            })
+            .catch(error => {
+                console.error("Error fetching RSS:", error);
+                // setError(error);
+                // setIsLoading(false);  // Ensure loading is set to false even on error
+            });
+    }, []);
 
+    // if (isLoading) {
+    //     return <div>Loading...</div>;  // or any fancy loader/spinner
+    // }
+    //
+    // if (error) {
+    //     return <div>Error: {error.message}</div>;  // Display error message
+    // }
 
     const handleCompanyClick = (company) => {
         if (company && company.name && company.currentStockPrice != null) {
@@ -343,119 +415,133 @@ const HomePage = () => {
                 {/*</div>*/}
                 <div className='bottomOfHomeChart'>
                 <div className='postArea'>
-                    <div className='postContainer'>
-                        <div className='postContent'>
-                            <p className={'postTitle'}><a href='https://www.almasryalyoum.com/news/details/3190684'>ضبط
-                                7
-                                مليون جنيه حصيلة تجارة العملة خلال 24 ساعة</a></p>
-
-                            <p className='postPubDate'>Tue, 11 Jun 2024 12:52:44 +0300</p>
-                                <a href='https://www.almasryalyoum.com/news/details/3190684'> <img
-                                    src="https://mediaaws.almasryalyoum.com/news/small/2024/05/11/2391276_0.jpeg"
-                                    alt="Modal Icon" className="post-image"/>
+                    {articles.map((article, index) => (
+                        <div key={index} className='postContainer'>
+                            <div className='postContent'>
+                                <p className='postTitle'>
+                                    <a href={article.link}>{article.title}</a>
+                                </p>
+                                <p className='postPubDate'>{article.pubDate}</p>
+                                <a href={article.link}>
+                                    <img src={extractImageUrl(article.content)} alt="Post Image" className="post-image"/>
                                 </a>
-                            <p className={'post-text'}>نجح قطاع الأمن العام بالتنسيق مع الإدارة العامة لمكافحة جرائم
-                                الأموال العامة ومديريات الأمن خلال24 ساعة في توجيه عدد من الضربات الأمنية لجرائم
-                                الإتجار غير المشروع بالنقد الأجنبى والمضاربة بأسعار العملات عن طريق إخفائها عن
-                                التداول والإتجار بها خارج نطاق السوق المصرفى ، وما تمثله...</p>
+                                <p className='post-text'>{article.contentSnippet}</p>
+                            </div>
                         </div>
+                    ))}
+                    {/*<div className='postContainer'>*/}
+                    {/*    <div className='postContent'>*/}
+                    {/*        <p className={'postTitle'}><a href='https://www.almasryalyoum.com/news/details/3190684'>ضبط*/}
+                    {/*            7*/}
+                    {/*            مليون جنيه حصيلة تجارة العملة خلال 24 ساعة</a></p>*/}
 
-                    </div>
-                    <div className='postContainer'>
-                        <div className='postContent'>
-                            <p className={'postTitle'}><a href='https://www.almasryalyoum.com/news/details/3190692'>مصادر
-                                برلمانية تكشف آخر تطورات قانون الإيجار القديم: إحصائيات أولية واجتماع مرتقب</a></p>
-                            <p className='postPubDate'>Tue, 11 Jun 2024 12:52:13 +0300</p>
-                            <a href='https://www.almasryalyoum.com/news/details/3190692'>
-                                <img src="https://mediaaws.almasryalyoum.com/news/small/2024/01/06/2291847_0.jpg"
-                                     alt="Post Image" className="post-image"/>
-                            </a>
-                            <p className={'post-text'}>قالت مصادر بلجنة الإسكان بمجلس النواب أن الأرقام التي وصلت للجنة
-                                حتي الآن فيما يخص «الإيجار القديم» تشير إلى أن 82% من الوحدات السكنية الخاضعة لقانون
-                                الإيجار القديم تقع في محافظات القاهرة والإسكندرية والجيزة والقليوبية، و18% منها مقسمة
-                                على باقي المحافظات، لافتًا إلى أن الحصر كشف عن وجود مباني...</p>
-                        </div>
+                    {/*        <p className='postPubDate'>Tue, 11 Jun 2024 12:52:44 +0300</p>*/}
+                    {/*            <a href='https://www.almasryalyoum.com/news/details/3190684'> <img*/}
+                    {/*                src="https://mediaaws.almasryalyoum.com/news/small/2024/05/11/2391276_0.jpeg"*/}
+                    {/*                alt="Modal Icon" className="post-image"/>*/}
+                    {/*            </a>*/}
+                    {/*        <p className={'post-text'}>نجح قطاع الأمن العام بالتنسيق مع الإدارة العامة لمكافحة جرائم*/}
+                    {/*            الأموال العامة ومديريات الأمن خلال24 ساعة في توجيه عدد من الضربات الأمنية لجرائم*/}
+                    {/*            الإتجار غير المشروع بالنقد الأجنبى والمضاربة بأسعار العملات عن طريق إخفائها عن*/}
+                    {/*            التداول والإتجار بها خارج نطاق السوق المصرفى ، وما تمثله...</p>*/}
+                    {/*    </div>*/}
 
-                    </div>
+                    {/*</div>*/}
+                    {/*<div className='postContainer'>*/}
+                    {/*    <div className='postContent'>*/}
+                    {/*        <p className={'postTitle'}><a href='https://www.almasryalyoum.com/news/details/3190692'>مصادر*/}
+                    {/*            برلمانية تكشف آخر تطورات قانون الإيجار القديم: إحصائيات أولية واجتماع مرتقب</a></p>*/}
+                    {/*        <p className='postPubDate'>Tue, 11 Jun 2024 12:52:13 +0300</p>*/}
+                    {/*        <a href='https://www.almasryalyoum.com/news/details/3190692'>*/}
+                    {/*            <img src="https://mediaaws.almasryalyoum.com/news/small/2024/01/06/2291847_0.jpg"*/}
+                    {/*                 alt="Post Image" className="post-image"/>*/}
+                    {/*        </a>*/}
+                    {/*        <p className={'post-text'}>قالت مصادر بلجنة الإسكان بمجلس النواب أن الأرقام التي وصلت للجنة*/}
+                    {/*            حتي الآن فيما يخص «الإيجار القديم» تشير إلى أن 82% من الوحدات السكنية الخاضعة لقانون*/}
+                    {/*            الإيجار القديم تقع في محافظات القاهرة والإسكندرية والجيزة والقليوبية، و18% منها مقسمة*/}
+                    {/*            على باقي المحافظات، لافتًا إلى أن الحصر كشف عن وجود مباني...</p>*/}
+                    {/*    </div>*/}
 
-                    <div className='postContainer'>
-                        <div className='postContent'>
-                            <p className={'postTitle'}><a href='https://www.almasryalyoum.com/news/details/3190667'>تجهيز
-                                250 شاحنة تمهيدًا لإدخالها الى قطاع غزة عبر بوابة معبر «كرم أبو سالم»</a></p>
-                            <p className='postPubDate'>Tue, 11 Jun 2024 12:51:32 +0300</p>
-                            <a href="https://www.almasryalyoum.com/news/details/3190667" target="_blank">
-                                <img src="https://mediaaws.almasryalyoum.com/news/small/2024/05/26/2403979_0.jpeg"
-                                     alt="Post Image" className="post-image"/>
-                            </a>
-                            <p className={'post-text'}>جهز الهلال الأحمر المصري في شمال سيناء، اليوم الثلاثاء، عدد 250
-                                شاحنة تضم مواد اغاثية وإنسانية تمهيدا لإدخالها الي قطاع غزة عبر بوابة معبر كرم أبو سالم
-                                جنوب مدينة رفح. وقال مصدر مسؤول بالهلال الأحمر المصري بشمال سيناء، ان الشاحنات تضم
-                                شاحنات وقود واغذية وادوية ومساعدات إنسانية واغاثية،...</p>
-                        </div>
+                    {/*</div>*/}
+
+                    {/*<div className='postContainer'>*/}
+                    {/*    <div className='postContent'>*/}
+                    {/*        <p className={'postTitle'}><a href='https://www.almasryalyoum.com/news/details/3190667'>تجهيز*/}
+                    {/*            250 شاحنة تمهيدًا لإدخالها الى قطاع غزة عبر بوابة معبر «كرم أبو سالم»</a></p>*/}
+                    {/*        <p className='postPubDate'>Tue, 11 Jun 2024 12:51:32 +0300</p>*/}
+                    {/*        <a href="https://www.almasryalyoum.com/news/details/3190667" target="_blank">*/}
+                    {/*            <img src="https://mediaaws.almasryalyoum.com/news/small/2024/05/26/2403979_0.jpeg"*/}
+                    {/*                 alt="Post Image" className="post-image"/>*/}
+                    {/*        </a>*/}
+                    {/*        <p className={'post-text'}>جهز الهلال الأحمر المصري في شمال سيناء، اليوم الثلاثاء، عدد 250*/}
+                    {/*            شاحنة تضم مواد اغاثية وإنسانية تمهيدا لإدخالها الي قطاع غزة عبر بوابة معبر كرم أبو سالم*/}
+                    {/*            جنوب مدينة رفح. وقال مصدر مسؤول بالهلال الأحمر المصري بشمال سيناء، ان الشاحنات تضم*/}
+                    {/*            شاحنات وقود واغذية وادوية ومساعدات إنسانية واغاثية،...</p>*/}
+                    {/*    </div>*/}
 
 
-                    </div>
+                    {/*</div>*/}
 
-                    <div className='postContainer'>
-                        <div className='postContent'>
-                            <p className={'postTitle'}><a href='https://www.almasryalyoum.com/news/details/3190670'>طقس
-                                شديد الحرارة بشمال سيناء</a></p>
-                            <p className='postPubDate'>Tue, 11 Jun 2024 12:50:48 +0300</p>
-                            <img src="https://mediaaws.almasryalyoum.com/news/small/2024/06/03/2409392_0.jpg"
-                                 alt="Post Image" className="post-image"/>
-                            <p className={'post-text'}>يسود مدن محافظة شمال سيناء، اليوم الثلاثاء، طقس شديد الحرارة خلال
-                                ساعات النهار ومعتدل الحرارة خلال ساعات الليل وفي الساعات الاولي من الصباح، مع تعرض مدن
-                                المحافظة لرياح خفيفة ساهمت في تلطيف درجات الحرارة. وقالت الهيئة العامة للأرصاد الجوية إن
-                                درجات الحرارة بمدن محافظة شمال...</p>
-                        </div>
+                    {/*<div className='postContainer'>*/}
+                    {/*    <div className='postContent'>*/}
+                    {/*        <p className={'postTitle'}><a href='https://www.almasryalyoum.com/news/details/3190670'>طقس*/}
+                    {/*            شديد الحرارة بشمال سيناء</a></p>*/}
+                    {/*        <p className='postPubDate'>Tue, 11 Jun 2024 12:50:48 +0300</p>*/}
+                    {/*        <img src="https://mediaaws.almasryalyoum.com/news/small/2024/06/03/2409392_0.jpg"*/}
+                    {/*             alt="Post Image" className="post-image"/>*/}
+                    {/*        <p className={'post-text'}>يسود مدن محافظة شمال سيناء، اليوم الثلاثاء، طقس شديد الحرارة خلال*/}
+                    {/*            ساعات النهار ومعتدل الحرارة خلال ساعات الليل وفي الساعات الاولي من الصباح، مع تعرض مدن*/}
+                    {/*            المحافظة لرياح خفيفة ساهمت في تلطيف درجات الحرارة. وقالت الهيئة العامة للأرصاد الجوية إن*/}
+                    {/*            درجات الحرارة بمدن محافظة شمال...</p>*/}
+                    {/*    </div>*/}
 
-                    </div>
+                    {/*</div>*/}
 
-                    <div className='postContainer'>
-                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
-                        <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Fathallah Gomla Market</p>
-                        <p><br></br></p>
-                        <p className={'post-text'}>Luxury Living Furnishings reported a decline in quarterly revenue,
-                            attributing the downturn to a sluggish luxury goods market and decreased consumer spending
-                            in key demographics.</p>
-                        <p className={'post-text'}>Despite lower sales, the company has managed to maintain
-                            profitability through stringent cost controls and inventory management.</p>
-                        <p className={'post-text'}>In response to current market conditions, Luxury Living is pivoting
-                            towards more online sales channels and enhancing their digital marketing efforts.</p>
-                        <p className={'post-text'}>The company also announced a new designer partnership aimed at
-                            rejuvenating its product line and attracting a younger clientele.</p>
-                        <p className={'post-text'}>Analysts are closely watching Luxury Living's strategic shifts, with
-                            some expressing concerns about the brand's ability to adapt to rapidly changing consumer
-                            preferences.</p>
+                    {/*<div className='postContainer'>*/}
+                    {/*    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>*/}
+                    {/*    <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Fathallah Gomla Market</p>*/}
+                    {/*    <p><br></br></p>*/}
+                    {/*    <p className={'post-text'}>Luxury Living Furnishings reported a decline in quarterly revenue,*/}
+                    {/*        attributing the downturn to a sluggish luxury goods market and decreased consumer spending*/}
+                    {/*        in key demographics.</p>*/}
+                    {/*    <p className={'post-text'}>Despite lower sales, the company has managed to maintain*/}
+                    {/*        profitability through stringent cost controls and inventory management.</p>*/}
+                    {/*    <p className={'post-text'}>In response to current market conditions, Luxury Living is pivoting*/}
+                    {/*        towards more online sales channels and enhancing their digital marketing efforts.</p>*/}
+                    {/*    <p className={'post-text'}>The company also announced a new designer partnership aimed at*/}
+                    {/*        rejuvenating its product line and attracting a younger clientele.</p>*/}
+                    {/*    <p className={'post-text'}>Analysts are closely watching Luxury Living's strategic shifts, with*/}
+                    {/*        some expressing concerns about the brand's ability to adapt to rapidly changing consumer*/}
+                    {/*        preferences.</p>*/}
 
-                    </div>
-                    <div className='postContainer'>
-                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
-                        <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;HSBC CO.</p>
-                        <p><br></br></p>
-                        <p className={'post-text'}>This is a post</p>
-                    </div>
-                    <div className='postContainer'>
-                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
-                        <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Ezz Steel Company Ltd.</p>
-                        <p><br></br></p>
-                        <p className={'post-text'}>This is another post</p>
-                    </div>
-                    <div className='postContainer'>
-                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
-                        <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Allianz Bank</p>
-                        <p><br></br></p>
-                        <p className={'post-text'}>and Another post</p>
-                        <p className={'post-text'}>with multiple lines</p>
-                    </div>
-                    <div className='postContainer'>
-                        <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
-                        <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Allianz Bank</p>
-                        <p><br></br></p>
-                        <p className={'post-text'}>and Another post</p>
-                        <p className={'post-text'}>with one,</p>
-                        <p className={'post-text'}>Two Three lines</p>
-                    </div>
+                    {/*</div>*/}
+                    {/*<div className='postContainer'>*/}
+                    {/*    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>*/}
+                    {/*    <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;HSBC CO.</p>*/}
+                    {/*    <p><br></br></p>*/}
+                    {/*    <p className={'post-text'}>This is a post</p>*/}
+                    {/*</div>*/}
+                    {/*<div className='postContainer'>*/}
+                    {/*    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>*/}
+                    {/*    <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Ezz Steel Company Ltd.</p>*/}
+                    {/*    <p><br></br></p>*/}
+                    {/*    <p className={'post-text'}>This is another post</p>*/}
+                    {/*</div>*/}
+                    {/*<div className='postContainer'>*/}
+                    {/*    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>*/}
+                    {/*    <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Allianz Bank</p>*/}
+                    {/*    <p><br></br></p>*/}
+                    {/*    <p className={'post-text'}>and Another post</p>*/}
+                    {/*    <p className={'post-text'}>with multiple lines</p>*/}
+                    {/*</div>*/}
+                    {/*<div className='postContainer'>*/}
+                    {/*    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>*/}
+                    {/*    <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Allianz Bank</p>*/}
+                    {/*    <p><br></br></p>*/}
+                    {/*    <p className={'post-text'}>and Another post</p>*/}
+                    {/*    <p className={'post-text'}>with one,</p>*/}
+                    {/*    <p className={'post-text'}>Two Three lines</p>*/}
+                    {/*</div>*/}
                 </div>
                 </div>
             </div>
