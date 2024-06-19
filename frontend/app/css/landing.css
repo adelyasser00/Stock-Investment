@@ -751,6 +751,12 @@ td:nth-last-child{
     font-size:0.9em;
     /*left:57px;*/
 }
+
+.save-button {
+    left:0;
+    top:40px;
+}
+
 @media (max-width: 1730px){
     .postArea{
         left:550px;

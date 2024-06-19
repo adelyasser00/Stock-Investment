@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation';
 import {checkAndUpdateFeed} from "@/lib/newsfeed/helper";
 import {search} from "@/lib/actions/user.actions"
 import SearchBar from './searchbar'
-import {getUserById} from '@/lib/actions/user.actions'
+import {getUserById, savePostToUser} from '@/lib/actions/user.actions'
 import {
   Chart as ChartJS,
   LineElement,
@@ -97,12 +97,19 @@ async function fetchRSS() {
         throw error;  // Rethrowing the error after logging
     }
 }
+async function savePost(article,clerkId){
+    console.log("saving this post")
+    console.log(article)
+   const result = await savePostToUser(article,clerkId)
+    console.log("save successful")
+    console.log(result)
+}
 
 function extractImageUrl(content) {
     // const imgTagMatch = content.match(/<img[^>]+src="([^">]+)"/);
     const imgTagMatch = content.slice(content.indexOf("src='") + 5).split("'")[0];
-    console.log("=======================================")
-    console.log("extraced image source:",imgTagMatch)
+    // console.log("=======================================")
+    // console.log("extraced image source:",imgTagMatch)
 
     return imgTagMatch ;
 }
@@ -434,6 +441,7 @@ const HomePage = () => {
                                     <img src={extractImageUrl(article.content)} alt="Post Image" className="post-image"/>
                                 </a>
                                 <p className='post-text'>{article.contentSnippet}</p>
+                                <button className='submit-button save-button' onClick={() => savePost(article,clerkId)}>Save</button>
                             </div>
                         </div>
                     ))}
