@@ -7,13 +7,14 @@ import Sidebar from './sidebar';
 import ChatComponent from './chatComponent';
 import { Line, Pie } from "react-chartjs-2";
 import Modal from './components/modal';
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
+import { clerkClient } from '@clerk/nextjs';
 import Page from './onboarding/page';
 import { useRouter } from 'next/navigation';
 import {checkAndUpdateFeed} from "@/lib/newsfeed/helper";
-// import type { GetServerSideProps, NextPage } from 'next';
-// import {handler} from '@/api/rss/rss'
-
+import {search} from "@/lib/actions/user.actions"
+import SearchBar from './searchbar'
+import {getUserById} from '@/lib/actions/user.actions'
 import {
   Chart as ChartJS,
   LineElement,
@@ -81,29 +82,7 @@ const salesData = {
  ]                   ,
 
 };
-// Function to open modal with company details
-// type Article = {
-//     title: string;
-//     link: string;
-//     pubDate: string;
-//     content: string;
-//     contentSnippet: string;
-// };
 
-// Define the getServerSideProps function
-// async function fetchRSS() {
-//     try {
-//         const response = await fetch('/api/rss/');  // Ensuring the correct API endpoint
-//         if (!response.ok) {
-//             throw new Error(`Failed to fetch articles: ${response.status} ${response.statusText}`);
-//         }
-//         console.log("Fetching RSS successfully");
-//         return await response.json();
-//     } catch (error) {
-//         console.error("Error fetching RSS:", error);
-//         throw error;  // Rethrowing the error after logging
-//     }
-// }
 
 async function fetchRSS() {
     try {
@@ -127,13 +106,13 @@ function extractImageUrl(content) {
 
     return imgTagMatch ;
 }
+async function getUserId (u){
+    return await getUserById(u)
+}
 
 const HomePage = () => {
-    const [articles, setArticles] = useState([]);
-    // const [isLoading, setIsLoading] = useState(true);
-    // const [error, setError] = useState(null);
 
-    // const articles = await fetchRSS();
+    const [articles, setArticles] = useState([]);
   const [activeTab, setActiveTab] = useState('Home');
   const [selectedStock, setSelectedStock] = useState('AAPL');
     const [selectedCompany, setSelectedCompany] = useState(null);
@@ -145,6 +124,16 @@ const HomePage = () => {
         return localStorage.getItem('hasCompletedOnboarding') !== 'true';
     });
     const router = useRouter();
+    const {user} = useUser();
+    const clerkId = user?.id
+
+    const [userId,setUserId] = useState(null)
+    useEffect(() => {
+        setUserId(getUserId(clerkId))
+        console.log(clerkId)
+        console.log(userId)
+        localStorage.setItem('clerkId',clerkId)
+    }, []);
 
     useEffect(() => {
         if (isFirstLogin) {
@@ -169,23 +158,13 @@ const HomePage = () => {
             .then(articles => {
                 console.log("articles received in frontend")
                 setArticles(articles);
-                // setIsLoading(false);  // Set loading to false once data is fetched
                 console.log("loading done")
             })
             .catch(error => {
                 console.error("Error fetching RSS:", error);
-                // setError(error);
-                // setIsLoading(false);  // Ensure loading is set to false even on error
             });
     }, []);
 
-    // if (isLoading) {
-    //     return <div>Loading...</div>;  // or any fancy loader/spinner
-    // }
-    //
-    // if (error) {
-    //     return <div>Error: {error.message}</div>;  // Display error message
-    // }
 
     const handleCompanyClick = (company) => {
         if (company && company.name && company.currentStockPrice != null) {
@@ -241,6 +220,35 @@ const HomePage = () => {
             stockChange: 0
         }
         ]);
+    const handleSearchResults = (searchResults) => {
+        // Assuming searchResults.data contains the array of results
+        if (searchResults.data.length > 0) {
+
+        const updatedCompanies = searchResults.data.map(result => ({
+            // Use 'ticker' as a name if 'name' is not available in the result
+            name: result.companyName || result.ticker || "No Company Name", // Using 'ticker' as the name if 'name' is absent
+            description: "No description available.", // Default text since description isn't part of the results
+            currentStockPrice: Math.random() * 100, // Simulated stock price if not in the results
+            stockChange: Math.random() >= 0.5 ? 1 : -1 // Simulated stock change
+        }));
+        setCompanies(updatedCompanies);
+    }
+        else {
+            setCompanies(
+                [
+                    {
+                        name: "No Results Found",
+                        description: "No results found for your search.",
+                        currentStockPrice: 0,
+                        stockChange: 0
+                    }
+                ]
+            );
+        }
+    };
+
+
+
 
     // Use effect to simulate stock price updates
     useEffect(() => {
@@ -372,7 +380,7 @@ const HomePage = () => {
 
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className='userButton'>
-            <UserButton  />
+            <UserButton afterSignOutUrl={"https://8adc-197-246-35-202.ngrok-free.app"} />
         </div>
 
 
@@ -635,7 +643,7 @@ const HomePage = () => {
           {activeTab === 'Search' && (
               <div>
                   <div className={'bigSectionBG searchContainer'}>
-                      <Input className="searchBar"/>
+                      <SearchBar onSearchResults={handleSearchResults} />
                       <Table className="SearchResultsTable">
                           {/* Tabletjsx content */}
                           <TableBody>
