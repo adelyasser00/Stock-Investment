@@ -108,6 +108,7 @@ async function savePost(article,clerkId){
     fetchSavedPosts(clerkId)
         .then(savedArticles=>{
             console.log("saved articles received in frontend")
+            savedArticles.reverse();
             setSavedArticles(savedArticles);
             console.log("loading saved articles done")
         })
@@ -198,6 +199,8 @@ const HomePage = () => {
         fetchSavedPosts(clerkId)
             .then(savedArticles=>{
                 console.log("saved articles received in frontend")
+                // get by newest saved first
+                savedArticles.reverse();
                 setSavedArticles(savedArticles);
                 console.log("loading saved articles done")
             })

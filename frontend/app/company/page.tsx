@@ -5,9 +5,15 @@ import '../css/landing.css';
 import Navbar from '../navbar';
 import Sidebar from './sidebar'; // Import the Sidebar component
 import { Line, Pie } from "react-chartjs-2";
-import { UserButton } from "@clerk/nextjs";
 import Modal from '../components/modal';
-
+import { UserButton, useUser } from "@clerk/nextjs";
+import { clerkClient } from '@clerk/nextjs';
+import Page from '../onboarding/page';
+import { useRouter } from 'next/navigation';
+import {checkAndUpdateFeed} from "@/lib/newsfeed/helper";
+import {search} from "@/lib/actions/user.actions"
+import SearchBar from '../searchbar'
+import {getUserById, savePostToUser, getSavedPosts} from '@/lib/actions/user.actions'
 import {
   Chart as ChartJS,
   LineElement,
@@ -41,8 +47,6 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Input } from '@/components/ui/input'
-import {useRouter} from "next/navigation";
-
 const salesData = {
     AAPL: [
         { month: "January"  , sales: 100 } ,
@@ -72,10 +76,67 @@ const salesData = {
 };
 // Function to open modal with company details
 
+async function fetchRSS() {
+    try {
+        const response = await checkAndUpdateFeed()
+        if (response.length==0) {
+            throw new Error(`Failed to fetch articles`);
+        }
+        console.log("RSS received in fetchRSS()");
+        return response;
+    } catch (error) {
+        console.error("Error fetching RSS:", error);
+        throw error;  // Rethrowing the error after logging
+    }
+}
+async function savePost(article,clerkId){
+    console.log("saving this post")
+    console.log(article)
+    const result = await savePostToUser(article,clerkId)
+    console.log("save successful")
+    console.log(result)
+    // re-fetch saved posts for the same session
+    console.log("fetching the updated saved posts")
+    fetchSavedPosts(clerkId)
+        .then(savedArticles=>{
+            console.log("saved articles received in frontend")
+            savedArticles.reverse();
+            setSavedArticles(savedArticles);
+            console.log("loading saved articles done")
+        })
+        .catch(error => {
+            console.error("Error fetching saved posts:", error);
+        });
+}
+async function fetchSavedPosts(clerkId){
+    try{
+        const response = await getSavedPosts(clerkId)
+        console.log("saved posts received")
+        console.log(response)
+        return response
+    } catch(error){
+        console.error("Error fetching saved post:", error);
+        throw error;  // Rethrowing the error after logging
+    }
+}
+
+function extractImageUrl(content) {
+    // const imgTagMatch = content.match(/<img[^>]+src="([^">]+)"/);
+    const imgTagMatch = content.slice(content.indexOf("src='") + 5).split("'")[0];
+    // console.log("=======================================")
+    // console.log("extraced image source:",imgTagMatch)
+
+    return imgTagMatch ;
+}
+async function getUserId (u){
+    return await getUserById(u)
+}
 
 
 
 const HomePage = () => {
+    const [savedArticles, setSavedArticles] = useState([]);
+    const [articles, setArticles] = useState([]);
     const [activeTab, setActiveTab] = useState('Feed');
     const [selectedStock, setSelectedStock] = useState('AAPL');
     const [selectedCompany, setSelectedCompany] = useState(null);
@@ -87,6 +148,17 @@ const HomePage = () => {
         return localStorage.getItem('hasCompletedOnboarding') !== 'true';
     });
     const router = useRouter();
+    const {user} = useUser();
+    const clerkId = user?.id
+
+    const [userId,setUserId] = useState(null)
+
+    useEffect(() => {
+        setUserId(getUserId(clerkId))
+        console.log(clerkId)
+        console.log(userId)
+        localStorage.setItem('clerkId',clerkId)
+    }, []);
 
     useEffect(() => {
         if (isFirstLogin) {
@@ -106,6 +178,30 @@ const HomePage = () => {
 
         return () => window.removeEventListener('storage', handleStorageChange);
     }, []);
+    useEffect(() => {
+        fetchRSS()
+            .then(articles => {
+                console.log("articles received in frontend")
+                setArticles(articles);
+                console.log("loading done")
+            })
+            .catch(error => {
+                console.error("Error fetching RSS:", error);
+            });
+    }, []);
+    useEffect(()=>{
+        fetchSavedPosts(clerkId)
+            .then(savedArticles=>{
+                console.log("saved articles received in frontend")
+                // get by newest saved first
+                savedArticles.reverse();
+                setSavedArticles(savedArticles);
+                console.log("loading saved articles done")
+            })
+            .catch(error => {
+                console.error("Error fetching saved posts:", error);
+            });
+    })
 
 
     const handleCompanyClick = (company) => {
@@ -162,6 +258,32 @@ const HomePage = () => {
             stockChange: 0
         }
     ]);
+    const handleSearchResults = (searchResults) => {
+        // Assuming searchResults.data contains the array of results
+        if (searchResults.data.length > 0) {
+
+            const updatedCompanies = searchResults.data.map(result => ({
+                // Use 'ticker' as a name if 'name' is not available in the result
+                name: (result.companyName||"") +("\n("+ result.ticker+")")||"" || "No Company Name", // Using 'ticker' as the name if 'name' is absent
+                description: result.description||"No description available.", // Default text since description isn't part of the results
+                currentStockPrice: Math.random() * 100, // Simulated stock price if not in the results
+                stockChange: Math.random() >= 0.5 ? 1 : -1 // Simulated stock change
+            }));
+            setCompanies(updatedCompanies);
+        }
+        else {
+            setCompanies(
+                [
+                    {
+                        name: "No Results Found",
+                        description: "No results found for your search.",
+                        currentStockPrice: 0,
+                        stockChange: 0
+                    }
+                ]
+            );
+        }
+    };
 
     // Use effect to simulate stock price updates
     useEffect(() => {
@@ -310,144 +432,26 @@ const HomePage = () => {
 
 
                         </div>
-                        <div className='postArea'>
-                            <div className='postContainer'>
-                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
-                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;HSBC CO.</p>
-                                <p><br></br></p>
-                                <p className={'post-text'}>Tech Innovations Inc. has outperformed market expectations in
-                                    the latest financial quarter, registering a significant increase in revenue. This
-                                    growth is attributed primarily to robust sales in their innovative consumer
-                                    technology sector.</p>
-                                <p className={'post-text'}>However, despite the increase in revenue, the company's
-                                    profit margins have faced pressures due to rising raw material costs and increased
-                                    expenditures on research and development.</p>
-                                <p className={'post-text'}>The company's executive team remains optimistic about future
-                                    prospects, citing strong pre-orders for upcoming products and a stable increase in
-                                    market share across key regions.</p>
-                                <p className={'post-text'}>In response to financial results, Tech Innovations Inc. has
-                                    announced plans to expand into new international markets, aiming to capitalize on
-                                    emerging consumer trends and increase global reach.</p>
-                                <p className={'post-text'}>Analysts have adjusted their forecasts for the company’s
-                                    stock, with several major firms upgrading their ratings, reflecting confidence in
-                                    the company’s strategic direction and its potential for sustained growth.</p>
-
-                                <div className='post-imageContainer'>
-                                    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
-                                    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
-                                </div>
-                            </div>
-                            <div className='postContainer'>
-                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
-                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Ezz Steel Company Ltd.</p>
-                                <p><br></br></p>
-                                <p className={'post-text'}>Global Pharma Co. reported a mixed financial performance this
-                                    quarter, with revenue slightly below expectations due to disruptions in the supply
-                                    chain.
-                                    The impact was notably significant in overseas markets.</p>
-                                <p className={'post-text'}>Despite the revenue shortfall, the company achieved a higher
-                                    profit
-                                    margin thanks to cost-saving measures implemented in the previous year.</p>
-                                <p className={'post-text'}>The firm has successfully launched two new blockbuster drugs,
-                                    which
-                                    are expected to contribute significantly to future revenues, as confirmed by the
-                                    early
-                                    strong market acceptance.</p>
-                                <p className={'post-text'}>In an effort to boost investor confidence, Global Pharma Co.
-                                    has
-                                    announced an increase in their quarterly dividend and a new share buyback
-                                    program.</p>
-                                <p className={'post-text'}>Market analysts remain cautiously optimistic about the
-                                    company’s
-                                    trajectory, citing the need for continued innovation and market expansion to sustain
-                                    growth.</p>
-                                <div className='post-imageContainer'>
-                                    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
-                                    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
-                                    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
-
-                                </div>
-                            </div>
-                            <div className='postContainer'>
-                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
-                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Allianz Bank</p>
-                                <p><br></br></p>
-                                <p className={'post-text'}>EcoEnergy Solutions has exceeded analyst predictions with a
-                                    record-breaking revenue this quarter, driven by a surge in demand for renewable
-                                    energy
-                                    solutions.</p>
-                                <p className={'post-text'}>Operating expenses have risen in tandem with sales,
-                                    reflecting the
-                                    company's investment in scaling up production capabilities and enhancing their
-                                    supply
-                                    chain.</p>
-                                <p className={'post-text'}>The company's strategic partnerships with major industrial
-                                    players
-                                    have been instrumental in achieving these results, positioning EcoEnergy as a leader
-                                    in
-                                    sustainable energy technologies.</p>
-                                <p className={'post-text'}>Looking forward, EcoEnergy is expanding its R&D department to
-                                    focus
-                                    on next-generation solar panels and energy storage systems.</p>
-                                <p className={'post-text'}>With government subsidies expected to bolster the renewable
-                                    sector,
-                                    analysts are revising their growth projections upwards for EcoEnergy Solutions.</p>
-
-                                <div className='post-imageContainer'>
-                                    <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="post-image"/>
-                                </div>
-                            </div>
-                            <div className='postContainer'>
-                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
-                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Fathallah Gomla Market</p>
-                                <p><br></br></p>
-                                <p className={'post-text'}>Luxury Living Furnishings reported a decline in quarterly
-                                    revenue,
-                                    attributing the downturn to a sluggish luxury goods market and decreased consumer
-                                    spending
-                                    in key demographics.</p>
-                                <p className={'post-text'}>Despite lower sales, the company has managed to maintain
-                                    profitability through stringent cost controls and inventory management.</p>
-                                <p className={'post-text'}>In response to current market conditions, Luxury Living is
-                                    pivoting
-                                    towards more online sales channels and enhancing their digital marketing
-                                    efforts.</p>
-                                <p className={'post-text'}>The company also announced a new designer partnership aimed
-                                    at
-                                    rejuvenating its product line and attracting a younger clientele.</p>
-                                <p className={'post-text'}>Analysts are closely watching Luxury Living's strategic
-                                    shifts, with
-                                    some expressing concerns about the brand's ability to adapt to rapidly changing
-                                    consumer
-                                    preferences.</p>
-
-                            </div>
-                            <div className='postContainer'>
-                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
-                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;HSBC CO.</p>
-                                <p><br></br></p>
-                                <p className={'post-text'}>This is a post</p>
-                            </div>
-                            <div className='postContainer'>
-                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
-                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Ezz Steel Company Ltd.</p>
-                                <p><br></br></p>
-                                <p className={'post-text'}>This is another post</p>
-                            </div>
-                            <div className='postContainer'>
-                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
-                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Allianz Bank</p>
-                                <p><br></br></p>
-                                <p className={'post-text'}>and Another post</p>
-                                <p className={'post-text'}>with multiple lines</p>
-                            </div>
-                            <div className='postContainer'>
-                                <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" className="companyIcon"/>
-                                <p style={{color: '#7140DEFF'}}>&emsp;&emsp;&ensp;Allianz Bank</p>
-                                <p><br></br></p>
-                                <p className={'post-text'}>and Another post</p>
-                                <p className={'post-text'}>with one,</p>
-                                <p className={'post-text'}>Two Three lines</p>
+                        <div className='bottomOfHomeChart'>
+                            <div className='postArea'>
+                                {articles.map((article, index) => (
+                                    <div key={index} className='postContainer'>
+                                        <div className='postContent'>
+                                            <p className='postTitle'>
+                                                <a href={article.link}>{article.title}</a>
+                                            </p>
+                                            <p className='postPubDate'>{article.pubDate}</p>
+                                            <a href={article.link}>
+                                                <img src={extractImageUrl(article.content)} alt="Post Image"
+                                                     className="post-image"/>
+                                            </a>
+                                            <p className='post-text'>{article.contentSnippet}</p>
+                                            <button className='submit-button save-button'
+                                                    onClick={() => savePost(article, clerkId)}>Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
 
@@ -609,7 +613,7 @@ const HomePage = () => {
                         <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
                             <div style={{position: 'relative'}}>
 
-                                {/* Adding an image below the close button but aligned to the top right corner */}
+                            {/* Adding an image below the close button but aligned to the top right corner */}
                                 <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" style={{
                                     position: 'absolute',
                                     right: '10px',
@@ -675,6 +679,29 @@ const HomePage = () => {
                         <p>
                             Telephone: +20 1014066663
                         </p>
+                    </div>
+                )}
+                {activeTab === 'Saved Posts' && (
+                    <div>
+                        <div className='bottomOfHomeChart'>
+                            <div className='postArea'>
+                                {savedArticles.map((article, index) => (
+                                    <div key={index} className='postContainer'>
+                                        <div className='postContent'>
+                                            <p className='postTitle'>
+                                                <a href={article.link}>{article.title}</a>
+                                            </p>
+                                            <p className='postPubDate'>{article.pubDate}</p>
+                                            <a href={article.link}>
+                                                <img src={extractImageUrl(article.content)} alt="Post Image"
+                                                     className="post-image"/>
+                                            </a>
+                                            <p className='post-text'>{article.contentSnippet}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>
