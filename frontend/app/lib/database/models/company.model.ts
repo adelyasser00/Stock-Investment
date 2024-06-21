@@ -38,6 +38,7 @@ const CompanySchema = new Schema({
       type:Schema.Types.ObjectId,
       ref:'Post'}]
 });
+CompanySchema.index({ companyName: 'text', description: 'text', ticker: 'text' });
 
 const Company = models?.Company || mongoose.model("Company", CompanySchema);
 

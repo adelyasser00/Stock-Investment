@@ -233,8 +233,8 @@ const HomePage = () => {
 
         const updatedCompanies = searchResults.data.map(result => ({
             // Use 'ticker' as a name if 'name' is not available in the result
-            name: result.companyName || result.ticker || "No Company Name", // Using 'ticker' as the name if 'name' is absent
-            description: "No description available.", // Default text since description isn't part of the results
+            name: (result.companyName||"") +("\n("+ result.ticker+")")||"" || "No Company Name", // Using 'ticker' as the name if 'name' is absent
+            description: result.description||"No description available.", // Default text since description isn't part of the results
             currentStockPrice: Math.random() * 100, // Simulated stock price if not in the results
             stockChange: Math.random() >= 0.5 ? 1 : -1 // Simulated stock change
         }));
@@ -387,7 +387,7 @@ const HomePage = () => {
 
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className='userButton'>
-            <UserButton afterSignOutUrl={"https://8adc-197-246-35-202.ngrok-free.app"} />
+            <UserButton afterSignOutUrl={"https://8adc-197-246-35-202.ngrok-free.app"}  />
         </div>
 
 

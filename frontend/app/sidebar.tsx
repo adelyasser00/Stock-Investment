@@ -39,7 +39,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
 
     return (
         <aside>
-            <div className={`${styles.sidebar} ${isCollapsed ? styles.sidebarCollapsed : ''}`}>
+            <div className={`${styles.sidebar} ${isCollapsed ? styles.sidebarHidden : ''}`}>
                 {isCollapsed ? (
                     <button onClick={toggleSidebar} className={styles.toggleButton}>
                         <img src="/css/icons/sdbar_menu.png" alt="Expand" className={styles.menuIcon} />

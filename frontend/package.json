@@ -24,6 +24,7 @@
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
+    "react-pro-sidebar": "^1.1.0",
     "rss-parser": "^3.13.0",
     "svix": "^1.23.0",
     "tailwind-merge": "^2.3.0",

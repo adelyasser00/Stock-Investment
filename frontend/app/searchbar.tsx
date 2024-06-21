@@ -12,7 +12,7 @@ const SearchBar = ({onSearchResults}) => {
         if (event.key === 'Enter') {
             event.preventDefault(); // Prevent the default form submission behavior
             console.log('Submitting:', inputValue);
-            const request = { ticker: inputValue };
+            const request = { searchText: inputValue };
             try {
                 const response = await search(request); // Assuming search returns a promise
                 console.log('Search response:', response);

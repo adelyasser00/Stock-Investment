@@ -17,11 +17,18 @@
 }
 
 .sidebarHidden {
-  margin-left: -250px;
+  margin-left: -65px;
+  width:70px;
+
+}
+.sidebarHidden:hover{
+  margin-left: 0;
+
 }
 
 .sidebarVisible {
   margin-left: 0;
+
 }
 
 .menuItem {
@@ -94,28 +101,28 @@
   background-color: white;
   border: none;
   cursor: pointer;
-  visibility: hidden;
+  /*visibility: hidden;*/
 }
 .sidebarCollapsed {
-  width: 70px; /* Even narrower if fully collapsed */
+  width: 0; /* Even narrower if fully collapsed */
   height:100vh;
 }
 
-.sidebar:not(.sidebarCollapsed) .menuItem div {
+.sidebar:not(.sidebarHidden) .menuItem div {
   opacity: 100;
 }
 
-@media (max-width: 768px) {
-  .sidebar {
-    width: 70px;
-    height: 100vh;/* Collapsed width */
-  }
+/*@media (max-width: 768px) {*/
+/*  .sidebar {*/
+/*    width: 70px;*/
+/*    height: 100vh;!* Collapsed width *!*/
+/*  }*/
 
-  .menuItem div {
-    display: none; /* Hide text labels in collapsed state */
-  }
+/*  .menuItem div {*/
+/*    display: none; !* Hide text labels in collapsed state *!*/
+/*  }*/
 
-  .toggleButton {
-    display: flex; /* Show button only in responsive mode */
-  }
-}
+/*  .toggleButton {*/
+/*    display: flex; !* Show button only in responsive mode *!*/
+/*  }*/
+/*}*/
