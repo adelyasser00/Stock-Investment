@@ -28,7 +28,8 @@ const Page = () => {
     const handleCompleteOnboarding = () => {
         localStorage.setItem('hasCompletedOnboarding', 'true');
         console.log('Submitting final preferences:', preferences);
-        router.push('/');  // Redirect to the homepage
+        window.location.href='/';  // Redirect to the homepage
+
     };
 
     const handleNext = () => {
