@@ -390,6 +390,7 @@ export async function savePostToUser(postData: PostParams, userId) {
     const newPost = new Post({
       title: postData.title,
       content: postData.content,
+      contentSnippet: postData.contentSnippet,
       image: postData.image,
       link: postData.link
     });
@@ -407,6 +408,27 @@ export async function savePostToUser(postData: PostParams, userId) {
     console.error('Failed to save post or update user:', error);
     throw error;
   }
+}
+
+export async function getSavedPosts(userId) {
+    console.log("moved to actions")
+    try {
+        await connectToDatabase();
+
+        const user = await User.findOne({ clerkId : userId });
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return await Post.find({
+            '_id': { $in: user.savedlist }  // assuming savedlist is an array of ObjectIds
+        }).lean();  // Using lean to get plain JavaScript objects
+
+
+
+    } catch (error) {
+        console.error('Failed to save post or update user:', error);
+        throw error;
+    }
 }
 
 // // USE CREDITS

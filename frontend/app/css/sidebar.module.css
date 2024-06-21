@@ -56,8 +56,8 @@
   margin-top: 50px; /* Push the fourth item and the ones after it to the bottom */
 }
 
-.menuItem:nth-child(7) {
-  margin-top: 250px; /* Push the fifth item and the ones after it to the bottom */
+.menuItem:nth-child(8) {
+  margin-top: 170px; /* Push the fifth item and the ones after it to the bottom */
 }
 
 .menuItem:hover {
@@ -110,6 +110,28 @@
 
 .sidebar:not(.sidebarHidden) .menuItem div {
   opacity: 100;
+}
+@media (max-width: 768px) {
+  .sidebar {
+    width:70px;
+    height:100vh;
+  }
+  .sidebarHidden{
+    width:70px;
+    margin-left:0;
+  }
+  .sidebarVisible{
+    width:70px;
+    margin-left:0;
+  }
+  .toggleButton{
+    visibility: hidden;
+  }
+  .menuIcon{
+    margin-top:10px;
+    margin-bottom:10px;
+  }
+
 }
 
 /*@media (max-width: 768px) {*/

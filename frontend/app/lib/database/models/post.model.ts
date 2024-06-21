@@ -8,6 +8,7 @@ const PostSchema = new Schema({
   },
 	author:Schema.Types.ObjectId,
     content: String,
+    contentSnippet: String,
     upvotes: { type: Number, default: 0 },
     downvotes: { type: Number, default: 0 },
     title:String,

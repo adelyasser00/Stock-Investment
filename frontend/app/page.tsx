@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation';
 import {checkAndUpdateFeed} from "@/lib/newsfeed/helper";
 import {search} from "@/lib/actions/user.actions"
 import SearchBar from './searchbar'
-import {getUserById, savePostToUser} from '@/lib/actions/user.actions'
+import {getUserById, savePostToUser, getSavedPosts} from '@/lib/actions/user.actions'
 import {
   Chart as ChartJS,
   LineElement,
@@ -103,6 +103,28 @@ async function savePost(article,clerkId){
    const result = await savePostToUser(article,clerkId)
     console.log("save successful")
     console.log(result)
+    // re-fetch saved posts for the same session
+    console.log("fetching the updated saved posts")
+    fetchSavedPosts(clerkId)
+        .then(savedArticles=>{
+            console.log("saved articles received in frontend")
+            setSavedArticles(savedArticles);
+            console.log("loading saved articles done")
+        })
+        .catch(error => {
+            console.error("Error fetching saved posts:", error);
+        });
+}
+async function fetchSavedPosts(clerkId){
+    try{
+        const response = await getSavedPosts(clerkId)
+        console.log("saved posts received")
+        console.log(response)
+        return response
+    } catch(error){
+        console.error("Error fetching saved post:", error);
+        throw error;  // Rethrowing the error after logging
+    }
 }
 
 function extractImageUrl(content) {
@@ -119,6 +141,7 @@ async function getUserId (u){
 
 const HomePage = () => {
 
+    const [savedArticles, setSavedArticles] = useState([]);
     const [articles, setArticles] = useState([]);
   const [activeTab, setActiveTab] = useState('Home');
   const [selectedStock, setSelectedStock] = useState('AAPL');
@@ -171,6 +194,18 @@ const HomePage = () => {
                 console.error("Error fetching RSS:", error);
             });
     }, []);
+    useEffect(()=>{
+        fetchSavedPosts(clerkId)
+            .then(savedArticles=>{
+                console.log("saved articles received in frontend")
+                setSavedArticles(savedArticles);
+                console.log("loading saved articles done")
+            })
+            .catch(error => {
+                console.error("Error fetching saved posts:", error);
+            });
+    })
+
 
 
     const handleCompanyClick = (company) => {
@@ -738,10 +773,33 @@ const HomePage = () => {
                   <ChatComponent />
               </div>
           )}
+          {activeTab === 'Saved Posts' && (
+              <div>
+                  <div className='bottomOfHomeChart'>
+                      <div className='postArea'>
+                          {savedArticles.map((article, index) => (
+                              <div key={index} className='postContainer'>
+                                  <div className='postContent'>
+                                      <p className='postTitle'>
+                                          <a href={article.link}>{article.title}</a>
+                                      </p>
+                                      <p className='postPubDate'>{article.pubDate}</p>
+                                      <a href={article.link}>
+                                          <img src={extractImageUrl(article.content)} alt="Post Image"
+                                               className="post-image"/>
+                                      </a>
+                                      <p className='post-text'>{article.contentSnippet}</p>
+                                  </div>
+                              </div>
+                          ))}
+                      </div>
+                  </div>
+              </div>
+          )}
       </div>
 
     </div>
-  );
+    );
 };
 
 export default HomePage;

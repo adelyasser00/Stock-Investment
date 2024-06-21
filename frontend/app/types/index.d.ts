@@ -78,6 +78,7 @@ declare type CompanyQuery = {
 declare type PostParams = {
   title: string,
   content: string,
+  contentSnippet:string,
   image: string,
   link: string
 }
