@@ -29,14 +29,28 @@ const CompanySchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'User'
    }],
-   description: String,
+   description: String, // will be field for now
    photo: String,
    article: String,
-   stockClosingPrice: Number, //should be list of historical data
+   // stockClosingPrice: Number, //should be list of historical data
    ticker: String,
    posts: [{
       type:Schema.Types.ObjectId,
-      ref:'Post'}]
+      ref:'Post'}],
+   details: {
+        Open: String,
+        Volume: String,
+        Market_Cap: String,
+        Revenue: String,
+        PE_Ratio: String,
+        Dividend: String,
+        Shares_outstanding: String,
+    },
+    History: {
+        type: Map,
+        of: String
+    },
+
 });
 CompanySchema.index({ companyName: 'text', description: 'text', ticker: 'text' });
 

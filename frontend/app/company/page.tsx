@@ -415,7 +415,7 @@ const HomePage = () => {
 
             <Sidebar activeTab={activeTab} setActiveTab={setActiveTab}/>
             <div className='userButton'>
-                <UserButton/>
+                <UserButton afterSignOutUrl={"https://843e-41-45-12-162.ngrok-free.app"}  />
             </div>
 
             <div>
