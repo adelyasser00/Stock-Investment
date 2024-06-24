@@ -210,6 +210,23 @@ const HomePage = () => {
         }
     }, [clerkId]); // Ensuring fetch only runs when clerkId changes and exists
 
+    // Use effect to simulate stock price updates
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCompanies(companies => companies.map(company => {
+                const change = Math.random() < 0.5 ? -1 : 1; // Randomly decide direction
+                const fluctuation = Math.floor(Math.random() * 10); // Random price change
+                return {
+                    ...company,
+                    currentStockPrice: company.currentStockPrice + fluctuation * change,
+                    stockChange: change
+                };
+            }));
+        }, 5000); // Update every 5 seconds
+
+        return () => clearInterval(interval);
+    }, []);
+
 
 
 
