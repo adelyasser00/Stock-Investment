@@ -388,7 +388,9 @@
                     gradientColor: "#cccccc"
                 };
             }
-
+            dates.reverse()
+            console.log("print dates for colors:")
+            console.log(history[dates[0]],history[dates[1]])
             const lastPrice = parseFloat(history[dates[0]]);
             const secondLastPrice = parseFloat(history[dates[1]]);
 
@@ -576,6 +578,7 @@
                 const dates = Object.keys(selectedStock.History).sort((a, b) => {
                     return new Date(a as string).getTime() - new Date(b as string).getTime();
                 });
+                console.log("dates: ", dates)
                 const sales = dates.map(date => parseFloat(selectedStock.History[date]));
 
                 const color = calculateColor(selectedStock.History);  // Ensure calculateColor can handle an empty or undefined 'history'
