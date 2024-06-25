@@ -533,24 +533,27 @@
             };
         };
         useEffect(() => {
-            const dates = Object.keys(selectedStock.History).sort((a, b) => {
+            if (selectedStock){
+                const dates = Object.keys(selectedStock.History).sort((a, b) => {
                 return new Date(a as string).getTime() - new Date(b as string).getTime();
             });
-            const sales = dates.map(date => parseFloat(selectedStock.History[date]));
+                const sales = dates.map(date => parseFloat(selectedStock.History[date]));
 
-            // Assuming selectedStock is updated from somewhere, like a watchlist click
-            const newChartData = {
+                // Assuming selectedStock is updated from somewhere, like a watchlist click
+                const newChartData = {
 
-                labels: dates, // new labels array
-                datasets: [{
-                    label: `${selectedStock.ticker} Price`,
-                    data: sales,
-                    borderColor: "rgba(53, 162, 235, 0.5)",
-                    fill: false,
-                    borderWidth: 2
-                }]
-            };
-            setChartData(newChartData);
+                    labels: dates, // new labels array
+                    datasets: [{
+                        label: `${selectedStock.ticker} Price`,
+                        data: sales,
+                        borderColor: "rgba(53, 162, 235, 0.5)",
+                        fill: false,
+                        borderWidth: 2
+                    }]
+                };
+                setChartData(newChartData);
+            }
+
 
         }, [selectedStock]); // Dependency on selectedStock to update the chart when it changes
 
