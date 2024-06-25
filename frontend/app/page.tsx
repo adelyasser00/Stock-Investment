@@ -14,7 +14,8 @@ import { useRouter } from 'next/navigation';
 import {checkAndUpdateFeed} from "@/lib/newsfeed/helper";
 import {addToWatchlist, search} from "@/lib/actions/user.actions"
 import SearchBar from './searchbar'
-import {getUserById, savePostToUser, getSavedPosts} from '@/lib/actions/user.actions'
+import {getUserById, savePostToUser, getSavedPosts, addInvestment} from '@/lib/actions/user.actions'
+// import {AddInvestedStock} from './types/index'
 import {
   Chart as ChartJS,
   LineElement,
@@ -437,6 +438,29 @@ const HomePage = () => {
             },
         },
     };
+    const [stockName, setStockName] = useState('');
+    const [stockPrice, setStockPrice] = useState('');
+    const [amountPurchased, setAmountPurchased] = useState('');
+    const [purchaseDate, setPurchaseDate] = useState('');
+    const addInvestmentToCompany = async (event) => {
+        event.preventDefault(); // Prevent default form submission
+        const investment: AddInvestedStock = {
+            price: parseFloat(stockPrice),
+            numOfUnits: parseInt(amountPurchased, 10),
+            companyTicker: stockName,
+            date: new Date(purchaseDate),
+        };
+        try{
+            console.log('Submitting', { investment });
+            // Add your submit logic here, e.g., sending data to an API
+            await addInvestment(clerkId,investment)
+            console.log("added investment successfully")
+        } catch (error){
+            console.log(error)
+            alert("company not found!")
+        }
+
+    };
 
 
     return (
@@ -508,25 +532,55 @@ const HomePage = () => {
 
                       </div>
                       <div className='bottomLeftSectionBG'>
-                          <h3>Add your stocks</h3>
-                          <button className="submit-button"></button>
-                          <div className='form__group field'>
-                          <input type="text" className="form__field"/>
-                          <label htmlFor="name" className="form__label">Stock Name</label>
+                          <form onSubmit={addInvestmentToCompany}>
+                              <h3>Add your stocks</h3>
+                              <button type="submit" className="submit-button"></button>
+                              <div className='form__group field'>
+                                  <input
+                                      type="text"
+                                      className="form__field"
+                                      value={stockName}
+                                      onChange={(e) => setStockName(e.target.value)}
+                                      placeholder="Stock Ticker"
+                                      required
+                                  />
+                                  <label htmlFor="name" className="form__label">Stock Name</label>
+                              </div>
+                              <div className='form__group field'>
+                                  <input
+                                      type="text"
+                                      className="form__field"
+                                      value={stockPrice}
+                                      onChange={(e) => setStockPrice(e.target.value)}
+                                      placeholder="Stock Price"
+                                      required
+                                  />
+                                  <label htmlFor="stockPrice" className="form__label">$ Stock Price </label>
+                              </div>
+                              <div className='form__group field'>
+                                  <input
+                                      type="text"
+                                      className="form__field"
+                                      value={amountPurchased}
+                                      onChange={(e) => setAmountPurchased(e.target.value)}
+                                      placeholder="Amount Purchased"
+                                      required
+                                  />
+                                  <label htmlFor="amountPurchased" className="form__label">Amount Purchased</label>
+                              </div>
+                              <div className='form__group field'>
+                                  <input
+                                      type="date"
+                                      className="form__field"
+                                      value={purchaseDate}
+                                      onChange={(e) => setPurchaseDate(e.target.value)}
+                                      required
+                                  />
+                                  <label htmlFor="purchaseDate" className="form__label">Purchase Date</label>
+                              </div>
+
+                          </form>
                       </div>
-                      <div className='form__group field'>
-                          <input type="text" className="form__field"/>
-                          <label htmlFor="name" className="form__label">$ Stock Price </label>
-                      </div>
-                      <div className='form__group field'>
-                          <input type="text" className="form__field"/>
-                          <label htmlFor="name" className="form__label">Amount Purchased</label>
-                      </div>
-                      <div className='form__group field'>
-                          <input type="date" className="form__field"/>
-                          <label htmlFor="name" className="form__label">Purchase date</label>
-                      </div>
-                  </div>
                   </div>
               </div>
           )}
@@ -562,9 +616,9 @@ const HomePage = () => {
           {activeTab === 'Search' && (
               <div>
                   <div className={'bigSectionBG searchContainer'}>
-                      <SearchBar onSearchResults={handleSearchResults} />
+                      <SearchBar onSearchResults={handleSearchResults}/>
                       <Table className="SearchResultsTable">
-                          {/* Tabletjsx content */}
+                      {/* Tabletjsx content */}
                           <TableBody>
                               {companies.map((company, index) => (
                                   <TableRow key={index} onClick={() => handleCompanyClick(company)}>

@@ -19,7 +19,8 @@ declare type UpdateUserParams = {
 declare type AddInvestedStock = {
   price: Number;
   numOfUnits: Number;
-  companyTicker: string;F
+  companyTicker: string;
+  date: Date;
 }
 
 // ====== COMPANY PARAMS
