@@ -133,6 +133,20 @@ export async function removeFromWatchlist(clerkId: string, companyId: string) {
     handleError(error);
  }
 }
+export async function getWatchlist(clerkId){
+    try{
+       await connectToDatabase()
+       const user = await User.findOne({clerkId:clerkId})
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return await Company.find({
+            '_id': { $in: user.watchlist }  // assuming savedlist is an array of ObjectIds
+        }).lean();
+    }  catch (error) {
+        handleError(error);
+    }
+}
 
 export async function addInvestment(userClerkId: string, investment: AddInvestedStock) {
   try {
@@ -162,7 +176,7 @@ export async function addInvestment(userClerkId: string, investment: AddInvested
     await user.save(); 
 
   } catch (error) {
-    handleError(error); 
+    handleError(error);
   }
 }
 

@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation';
 import {checkAndUpdateFeed} from "@/lib/newsfeed/helper";
 import {addToWatchlist, search} from "@/lib/actions/user.actions"
 import SearchBar from './searchbar'
-import {getUserById, savePostToUser, getSavedPosts, addInvestment} from '@/lib/actions/user.actions'
+import {getUserById, savePostToUser, getSavedPosts, addInvestment, getWatchlist} from '@/lib/actions/user.actions'
 // import {AddInvestedStock} from './types/index'
 import {
   Chart as ChartJS,
@@ -153,9 +153,19 @@ const handleAddToWatchlistClick = async (clerkId,company) => {
         alert('Failed to add to watchlist.');
     }
 };
+async function fetchWatchlist(clerkId){
+    try{
+        const response = await getWatchlist(clerkId);
+        console.log("watchlist received")
+        console.log(response)
+        return response
+    } catch(error){
+        console.error("Error fetching watchlist:", error);
+        throw error;  // Rethrowing the error after logging
+    }
+}
 
 const HomePage = () => {
-
     const [savedArticles, setSavedArticles] = useState([]);
     const [articles, setArticles] = useState([]);
   const [activeTab, setActiveTab] = useState('Home');
@@ -223,7 +233,19 @@ const HomePage = () => {
                 });
         }
     }, [clerkId]); // Ensuring fetch only runs when clerkId changes and exists
-
+    useEffect(()=>{
+        if (clerkId){
+            fetchWatchlist(clerkId)
+                .then(watchlist =>{
+                    console.log("watchlist received in frontend")
+                    setWatchlist(watchlist)
+                    console.log("loading watchlist done")
+                })
+                .catch(error => {
+                    console.error("Error fetching watchlist:", error);
+                });
+        }
+    },[clerkId]);
     // Use effect to simulate stock price updates
     useEffect(() => {
         const interval = setInterval(() => {
