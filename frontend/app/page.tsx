@@ -12,7 +12,7 @@ import { clerkClient } from '@clerk/nextjs';
 import Page from './onboarding/page';
 import { useRouter } from 'next/navigation';
 import {checkAndUpdateFeed} from "@/lib/newsfeed/helper";
-import {search} from "@/lib/actions/user.actions"
+import {addToWatchlist, search} from "@/lib/actions/user.actions"
 import SearchBar from './searchbar'
 import {getUserById, savePostToUser, getSavedPosts} from '@/lib/actions/user.actions'
 import {
@@ -140,6 +140,19 @@ async function getUserId (u){
     return await getUserById(u)
 }
 
+const handleAddToWatchlistClick = async (clerkId,company) => {
+    try {
+        console.log("company is: "+ company.ticker)
+        console.log("adding: " + company._id)
+        const added = await addToWatchlist(clerkId, company._id);  // Assuming each company has an _id field
+        console.log('User added:', added);
+        alert(`${company.name} added to your watchlist!`);
+    } catch (error) {
+        console.error('Error adding to watchlist:', error);
+        alert('Failed to add to watchlist.');
+    }
+};
+
 const HomePage = () => {
 
     const [savedArticles, setSavedArticles] = useState([]);
@@ -218,8 +231,8 @@ const HomePage = () => {
                 const fluctuation = Math.floor(Math.random() * 10); // Random price change
                 return {
                     ...company,
-                    currentStockPrice: company.currentStockPrice + fluctuation * change,
-                    stockChange: change
+                    // currentStockPrice: company.currentStockPrice + fluctuation * change,
+                    // stockChange: change
                 };
             }));
         }, 5000); // Update every 5 seconds
@@ -231,8 +244,10 @@ const HomePage = () => {
 
 
     const handleCompanyClick = (company) => {
-        if (company && company.name && company.currentStockPrice != null) {
+        if (company && company.name) {
             setSelectedCompany(company);
+            console.log("selected Company: " + company.ticker)
+            console.log(company.history['06/13/2024'])
             setIsModalOpen(true);
         } else {
             console.error("Invalid company data");
@@ -259,30 +274,30 @@ const HomePage = () => {
     // Stock companies data and stock price updater
     const [companies, setCompanies] = useState([
         // Initial stock data
-        {
-            name: "Quantum Solutions",
-            description: "Quantum Solutions stands at the forefront of technology innovation, providing robust IT solutions that drive efficiency and growth. Specializing in cloud services, cybersecurity, and custom software development, we empower businesses to thrive in a digital-first world. Our commitment to excellence and innovation ensures that our clients receive the most advanced and reliable services available.",
-            currentStockPrice: 150,
-            stockChange: 0
-        },
-        {
-            name: "GreenLeaf Renewables",
-            description: "GreenLeaf Renewables is dedicated to advancing the adoption of sustainable energy solutions. We specialize in the development of cutting-edge solar and wind technology projects that reduce carbon footprints and foster sustainable development. Our mission is to make renewable energy accessible and efficient for all, ensuring a greener, more sustainable future.",
-            currentStockPrice: 120,
-            stockChange: 0
-        },
-        {
-            name: "TechBridge Communications",
-            description: "TechBridge Communications is a leader in telecommunications, offering a wide range of services including fiber optics installation, 5G network services, and comprehensive infrastructure management. We are committed to bridging the digital divide by enhancing connectivity in both urban and remote areas, thus facilitating seamless communication and business operations.",
-            currentStockPrice: 135,
-            stockChange: 0
-        },
-        {
-            name: "HealthPath Diagnostics",
-            description: "HealthPath Diagnostics revolutionizes the healthcare industry by providing cutting-edge diagnostic tools and AI-driven analysis. Our technologies improve patient outcomes and enhance preventive care strategies through innovative, accurate, and accessible diagnostic solutions. We are dedicated to transforming healthcare with technology, making high-quality care achievable for everyone.",
-            currentStockPrice: 160,
-            stockChange: 0
-        }
+        // {
+        //     name: "Quantum Solutions",
+        //     description: "Quantum Solutions stands at the forefront of technology innovation, providing robust IT solutions that drive efficiency and growth. Specializing in cloud services, cybersecurity, and custom software development, we empower businesses to thrive in a digital-first world. Our commitment to excellence and innovation ensures that our clients receive the most advanced and reliable services available.",
+        //     currentStockPrice: 150,
+        //     stockChange: 0
+        // },
+        // {
+        //     name: "GreenLeaf Renewables",
+        //     description: "GreenLeaf Renewables is dedicated to advancing the adoption of sustainable energy solutions. We specialize in the development of cutting-edge solar and wind technology projects that reduce carbon footprints and foster sustainable development. Our mission is to make renewable energy accessible and efficient for all, ensuring a greener, more sustainable future.",
+        //     currentStockPrice: 120,
+        //     stockChange: 0
+        // },
+        // {
+        //     name: "TechBridge Communications",
+        //     description: "TechBridge Communications is a leader in telecommunications, offering a wide range of services including fiber optics installation, 5G network services, and comprehensive infrastructure management. We are committed to bridging the digital divide by enhancing connectivity in both urban and remote areas, thus facilitating seamless communication and business operations.",
+        //     currentStockPrice: 135,
+        //     stockChange: 0
+        // },
+        // {
+        //     name: "HealthPath Diagnostics",
+        //     description: "HealthPath Diagnostics revolutionizes the healthcare industry by providing cutting-edge diagnostic tools and AI-driven analysis. Our technologies improve patient outcomes and enhance preventive care strategies through innovative, accurate, and accessible diagnostic solutions. We are dedicated to transforming healthcare with technology, making high-quality care achievable for everyone.",
+        //     currentStockPrice: 160,
+        //     stockChange: 0
+        // }
         ]);
     const handleSearchResults = (searchResults) => {
         // Assuming searchResults.data contains the array of results
@@ -292,6 +307,10 @@ const HomePage = () => {
             // Use 'ticker' as a name if 'name' is not available in the result
             name: (result.companyName||"") +("\n("+ result.ticker+")")||"" || "No Company Name", // Using 'ticker' as the name if 'name' is absent
             description: result.description||"No description available.", // Default text since description isn't part of the results
+            ticker:result.ticker,
+            details: result.details,
+            history: result.History,
+            _id: result._id
         }));
         setCompanies(updatedCompanies);
     }
@@ -425,7 +444,8 @@ const HomePage = () => {
 
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className='userButton'>
-            <UserButton afterSignOutUrl={"https://843e-41-45-12-162.ngrok-free.app"}  />
+            {/*<UserButton afterSignOutUrl={"https://843e-41-45-12-162.ngrok-free.app"}  />*/}
+            <UserButton afterSignOutUrl={"/"}  />
         </div>
 
 
@@ -549,9 +569,10 @@ const HomePage = () => {
                               {companies.map((company, index) => (
                                   <TableRow key={index} onClick={() => handleCompanyClick(company)}>
                                       <TableCell className="font-medium SearchCompanyName">{company.name}</TableCell>
+                                      <TableCell>{company.ticker}</TableCell>
                                   <TableCell>{company.description}</TableCell>
-                                  <TableCell className={`font-medium ${company.stockChange > 0 ? 'stockIncrease' : 'stockDecrease'}`}>
-                                      ${company.currentStockPrice.toFixed(2)} {company.stockChange > 0 ? '↑' : '↓'}
+                                  <TableCell className={`font-medium ${company.history['06/13/2024'] - company.history['06/12/2024'] > 0 ? 'stockIncrease' : 'stockDecrease'}`}>
+                                      ${company?.history['06/13/2024'] || 'N/A'} {company.history['06/13/2024'] - company.history['06/12/2024'] >= 0 ? '↑' : '↓'}
                                   </TableCell>
                               </TableRow>
                           ))}
@@ -560,35 +581,38 @@ const HomePage = () => {
 
               </div>
                   <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-                      <div style={{position: 'relative'}}>
-
-                          {/* Adding an image below the close button but aligned to the top right corner */}
-                          <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" style={{
-                              position: 'absolute',
-                              right: '10px',
-                              top: '40px',
-                              width: '150px',
-                              height: '150px'
-                          }}/>
-                          <br/><br/><br/>
-                          <h1 style={{fontSize: '48px'}}>{selectedCompany?.name}</h1>
-                          <br/><br/>
-                          <p>{selectedCompany?.description}</p>
-                          <br/><br/><br/><br/>
-                          <p className="profileStockValue">
-                              Current Stock Price:
-                              <span
-                                  className={`${selectedCompany?.stockChange > 0 ? 'stockIncrease' : 'stockDecrease'}`}>
-                &nbsp;${selectedCompany?.currentStockPrice?.toFixed(2)}
-                                  {selectedCompany?.stockChange > 0 ? '↑' : '↓'}
-            </span>
-                          </p>
-
-                          <button className="addWatchlistBtn" onClick={() => addToWatchlist(selectedCompany)}>Add to
-                              Watchlist
-                          </button>
-                      </div>
+                      {selectedCompany ? (
+                          <div style={{position: 'relative'}}>
+                              {/* Adding an image below the close button but aligned to the top right corner */}
+                              <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" style={{
+                                  position: 'absolute',
+                                  right: '10px',
+                                  top: '40px',
+                                  width: '150px',
+                                  height: '150px'
+                              }}/>
+                              <br/><br/><br/>
+                              <h1 style={{fontSize: '48px'}}>{selectedCompany.name}</h1>
+                              <br/><br/>
+                              <p>{selectedCompany.description}</p>
+                              <br/><br/><br/><br/>
+                              <p className="profileStockValue">
+                                  Current Stock Price:
+                                  <span className={selectedCompany.history && selectedCompany.history['06/13/2024'] - selectedCompany.history['06/12/2024'] >= 0 ? 'stockIncrease' : 'stockDecrease'}>
+                    &nbsp;${selectedCompany.history && selectedCompany.history['06/13/2024'] || 'N/A'}
+                                      {selectedCompany.history && (selectedCompany.history['06/13/2024'] - selectedCompany.history['06/12/2024'] >= 0 ? '↑' : '↓')}
+                </span>
+                              </p>
+                              <button className="addWatchlistBtn" onClick={() => handleAddToWatchlistClick(clerkId,selectedCompany)}>Add to Watchlist</button>
+                          </div>
+                      ) : (
+                          <div>
+                              <p>No company selected.</p>
+                          </div>
+                      )}
                   </Modal>
+
+
 
 
               </div>

@@ -346,7 +346,7 @@ export async function search(queryObj:SearchParamProps) {
 
     // Execute the query with pagination
     const results = await Company.find(query)
-      .select('companyName email ticker photo description')
+      // .select('companyName email ticker photo description')
       .limit(limit)
       .skip(limit * (page - 1))
       .lean();

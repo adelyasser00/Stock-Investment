@@ -57,7 +57,7 @@
 }
 
 .menuItem:nth-child(8) {
-  margin-top: 170px; /* Push the fifth item and the ones after it to the bottom */
+  margin-top: 95px; /* Push the fifth item and the ones after it to the bottom */
 }
 
 .menuItem:hover {
@@ -88,6 +88,17 @@
   height:23px;
   filter: brightness(0);
 }
+.websiteIcon{
+  width:210px;
+  height:150px;
+  position:relative;
+  left:25px;
+  cursor:pointer;
+}
+.toggleIcon{
+  width:15px;
+  height:15px;
+}
 
 .activeMenuIcon {
   filter: brightness(100);
@@ -106,6 +117,13 @@
 .sidebarCollapsed {
   width: 0; /* Even narrower if fully collapsed */
   height:100vh;
+}
+.collapsedWebsiteIcon{
+  width:60px;
+  height:45px;
+  position:relative;
+  left:3px;
+
 }
 
 .sidebar:not(.sidebarHidden) .menuItem div {
@@ -130,6 +148,13 @@
   .menuIcon{
     margin-top:10px;
     margin-bottom:10px;
+  }
+  .websiteIcon{
+    width:60px;
+    height:45px;
+    position:relative;
+    left:3px;
+
   }
 
 }

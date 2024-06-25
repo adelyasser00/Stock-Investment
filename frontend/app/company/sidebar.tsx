@@ -43,19 +43,22 @@ export default function Sidebar({ activeTab, setActiveTab }) {
             <div className={`${styles.sidebar} ${isCollapsed ? styles.sidebarHidden : ''}`}>
                 {isCollapsed ? (
                     <button onClick={toggleSidebar} className={styles.toggleButton}>
-                        <img src="/css/icons/sdbar_menu.png" alt="Expand" className={styles.menuIcon} />
+                        <img src="/css/icons/sdbar_menu.png" alt="Expand" className={styles.menuIcon}/>
                     </button>
                 ) : (
                     <button onClick={toggleSidebar} className={styles.toggleButton}>
-                        <img src="/css/icons/sdbar_menu.png" alt="Collapse" className={styles.menuIcon} />
+                        <img src="/css/icons/sdbar_menu.png" alt="Collapse" className={styles.menuIcon}/>
                     </button>
                 )}
-                <MenuItem name="Logo" icon="/css/icons/sdbar_home.png"/>
+                <a href="/"><img src="/css/icons/Plutus_icon.png" alt="logo"
+                                 className={`${styles.websiteIcon} ${isCollapsed ? styles.collapsedWebsiteIcon : ''} `}></img></a>
+
+                {/*<MenuItem name="Logo" icon="/css/icons/sdbar_home.png"/>*/}
                 <MenuItem name="Feed" icon="/css/icons/sdbar_home.png"/>
                 <MenuItem name="Profile" icon="/css/icons/sdbar_portfolio.png"/>
                 <MenuItem name="User Statistics" icon="/css/icons/sdbar_watchlist.png"/>
                 <MenuItem name="Search" icon="/css/icons/sdbar_search.png"/>
-                <MenuItem name="Saved Posts" icon="/css/icons/sdbar_home.png" />
+                <MenuItem name="Saved Posts" icon="/css/icons/sdbar_home.png"/>
                 <MenuItem name="About Us" icon="/css/icons/sdbar_aboutUs.png"/>
                 <MenuItem name="Contact" icon="/css/icons/sdbar_contactUs.png"/>
             </div>

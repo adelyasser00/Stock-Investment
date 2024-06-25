@@ -17,22 +17,10 @@ const Modal = ({ isOpen, onClose, children }) => {
         onClose();
     };
 
-    const handleContentClick = async (e) => {
-        // Prevents the overlay click handler from firing when clicking inside the modal
-        e.stopPropagation();
-        try {
-            const added = await addToWatchlist(clerkId, companyId);
-            console.log('User added:', added);
-        }
-        catch (error) {
-            console.error('Error updating user:', error);
-            // Handle the error appropriately, e.g., show a message to the user
-        }
-    };
 
     return (
-        <div className="modal-overlay" onClick={handleOverlayClick}>
-            <div className="modal-content" onClick={handleContentClick}>
+        <div className="modal-overlay">
+            <div className="modal-content">
                 {children}
                 <button onClick={onClose} className="modal-close">X</button>
             </div>
