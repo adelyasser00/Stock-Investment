@@ -14,7 +14,10 @@
     import {checkAndUpdateFeed} from "@/lib/newsfeed/helper";
     import {addToWatchlist, search} from "@/lib/actions/user.actions"
     import SearchBar from './searchbar'
-    import {getUserById, savePostToUser, getSavedPosts, addInvestment, getWatchlist} from '@/lib/actions/user.actions'
+    import {getUserById, savePostToUser, getSavedPosts, addInvestment, getWatchlist, getInvestments} from '@/lib/actions/user.actions'
+    import axios from 'axios';
+
+    import {sendRequest} from '@/lib/chatbot/helper'
     // import {AddInvestedStock} from './types/index'
     import {
       Chart as ChartJS,
@@ -37,8 +40,9 @@
         TableHeader,
         TableRow,
     } from "@/components/ui/table"
-    import { Input } from "@/components/ui/input"
-    import {flushAndExit} from "next/dist/telemetry/flush-and-exit";
+    // import { Input } from "@/components/ui/input"
+    // import {flushAndExit} from "next/dist/telemetry/flush-and-exit";
+    // import {response} from "express";
 
 
 
@@ -94,7 +98,7 @@
             console.log("RSS received in fetchRSS()");
             return response;
         } catch (error) {
-            console.error("Error fetching RSS:", error);
+            console.error("Error fetching RSS  :", error);
             throw error;  // Rethrowing the error after logging
         }
     }
@@ -164,8 +168,50 @@
             throw error;  // Rethrowing the error after logging
         }
     }
+    async function postChatbot(){
+        try{
+            console.log("inside postChatbot")
+            // const response = await fetch(`https://037f-34-135-219-34.ngrok-free.app/predict?data=${encodeURIComponent('Financial Headline Classification')}&task=${encodeURIComponent('Apple released new iphone')}`,
+            //     {
+            //         method: 'POST', // Assuming it's a POST request; adjust if different
+            //         mode: 'no-cors',
+            //         headers: {
+            //             'Accept': 'application/json',  // It's good practice to capitalize the first letter of header names
+            //             'Access-Control-Allow-Origin':'*',
+            //         }
+            //     });
+            const response = sendRequest('Financial Headline Classification','Apple released new iphone')
+            console.log(response)
+            console.log("fetch has passed")
+            // const response = await sendRequest('Financial Headline Classification', 'Apple released new iphone')
+            // const jsonRes = await response.json()
+            // console.log(jsonRes)
+            // console.log("finished sendRequest")
+            return response
+        } catch(error) {
+            console.error("Error fetching chatbot:", error);
+            throw error;  // Rethrowing the error after logging
+        }
+
+    }
+    async function getUserInvestments(clerkId){
+        try{
+            const response = await getInvestments((clerkId))
+            console.log("investments received")
+            console.log(response)
+            return response
+        }catch(error) {
+            console.error("Error fetching investments:", error);
+            throw error;  // Rethrowing the error after logging
+        }
+
+    }
 
     const HomePage = () => {
+        const [userInvestments, setuserInvestments] = useState([]);
+
+        const [chatbot,setChatbot]=useState(null);
+
         const [savedArticles, setSavedArticles] = useState([]);
         const [articles, setArticles] = useState([]);
       const [activeTab, setActiveTab] = useState('Home');
@@ -250,6 +296,41 @@
                     });
             }
         },[clerkId]);
+        useEffect(() => {
+            if (clerkId){
+                getUserInvestments(clerkId)
+                    .then(userInvestments =>{
+                        console.log("user investments received in frontend")
+                        setuserInvestments(userInvestments)
+                        console.log("loading user investments done")
+                    })
+                    .catch(error => {
+                        console.error("Error fetching user investments:", error);
+                    });
+                // console.log("call getInvestments: ",response)
+            }
+        }, [clerkId]);
+        useEffect(() => {
+            if (clerkId){
+                postChatbot()
+                    .then(chatbot =>{
+                        console.log("chatbot received in frontend")
+                        setChatbot(chatbot)
+                        // console.log(chatb/**/ot)
+                        console.log("loading chatbot done")
+                    })
+                    .catch(error => {
+                        console.error("Error fetching user investments:", error);
+                    });
+            }
+
+        }, [clerkId]);
+        // useEffect(() => {
+        //     if (chatbot){
+        //          console.log("useEffect received response of chatbot: ")
+        //          console.log(chatbot)
+        //     }
+        // }, [chatbot]);
         // Use effect to simulate stock price updates
         useEffect(() => {
             const interval = setInterval(() => {
@@ -390,6 +471,9 @@
             }
             dates.reverse()
             console.log("print dates for colors:")
+            // console.log(userInvestments)
+            // console.log(chatbot)
+            // console.log(chatbot.Response)
             console.log(history[dates[0]],history[dates[1]])
             const lastPrice = parseFloat(history[dates[0]]);
             const secondLastPrice = parseFloat(history[dates[1]]);

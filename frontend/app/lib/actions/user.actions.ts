@@ -179,6 +179,22 @@ export async function addInvestment(userClerkId: string, investment: AddInvested
     handleError(error);
   }
 }
+export async function getInvestments(userClerkId: string){
+    try{
+        await connectToDatabase();
+        const user = await User.findOne({ clerkId : userClerkId });
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return await Stock.find({
+            '_id': { $in: user.investedStocks }  // assuming investedStocks is an array of ObjectIds
+        }).lean();
+
+    } catch (error) {
+        handleError(error);
+    }
+}
 
 
 export async function removeInvestment(userClerkId: string, stockId: string) {

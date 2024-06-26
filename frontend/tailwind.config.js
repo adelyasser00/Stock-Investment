@@ -74,4 +74,12 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:4000/:path*'
+      }
+    ]
+  },
 }
