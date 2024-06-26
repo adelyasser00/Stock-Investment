@@ -178,7 +178,9 @@
 
 .chat-body {
     position: relative;
-    height:485px;
+    max-height:485px;
+    min-height: 485px;
+    overflow-y: auto;
 }
 
 .chat-body-close {

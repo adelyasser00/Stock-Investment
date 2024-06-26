@@ -1,28 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './css/chatComponent.module.css'; // Ensure this path is correct
 
-function ChatComponent() {
-    const [messageBoxValue, setMessageBoxValue] = useState<string>(''); // Specify type as string
-    const defaultConversation = [
-        { text: "Hello! How can I assist you with your financial planning today?", isUser: false },
-        // Additional messages...
-    ];
+function ChatComponent({ onSendMessage, conversation }) {
+    const [messageBoxValue, setMessageBoxValue] = useState('');
+    const chatBodyRef = useRef(null); // Creates a ref for the chat body container
 
-    const [conversation, setConversation] = useState(defaultConversation);
+    useEffect(() => {
+        if (chatBodyRef.current) {
+            const { scrollHeight, clientHeight } = chatBodyRef.current;
+            chatBodyRef.current.scrollTop = scrollHeight - clientHeight;
+        }
+    }, [conversation]); // Runs every time the conversation updates
 
-    const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setMessageBoxValue(e.target.value);
+    const handleMessageChange = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // Prevents the default action of the enter key (new line)
+            if (messageBoxValue.trim()) { // Prevents sending empty messages
+                onSendMessage(messageBoxValue.trim());
+                setMessageBoxValue(''); // Clears the text area after sending
+            }
+        } else {
+            setMessageBoxValue(e.target.value);
+        }
+    };
+
+    const handleFormSubmit = (e) => {
+        e.preventDefault(); // Prevents the form from submitting traditionally
+        if (messageBoxValue.trim()) {
+            onSendMessage(messageBoxValue.trim());
+            setMessageBoxValue('');
+        }
     };
 
     return (
         <div className={styles['tabs-container']}>
             <div className={styles['chat-tab']}>
                 <div className={styles['chat-header']}>
-                    <a href="#" className={`${styles['user-avatar']} ${styles['user-avatar-main']}`}></a>
-                    <a href="#" className={styles['user-name']} title="Chatbot">Chatbot</a>
+                    <span className={styles['user-name']} title="Chatbot">Chatbot</span>
                     <span className={styles['user-state']}>Available</span>
                 </div>
-                <div className={styles['chat-body']}>
+                <div className={styles['chat-body']} ref={chatBodyRef}> {/* Attaches ref here */}
                     <div className={styles['chat-container']} id="conversation">
                         {conversation.map((message, index) => (
                             <div key={index} className={`${styles['chat']} ${message.isUser ? styles['chat-user'] : ''}`}>
@@ -34,7 +51,7 @@ function ChatComponent() {
                     </div>
                 </div>
                 <div className={styles['chat-footer']}>
-                    <form className={styles['message-form']}>
+                    <form onSubmit={handleFormSubmit} className={styles['message-form']}>
                         <textarea
                             className={styles['message']}
                             name="message"
@@ -43,6 +60,7 @@ function ChatComponent() {
                             placeholder="Write a message..."
                             value={messageBoxValue}
                             onChange={handleMessageChange}
+                            onKeyPress={handleMessageChange} // Handles key press for Enter submission
                         />
                     </form>
                 </div>

@@ -491,7 +491,8 @@ td:nth-last-child{
 .chat-body {
     flex-grow: 1; /* Allow the chat body to expand */
     overflow-y: auto;
-    height:450px;
+    min-height:450px;
+    max-height:450px;
     /* Ensure it scrolls internally */
 }
 
@@ -755,6 +756,56 @@ td:nth-last-child{
 .save-button {
     left:0;
     top:40px;
+}
+input[type=radio] {
+    opacity: 0;
+    display: none;
+    margin: 0;
+}
+
+.toggle-radio input[type="radio"]:checked + label {
+    background-color: #25a209;
+    border-color: #25a209;
+    color: white;
+}
+
+.toggle-radio label {
+    font-family: "Open Sans", sans-serif;
+    float: left;
+    padding: 6px 12px;
+    margin-right: 0;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.428571429;
+    cursor: pointer;
+    border-left: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+
+.toggle-radio {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.toggle-radio label:hover {
+    background-color: #ebebeb;
+}
+
+.toggle-radio label:last-child {
+    border-radius: 0 2px 2px 0;
+    border-right: 1px solid #ccc;
+}
+
+.toggle-radio [type="radio"] {
+    display: none;
+}
+
+.toggle-radio [type="radio"]:first-child + label {
+    border-radius: 2px 0 0 2px;
 }
 
 @media (max-width: 1730px){

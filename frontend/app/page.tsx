@@ -168,7 +168,7 @@
             throw error;  // Rethrowing the error after logging
         }
     }
-    async function postChatbot(){
+    async function postChatbot(task,data){
         try{
             console.log("inside postChatbot")
             // const response = await fetch(`https://037f-34-135-219-34.ngrok-free.app/predict?data=${encodeURIComponent('Financial Headline Classification')}&task=${encodeURIComponent('Apple released new iphone')}`,
@@ -180,7 +180,7 @@
             //             'Access-Control-Allow-Origin':'*',
             //         }
             //     });
-            const response = sendRequest('Financial Headline Classification','Apple released new iphone')
+            const response = sendRequest(task,data)
             console.log(response)
             console.log("fetch has passed")
             // const response = await sendRequest('Financial Headline Classification', 'Apple released new iphone')
@@ -206,8 +206,66 @@
         }
 
     }
+    const ChatbotTaskContext = React.createContext(null);
+
+    const RadioButtonsComponent = ({ setChatbotTask }) => {
+        // Initialize with the default task
+        const [selectedOption, setSelectedOption] = useState('a');
+
+        // Effect hook to set the default value on initial render
+        useEffect(() => {
+            setChatbotTask("Financial Sentiment Analysis");
+        }, [setChatbotTask]);
+
+        const handleRadioChange = (event) => {
+            setSelectedOption(event.target.value);
+            setChatbotTask(event.target.labels[0].innerText);
+        };
+
+        return (
+            <div className="toggle-radio">
+                <input type="radio" name="ab" id="a" value="a" checked={selectedOption === 'a'} onChange={handleRadioChange}/>
+                <label htmlFor="a">Financial Sentiment Analysis</label>
+
+                <input type="radio" name="ab" id="b" value="b" checked={selectedOption === 'b'} onChange={handleRadioChange}/>
+                <label htmlFor="b">Financial Relation Extraction</label>
+
+                <input type="radio" name="ab" id="c" value="c" checked={selectedOption === 'c'} onChange={handleRadioChange}/>
+                <label htmlFor="c">Financial Headline Classification</label>
+
+                <input type="radio" name="ab" id="d" value="d" checked={selectedOption === 'd'} onChange={handleRadioChange}/>
+                <label htmlFor="d">Financial Named Entity Recognition</label>
+            </div>
+        );
+    };
+
 
     const HomePage = () => {
+        const [chatbotTask, setChatbotTask] = useState('');
+        const [conversation, setConversation] = useState([
+            { text: "Hello! How can I assist you with your financial planning today?", isUser: false }
+        ]);
+        const [chatbotResponse,setChatbotResponse]= useState(null)
+        const handleSendMessage = async (message) => {
+            // Update conversation with user's message
+            setConversation(conversation => [...conversation, { text: message, isUser: true }]);
+
+            // Call postChatbot or similar function to get response
+            try {
+                const chatbotResponse = await postChatbot(chatbotTask, message);
+                console.log("chatbot response:", chatbotResponse.response);
+                const result = chatbotResponse.response;
+                const answer = result.split('Answer: ')[1].trim();
+
+                // Use a callback to ensure you're working with the latest state
+                setConversation(currentConversation => [
+                    ...currentConversation,
+                    { text: answer, isUser: false }
+                ]);
+            } catch (error) {
+                console.error("Error in fetching chatbot response: ", error);
+            }
+        };
         const [userInvestments, setuserInvestments] = useState([]);
 
         const [chatbot,setChatbot]=useState(null);
@@ -232,6 +290,7 @@
         const clerkId = user?.id
 
         const [userId,setUserId] = useState(null)
+
         useEffect(() => {
             setUserId(getUserId(clerkId))
             console.log(clerkId)
@@ -310,21 +369,28 @@
                 // console.log("call getInvestments: ",response)
             }
         }, [clerkId]);
+        // useEffect(() => {
+        //     if (clerkId){
+        //         postChatbot()
+        //             .then(chatbot =>{
+        //                 console.log("chatbot received in frontend")
+        //                 // Assuming chatbot.response contains the response string
+        //                 const result = chatbot.response;
+        //                 // Splitting the string at "Answer: " and taking the second part (index 1)
+        //                 const answer = result.split('Answer:  ')[1];
+        //                 setChatbot(answer);  // Now setChatbot will store only the part after "Answer: "
+        //                 console.log("loading chatbot done")
+        //             })
+        //             .catch(error => {
+        //                 console.error("Error fetching user investments:", error);
+        //             });
+        //     }
+        //
+        // }, [clerkId]);
         useEffect(() => {
-            if (clerkId){
-                postChatbot()
-                    .then(chatbot =>{
-                        console.log("chatbot received in frontend")
-                        setChatbot(chatbot)
-                        // console.log(chatb/**/ot)
-                        console.log("loading chatbot done")
-                    })
-                    .catch(error => {
-                        console.error("Error fetching user investments:", error);
-                    });
-            }
-
-        }, [clerkId]);
+            console.log("====================")
+            console.log("chatbot has changed to:",chatbot)
+        }, [chatbotResponse]);
         // useEffect(() => {
         //     if (chatbot){
         //          console.log("useEffect received response of chatbot: ")
@@ -470,11 +536,11 @@
                 };
             }
             dates.reverse()
-            console.log("print dates for colors:")
+            // console.log("print dates for colors:")
             // console.log(userInvestments)
             // console.log(chatbot)
             // console.log(chatbot.Response)
-            console.log(history[dates[0]],history[dates[1]])
+            // console.log(history[dates[0]],history[dates[1]])
             const lastPrice = parseFloat(history[dates[0]]);
             const secondLastPrice = parseFloat(history[dates[1]]);
 
@@ -968,7 +1034,13 @@
               )}
               {activeTab === 'Chatbot' && (
                   <div className='bigSectionBG chatbot'>
-                      <ChatComponent />
+                      <ChatComponent onSendMessage={handleSendMessage} conversation={conversation}/>
+                      <ChatbotTaskContext.Provider value={chatbotTask}>
+                          <RadioButtonsComponent setChatbotTask={setChatbotTask} />
+                          <div>Selected Task: {chatbotTask}</div>
+                          {/* Other components that need access to chatbotTask */}
+                      </ChatbotTaskContext.Provider>
+
                   </div>
               )}
               {activeTab === 'Saved Posts' && (
