@@ -249,8 +249,6 @@
         const handleSendMessage = async (message) => {
             // Update conversation with user's message
             setConversation(conversation => [...conversation, { text: message, isUser: true }]);
-
-            // Call postChatbot or similar function to get response
             try {
                 const chatbotResponse = await postChatbot(chatbotTask, message);
                 console.log("chatbot response:", chatbotResponse.response);

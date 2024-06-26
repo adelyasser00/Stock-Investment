@@ -179,22 +179,39 @@ export async function addInvestment(userClerkId: string, investment: AddInvested
     handleError(error);
   }
 }
-export async function getInvestments(userClerkId: string){
-    try{
+export async function getInvestments(userClerkId: string) {
+    try {
         await connectToDatabase();
-        const user = await User.findOne({ clerkId : userClerkId });
+        const user = await User.findOne({ clerkId: userClerkId });
 
         if (!user) {
             throw new Error('User not found');
         }
-        return await Stock.find({
-            '_id': { $in: user.investedStocks }  // assuming investedStocks is an array of ObjectIds
-        }).lean();
+
+        // Fetching stocks first
+        const stocks = await Stock.find({
+            '_id': { $in: user.investedStocks }
+        }).lean().exec(); // Ensuring to resolve the promise
+
+        // Assuming each stock has a companyClerkId field and you need to fetch related company details
+        const companyIds = stocks.map(stock => stock.companyClerkId);
+        const companies = await Company.find({
+            'clerkId': { $in: companyIds }
+        }).lean().exec(); // Fetching all companies at once
+
+        // Enhancing stocks with company details
+        const enhancedStocks = stocks.map(stock => {
+            const companyDetails = companies.find(company => company.clerkId === stock.companyClerkId);
+            return { ...stock, companyDetails };
+        });
+
+        return enhancedStocks;
 
     } catch (error) {
         handleError(error);
     }
 }
+
 
 
 export async function removeInvestment(userClerkId: string, stockId: string) {
