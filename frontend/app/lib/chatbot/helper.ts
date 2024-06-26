@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 export async function sendRequest(task: 'Financial Sentiment Analysis' | 'Financial Relation Extraction' | 'Financial Headline Classification' | 'Financial Named Entity Recognition', data: string): Promise<any> {
+export async function sendRequest(task: 'Financial Sentiment Analysis' | 'Financial Relation Extraction' | 'Financial Headline Classification' | 'Financial Named Entity Recognition', data: string): Promise<any> {
   const encodedData = encodeURIComponent(data);
   const encodedTask = encodeURIComponent(task);
   const url = `https://5681-34-74-253-152.ngrok-free.app/predict?data=${encodedData}&task=${encodedTask}`;
@@ -28,7 +29,4 @@ export async function sendRequest(task: 'Financial Sentiment Analysis' | 'Financ
   }
 }
 
-// Example usage:
-sendRequest('Financial Headline Classification', 'Apple released new iphone')
-  .then(response => console.log(response))
-  .catch(error => console.error(error));
+
