@@ -30,10 +30,13 @@ const SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
 const TOKEN_PATH = 'token.json';
 
 // Load client secrets from a local file.
-fs.readFile('credentials.json', (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err);
-    authorize(JSON.parse(content), updateTickersFromGoogleDriveFolder);
-});
+export async function runRecommsys(){
+    fs.readFile('credentials.json', (err, content) => {
+        if (err) return console.log('Error loading client secret file:', err);
+        authorize(JSON.parse(content), updateTickersFromGoogleDriveFolder);
+    });
+}
+
 
 /**
  * Create an OAuth2 client with the given credentials.
@@ -89,7 +92,7 @@ async function updateTickersFromGoogleDriveFolder(auth) {
     try {
         const res = await drive.files.list({
             q: `'${folderId}' in parents and mimeType='text/csv'`,
-            fields: 'files(id, name)',≈
+            fields: 'files(id, name)',
         });
 
         const files = res.data.files;

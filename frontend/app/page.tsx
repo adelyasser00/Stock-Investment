@@ -16,7 +16,7 @@
     import SearchBar from './searchbar'
     import {getUserById, savePostToUser, getSavedPosts, addInvestment, getWatchlist, getInvestments} from '@/lib/actions/user.actions'
     import axios from 'axios';
-
+    import {runRecommsys} from '@/lib/recommsys/helper'
     import {sendRequest} from '@/lib/chatbot/helper'
     // import {AddInvestedStock} from './types/index'
     import {
@@ -241,6 +241,19 @@
 
 
     const HomePage = () => {
+        const [tickers,setTickers]=useState(null);
+        useEffect(() => {
+            runRecommsys()
+                .then(tickers =>{
+                    const bruh = localStorage.getItem('sortedTickers')
+                    setTickers(bruh) ;
+            })
+        }, []);
+        useEffect(() => {
+            console.log("***********************")
+            console.log("tickers have changed:",tickers)
+        }, [tickers]);
+
         const [chatbotTask, setChatbotTask] = useState('');
         const [conversation, setConversation] = useState([
             { text: "Hello! How can I assist you with your financial planning today?", isUser: false }
