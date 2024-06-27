@@ -131,3 +131,5 @@ dist
 
 # WebStorm project files
 .idea
+
+app/lib/recommsys/credentials.json
