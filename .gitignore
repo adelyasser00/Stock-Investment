@@ -133,3 +133,4 @@ dist
 .idea
 
 app/lib/recommsys/credentials.json
+app/api/credentials.json
