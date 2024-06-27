@@ -16,6 +16,7 @@
 
 }
 
+
 .sidebarHidden {
   margin-left: -65px;
   width:70px;
@@ -59,6 +60,7 @@
 .menuItem:nth-child(8) {
   margin-top: 125px; /* Push the fifth item and the ones after it to the bottom */
 }
+
 
 .menuItem:hover {
   color: #fff;

@@ -58,7 +58,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
                 <MenuItem name="Saved Posts" icon="/css/icons/sdbar_home.png" />
                 <MenuItem name="Chatbot" icon="/css/icons/sdbar_chatbot.png" />
                 <MenuItem name="About Us" icon="/css/icons/sdbar_aboutUs.png" />
-                <MenuItem name="Contact" icon="/css/icons/sdbar_contactUs.png" />
+                <MenuItem name="Apply Company" icon="/css/icons/sdbar_contactUs.png" />
             </div>
         </aside>
     );

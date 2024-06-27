@@ -143,6 +143,10 @@ h3, h2 {
     font-size: 1.2em;
     color:black;
 }
+.apply-company{
+    left:-253px;
+    top:45px;
+}
 
 .stockDisplayListWatchlist{
     position:absolute;
@@ -165,8 +169,8 @@ h3, h2 {
 }
 .StockDisplayWatchlistStats{
     position:absolute;
-    left: 0;
-    top: 170px;
+    left: 150px;
+    top: 150px;
     /*transform: translateY(-70%);*/
     width: 900px;
     font-family: "Campton", sans-serif;

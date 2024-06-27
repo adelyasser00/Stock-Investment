@@ -16,7 +16,7 @@
     import SearchBar from './searchbar'
     import {getUserById, savePostToUser, getSavedPosts, addInvestment, getWatchlist, getInvestments} from '@/lib/actions/user.actions'
     import axios from 'axios';
-    import {runRecommsys} from '@/lib/recommsys/helper'
+    // import {runRecommsys} from '@/lib/recommsys/helper'
     import {sendRequest} from '@/lib/chatbot/helper'
     // import {AddInvestedStock} from './types/index'
     import {
@@ -145,13 +145,27 @@
         return await getUserById(u)
     }
 
-    const handleAddToWatchlistClick = async (clerkId,company) => {
+    const handleAddToWatchlistClick = async (clerkId,company,setWatchlist,setSelectedStock) => {
         try {
             console.log("company is: "+ company.ticker)
             console.log("adding: " + company._id)
             const added = await addToWatchlist(clerkId, company._id);  // Assuming each company has an _id field
             console.log('User added:', added);
             alert(`${company.name} added to your watchlist!`);
+            // update watchlist
+            if (clerkId){
+                fetchWatchlist(clerkId)
+                    .then(watchlist =>{
+                        console.log("watchlist received in frontend")
+                        setWatchlist(watchlist)
+                        setSelectedStock(watchlist[0])
+                        console.log("loading watchlist done")
+                    })
+                    .catch(error => {
+                        console.error("Error fetching watchlist:", error);
+                    });
+            }
+
         } catch (error) {
             console.error('Error adding to watchlist:', error);
             alert('Failed to add to watchlist.');
@@ -241,19 +255,37 @@
 
 
     const HomePage = () => {
-        const [tickers,setTickers]=useState(null);
-        useEffect(() => {
-            runRecommsys()
-                .then(tickers =>{
-                    const bruh = localStorage.getItem('sortedTickers')
-                    setTickers(bruh) ;
-            })
-        }, []);
-        useEffect(() => {
-            console.log("***********************")
-            console.log("tickers have changed:",tickers)
-        }, [tickers]);
-
+        // const [tickers,setTickers]=useState(null);
+        // useEffect(() => {
+        //     runRecommsys()
+        //         .then(tickers =>{
+        //             const bruh = localStorage.getItem('sortedTickers')
+        //             setTickers(bruh) ;
+        //     })
+        // }, []);
+        // useEffect(() => {
+        //     console.log("***********************")
+        //     console.log("tickers have changed:",tickers)
+        // }, [tickers]);
+        // useEffect(() => {
+        //     console.log("before recom sys")
+        //     fetch('/api/runRecommsys')
+        //         .then(res => {
+        //             console.log("after fetch recom sys")
+        //             console.log(res)
+        //             res.json()
+        //         })
+        //         .then(data => {
+        //             console.log("!!!!!!!!!!!!!!!!!!!!\n recommendation system result:")
+        //             console.log(data)
+        //         })
+        //         .catch(err => console.error('Error running recommendation system:', err));
+        // }, []);
+        const handleApplyCompany=()=>{
+            alert("We will be in contact once your documents have been reviewed!")
+            router.push("/")
+        }
+        const [uInvestment,setUInvesment] = useState(null)
         const [chatbotTask, setChatbotTask] = useState('');
         const [conversation, setConversation] = useState([
             { text: "Hello! How can I assist you with your financial planning today?", isUser: false }
@@ -287,7 +319,12 @@
         const [chartData, setChartData] = useState({
             labels: [],
             datasets: [] // Ensure datasets is always an array
-        });    const [selectedStock, setSelectedStock] = useState(null);
+        });
+        const [chartDataPort, setChartDataPort] = useState({
+            labels: [],
+            datasets: [] // Ensure datasets is always an array
+        });
+        const [selectedStock, setSelectedStock] = useState(null);
         const [selectedCompany, setSelectedCompany] = useState(null);
         const [isModalOpen, setIsModalOpen] = useState(false);  // State to control modal visibility
         const [watchlist, setWatchlist] = useState([]);
@@ -372,6 +409,7 @@
                     .then(userInvestments =>{
                         console.log("user investments received in frontend")
                         setuserInvestments(userInvestments)
+                        setUInvesment(userInvestments[0].companyDetails)
                         console.log("loading user investments done")
                     })
                     .catch(error => {
@@ -515,15 +553,44 @@
 
 
 
-            const pieData = {
-            labels: ['AAPL', 'MSFT', 'TSLA'],
-            datasets: [
-                {
-                    data: [35, 45, 20],
-                    backgroundColor: ['#7140DEFF', 'grey', 'black'],
-                },
-            ],
+        const [pieData, setPieData] = useState({
+            labels: [],
+            datasets: [{
+                data: [],
+                backgroundColor: [],  // Initial empty array
+            }],
+        });
+        const calculatePieData = () => {
+            const groupedData = userInvestments.reduce((acc, investment) => {
+                const key = investment.companyDetails.companyName;  // or investment.companyClerkId for ID based grouping
+                if (!acc[key]) {
+                    acc[key] = {
+                        totalValue: 0,
+                        count: 0, // To calculate average price if needed
+                    };
+                }
+                acc[key].totalValue += investment.numOfUnits * investment.price;
+                acc[key].count += investment.numOfUnits;
+                return acc;
+            }, {});
+
+            const labels = Object.keys(groupedData);
+            const data = labels.map(label => groupedData[label].totalValue);
+            const backgroundColors = labels.map(() => `#${Math.floor(Math.random()*16777215).toString(16)}`);  // Random colors for each company
+
+            setPieData({
+                labels,
+                datasets: [{
+                    data,
+                    backgroundColor: backgroundColors,
+                }],
+            });
         };
+        useEffect(() => {
+            calculatePieData();
+        }, [userInvestments]);  // Recalculate when userInvestments changes
+
+
         const calculateColor = (history) => {
             // Ensure that history is not null or undefined
             if (!history) {
@@ -652,6 +719,8 @@
         const [stockPrice, setStockPrice] = useState('');
         const [amountPurchased, setAmountPurchased] = useState('');
         const [purchaseDate, setPurchaseDate] = useState('');
+        const [key, setKey] = useState(0);
+        const [sales,setSales] = useState([]);
         const addInvestmentToCompany = async (event) => {
             event.preventDefault(); // Prevent default form submission
             const investment: AddInvestedStock = {
@@ -664,6 +733,18 @@
                 console.log('Submitting', { investment });
                 // Add your submit logic here, e.g., sending data to an API
                 await addInvestment(clerkId,investment)
+                if (clerkId){
+                    getUserInvestments(clerkId)
+                        .then(userInvestments =>{
+                            console.log("user investments received in frontend")
+                            setuserInvestments(userInvestments)
+                            console.log("loading user investments done")
+                        })
+                        .catch(error => {
+                            console.error("Error fetching user investments:", error);
+                        });
+                    // console.log("call getInvestments: ",response)
+                }
                 console.log("added investment successfully")
             } catch (error){
                 console.log(error)
@@ -671,37 +752,36 @@
             }
 
         };
-        const getChartData = () => {
-            if (!selectedStock) {
-                console.log("didnt find selected stock")
-                return {labels: [], datasets: []};
-            }
-            console.log(selectedStock.History)
-
-            const dates = Object.keys(selectedStock.History).sort((a, b) => {
-                return new Date(a as string).getTime() - new Date(b as string).getTime();
-            });
-            console.log(dates);
-            const sales = dates.map(date => parseFloat(selectedStock.History[date]));
-            console.log(sales)
-            return {
-                labels: dates,
-                datasets: [{
-                    label: `${selectedStock.ticker} Price`,
-                    data: sales,
-                    borderColor: "rgba(53, 162, 235, 0.5)",
-                    fill: false,
-                    borderWidth: 2
-                }]
-            };
-        };
+        // const getChartData = () => {
+        //     if (!selectedStock) {
+        //         console.log("didnt find selected stock")
+        //         return {labels: [], datasets: []};
+        //     }
+        //     console.log(selectedStock.History)
+        //
+        //     const dates = Object.keys(selectedStock.History).sort((a, b) => {
+        //         return new Date(a as string).getTime() - new Date(b as string).getTime();
+        //     });
+        //     console.log(dates);
+        //     setSales(dates.map(date => parseFloat(selectedStock.History[date])))
+        //     console.log(sales)
+        //     return {
+        //         labels: dates,
+        //         datasets: [{
+        //             label: `${selectedStock.ticker} Price`,
+        //             data: sales,
+        //             borderColor: "rgba(53, 162, 235, 0.5)",
+        //             fill: false,
+        //             borderWidth: 2
+        //         }]
+        //     };
+        // };
         useEffect(() => {
             if (selectedStock){
                 const dates = Object.keys(selectedStock.History).sort((a, b) => {
                 return new Date(a as string).getTime() - new Date(b as string).getTime();
             });
-                const sales = dates.map(date => parseFloat(selectedStock.History[date]));
-
+                setSales(dates.map(date => parseFloat(selectedStock.History[date])))
                 // Assuming selectedStock is updated from somewhere, like a watchlist click
                 const newChartData = {
 
@@ -719,7 +799,36 @@
 
 
         }, [selectedStock]); // Dependency on selectedStock to update the chart when it changes
+        useEffect(() => {
+            if (uInvestment && uInvestment.History){
+                const dates = Object.keys(uInvestment.History).sort((a, b) => {
+                    return new Date(a as string).getTime() - new Date(b as string).getTime();
+                });
+                setSales(dates.map(date => parseFloat(uInvestment.History[date])))
+                // Assuming selectedStock is updated from somewhere, like a watchlist click
+                const newChartData = {
 
+                    labels: dates, // new labels array
+                    datasets: [{
+                        label: `${uInvestment.ticker} Price`,
+                        data: sales,
+                        borderColor: "rgba(53, 162, 235, 0.5)",
+                        fill: false,
+                        borderWidth: 2
+                    }]
+                };
+                setChartDataPort(newChartData);
+            }
+
+
+        }, [uInvestment]); // Dependency on selectedStock to update the chart when it changes
+
+
+        const selectInvestmentFromPortfolio = (company) => {
+            console.log("entered selectInvestmentFromPortfolio")
+            setUInvesment(company); // Assuming setUInvesment sets the company whose details are to be displayed
+            console.log("set selectInvestmentFromPortfolio: ","stock sent as parameter: " ,company)
+        };
         const selectStockFromWatchlist = (company) => {
             console.log("entered selectStockFromWatchlist")
             setSelectedStock(company); // Assuming setSelectedStock sets the company whose details are to be displayed
@@ -776,12 +885,82 @@
                 });
             }
         }, [selectedStock]); // Dependency on selectedStock ensures updates when stock selection changes
+        useEffect(() => {
+            if (uInvestment && uInvestment.History) {
+                console.log("inside if of useEffect for chartData after change in uInvestment")
+                // Ensure that history is an object with keys before trying to access them
+                const dates = Object.keys(uInvestment.History).sort((a, b) => {
+                    return new Date(a as string).getTime() - new Date(b as string).getTime();
+                });
+                console.log("dates: ", dates)
+                const sales = dates.map(date => parseFloat(uInvestment.History[date]));
+
+                const color = calculateColor(uInvestment.History);  // Ensure calculateColor can handle an empty or undefined 'history'
+
+                const newChartData = {
+                    labels: dates,
+                    datasets: [{
+                        label: uInvestment.ticker,  // Using ticker as the label
+                        data: sales,
+                        borderColor: color.borderColor,
+                        borderWidth: 3,
+                        pointBorderColor: color.pointBorderColor,
+                        pointBorderWidth: 3,
+                        tension: 0.5,
+                        fill: true,
+                        backgroundColor: (context) => {
+                            const ctx = context.chart.ctx;
+                            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                            gradient.addColorStop(0, color.gradientColor);
+                            gradient.addColorStop(1, "white");
+                            return gradient;
+                        },
+                    }]
+                };
+
+                setChartDataPort(newChartData);
+            } else {
+                // Handle cases where uInvestment or its history is not available
+                console.log("inside else of useEffect for chartData after change in uInvestment")
+
+                setChartDataPort({
+                    labels: [],
+                    datasets: []
+                });
+            }
+        }, [uInvestment]);
+        useEffect(() => {
+            setKey(prevKey => prevKey + 1);
+            console.log("***chartData:",chartData)
+            console.log("***sales:",sales)
+        }, [chartData]);
+        useEffect(() => {
+            console.log("***sales:",sales)
+        }, [sales]);
 
         useEffect(() => {
+            console.log("=================")
+            console.log("selectedStock changed")
+            console.log(selectedStock)
+        }, [selectedStock]);
+        useEffect(() => {
+            console.log("=================")
+            console.log("uInvestment changed")
+            console.log(uInvestment)
+        }, [uInvestment]);
+        const getUniqueInvestmentsByTicker = (investments) => {
+            const investmentMap = new Map();
 
-        }, [chartData]);
+            investments.forEach(investment => {
+                const ticker = investment.companyDetails.ticker;
+                if (!investmentMap.has(ticker)) {
+                    investmentMap.set(ticker, investment);
+                }
+            });
 
-
+            return Array.from(investmentMap.values());
+        };
+        const uniqueInvestments = getUniqueInvestmentsByTicker(userInvestments);
 
 
         return (
@@ -792,6 +971,9 @@
                 {/*<UserButton afterSignOutUrl={"https://843e-41-45-12-162.ngrok-free.app"}  />*/}
                 <UserButton afterSignOutUrl={"/"}  />
             </div>
+            {/*<form>*/}
+            {/*    <button className="submit-button save-button">Register company</button>*/}
+            {/*</form>*/}
 
 
           <div>
@@ -824,28 +1006,61 @@
                           <p>Your Stocks
                           </p>
                           <p className='stockDisplayListWatchlist'>
-                              <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>
-                              <br></br>
-                              <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>
-                              <br></br>
-                              <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>
+                              {uniqueInvestments.map(company => (
+                                  <span key={company._id} className='stockDisplayListItem'
+                                        onClick={() => selectInvestmentFromPortfolio(company)}>
+                                    <br></br>
+                                  <span>{company.companyDetails.ticker}</span>
+                             </span>
+                              ))}
+                          </p>
+                          <br/><br/>
+                          <p className='stockDisplayListWatchlist'>
+                              <div key={uInvestment._id} className='StockDisplayWatchlistStats'>
+
+                                  <span>Previous Close: {uInvestment.details.Open} &emsp;&emsp;
+                                      Open: {uInvestment.details.Open}&emsp;&emsp;
+                                      Market Cap: {uInvestment.details.Market_Cap} &emsp;&emsp;
+                                      Volume: {uInvestment.details.Volume}</span>
+                                  <br/>
+                                  <span> Market Cap: {uInvestment.details.Market_Cap} &emsp;&emsp;
+                                      Revenue: {uInvestment.details.Revenue} &emsp;&emsp;
+                                      PE Ratio: {uInvestment.details.PE_Ratio} &emsp;&emsp;
+                                      Dividend: {uInvestment.details.Dividend} &emsp;&emsp;
+                                      <br></br>
+                                      Shares Outstanding: {uInvestment.details.Shares_outstanding}</span>
+                              </div>
                           </p>
                           <div className="topChartClassWatchlist">
-                              {selectedStock ? (
-                                  <Line data={chartData} options={options} />
+                              {uInvestment ? (
+                                  <Line data={chartDataPort} options={options}/>
                               ) : (
                                   <div>Loading or Select a Stock...</div>
                               )}
                           </div>
-                          <br></br>
-                          <br></br>
-                          <p className='stockDisplayListWatchlist bigWatchlist'>
-                              <div className='StockDisplayWatchlistStats'>
-                                  <span>Previous Close: 172.62  &emsp;&emsp;    Open: 175.60&emsp;&emsp;    Bid 173.05 x 1400&emsp;&emsp; Volume: 75,000,820</span>
-                                  <br></br>
-                                  <span> Ask: 173.07 x 1100&emsp;&emsp; Day's Range: 173.52 - 177.71 &emsp;&emsp;52 Week Range: 155.98 - 199.62</span>
-                              </div>
-                          </p>
+                          {/*<p className='stockDisplayListWatchlist'>*/}
+                          {/*    <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>*/}
+                          {/*    <br></br>*/}
+                          {/*    <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>*/}
+                          {/*    <br></br>*/}
+                          {/*    <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>*/}
+                          {/*</p>*/}
+                          {/*<div className="topChartClassWatchlist">*/}
+                          {/*    {selectedStock ? (*/}
+                          {/*        <Line data={chartData} options={options} />*/}
+                          {/*    ) : (*/}
+                          {/*        <div>Loading or Select a Stock...</div>*/}
+                          {/*    )}*/}
+                          {/*</div>*/}
+                          {/*<br></br>*/}
+                          {/*<br></br>*/}
+                          {/*<p className='stockDisplayListWatchlist bigWatchlist'>*/}
+                          {/*    <div className='StockDisplayWatchlistStats'>*/}
+                          {/*        <span>Previous Close: 172.62  &emsp;&emsp;    Open: 175.60&emsp;&emsp;    Bid 173.05 x 1400&emsp;&emsp; Volume: 75,000,820</span>*/}
+                          {/*        <br></br>*/}
+                          {/*        <span> Ask: 173.07 x 1100&emsp;&emsp; Day's Range: 173.52 - 177.71 &emsp;&emsp;52 Week Range: 155.98 - 199.62</span>*/}
+                          {/*    </div>*/}
+                          {/*</p>*/}
 
                       </div>
                       <div className='bottomOfHomeChart'>
@@ -912,10 +1127,10 @@
               {activeTab === 'Watchlist' && (
                   <div className='bigSectionBG'>
                       <p>My WatchList</p>
-                      <div className='form__group__watchlist field'>
-                          <input type="text" className="form__field"/>
-                          <label htmlFor="name" className="form__label">Add a stock</label>
-                      </div>
+                      {/*<div className='form__group__watchlist field'>*/}
+                      {/*    <input type="text" className="form__field"/>*/}
+                      {/*    <label htmlFor="name" className="form__label">Add a stock</label>*/}
+                      {/*</div>*/}
                       <p className='stockDisplayListWatchlist'>
                           {watchlist.map(company => (
                               <span key={company._id} className='stockDisplayListItem'
@@ -927,26 +1142,26 @@
                       </p>
                       <br/><br/>
                       <p className='stockDisplayListWatchlist'>
-                          {watchlist.map(company => (
-                              <div key={company._id} className='StockDisplayWatchlistStats'>
+                          {/*{watchlist.map(company => (*/}
+                              <div key={selectedStock._id} className='StockDisplayWatchlistStats'>
 
-                                  <span>Previous Close: {company.details.Open} &emsp;&emsp;
-                                      Open: {company.details.Open}&emsp;&emsp;
-                                      Market Cap: {company.details.Market_Cap} &emsp;&emsp;
-                                      Volume: {company.details.Volume}</span>
+                                  <span>Previous Close: {selectedStock.details.Open} &emsp;&emsp;
+                                      Open: {selectedStock.details.Open}&emsp;&emsp;
+                                      Market Cap: {selectedStock.details.Market_Cap} &emsp;&emsp;
+                                      Volume: {selectedStock.details.Volume}</span>
                                   <br/>
-                                  <span> Market Cap: {company.details.Market_Cap} &emsp;&emsp;
-                                      Revenue: {company.details.Revenue} &emsp;&emsp;
-                                      PE Ratio: {company.details.PE_Ratio} &emsp;&emsp;
-                                      Dividend: {company.details.Dividend} &emsp;&emsp;
+                                  <span> Market Cap: {selectedStock.details.Market_Cap} &emsp;&emsp;
+                                      Revenue: {selectedStock.details.Revenue} &emsp;&emsp;
+                                      PE Ratio: {selectedStock.details.PE_Ratio} &emsp;&emsp;
+                                      Dividend: {selectedStock.details.Dividend} &emsp;&emsp;
                                       <br></br>
-                                      Shares Outstanding: {company.details.Shares_outstanding}</span>
+                                      Shares Outstanding: {selectedStock.details.Shares_outstanding}</span>
                               </div>
-                          ))}
+                          {/*))}*/}
                       </p>
                       <div className="topChartClassWatchlist">
                           {selectedStock ? (
-                              <Line data={chartData} options={options} />
+                              <Line data={chartData} options={options} key={key} />
                           ) : (
                               <div>Loading or Select a Stock...</div>
                           )}
@@ -998,7 +1213,7 @@
                                           {selectedCompany.history && (selectedCompany.history['06/13/2024'] - selectedCompany.history['06/12/2024'] >= 0 ? '↑' : '↓')}
                     </span>
                                   </p>
-                                  <button className="addWatchlistBtn" onClick={() => handleAddToWatchlistClick(clerkId,selectedCompany)}>Add to Watchlist</button>
+                                  <button className="addWatchlistBtn" onClick={() => handleAddToWatchlistClick(clerkId,selectedCompany,setWatchlist,setSelectedStock)}>Add to Watchlist</button>
                               </div>
                           ) : (
                               <div>
@@ -1017,18 +1232,21 @@
               {activeTab === 'About Us' && (
                   <div className='bigSectionBG About-Us'>
                       <p>
-                          Welcome to <strong>Stock Investment Platform</strong>, your number one source for all things related to stock investment. We're dedicated to providing you the very best of investment advice, with an emphasis on reliability, customer service, and uniqueness.
+                          Welcome to <strong>Stock Investment Platform</strong>, your number one source for all things
+                          related to stock investment. We're dedicated to providing you the very best of investment
+                          advice, with an emphasis on reliability, customer service, and uniqueness.
                       </p>
                       <p>
-                          Founded in 2023, <strong>Stock Investment Platform</strong> has come a long way from its beginnings. When we first started out, our passion for helping other investors be more eco-friendly, providing the best equipment for their trading drove us to start our own business.
+                          Founded in 2023, <strong>Stock Investment Platform</strong> has come a long way from its
+                          beginnings. When we first started out, our passion for helping other investors be more
+                          eco-friendly, providing the best equipment for their trading drove us to start our own
+                          business.
                       </p>
                       <p>
-                          We hope you enjoy our services as much as we enjoy offering them to you. If you have any questions or comments, please don't hesitate to contact us.
+                          We hope you enjoy our services as much as we enjoy offering them to you. If you have any
+                          questions or comments, please don't hesitate to contact us.
                       </p>
-                  </div>
-              )}
-              {activeTab === 'Contact' && (
-                  <div className='bigSectionBG Contact'>
+                      <br></br><br></br>
                       <h1>
                           For further inquiries:
                       </h1>
@@ -1041,6 +1259,17 @@
                       <p>
                           Telephone: +20 1014066663
                       </p>
+                  </div>
+              )}
+              {activeTab === 'Apply Company' && (
+                  <div className='bigSectionBG Contact'>
+                     <h1>
+                         Please upload your company's documents and we will be in touch
+                     </h1>
+                      <form onSubmit={handleApplyCompany}>
+                          <input type="file" accept="document/*"/>
+                          <button className="submit-button apply-company" >Submit</button>
+                      </form>
                   </div>
               )}
               {activeTab === 'Chatbot' && (
