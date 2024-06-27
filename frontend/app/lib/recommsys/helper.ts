@@ -29,14 +29,11 @@ const client = redis.createClient();
 const SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
 const TOKEN_PATH = 'token.json';
 // Load client secrets from a local file.
- async function runRecommsys(){
-    authorize(credentials, updateTickersFromGoogleDriveFolder);
 
-}
-    // fs.readFile('credentials.json', (err, content) => {
-    //     if (err) return console.log('Error loading client secret file:', err);
-    //
-    // });
+    fs.readFile('credentials.json', (err, content) => {
+        if (err) return console.log('Error loading client secret file:', err);
+        authorize(credentials, updateTickersFromGoogleDriveFolder);
+    });
 
 
 /**
