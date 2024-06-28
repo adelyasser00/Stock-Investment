@@ -10,6 +10,7 @@ import { ObjectId, Schema } from "mongoose";
 import Company from "@/lib/database/models/company.model";
 import Stock from "@/lib/database/models/stock.model"
 import mongoose from "mongoose";
+import {extractTickersFromFile} from "@/lib/recommsys/helper";
 /**
  * functionalities of user
  * 1- update/cretae/delete user
@@ -371,48 +372,67 @@ export async function downvotePost(clerkId: string,  postId:Schema.Types.ObjectI
 }
 
 export async function search(queryObj:SearchParamProps) {
-  try {
-    // Connect to the database if not already connected
-    await mongoose.connect(process.env.MONGODB_URI);
+    try {
+        // Connect to the database if not already connected
+        await mongoose.connect(process.env.MONGODB_URI);
 
-    // Build a query based on the input object
-    const query: CompanyQuery  = {};
-    if (queryObj.companyName) query.companyName = new RegExp(queryObj.companyName, 'i');
-    if (queryObj.clerkId) query.clerkId = queryObj.clerkId;
-    if (queryObj.email) query.email = queryObj.email;
-    if (queryObj.ticker) query.ticker = queryObj.ticker;
+        // Build a query based on the input object
+        const query:CompanyQuery = {};
+        if (queryObj.companyName) query.companyName = new RegExp(queryObj.companyName, 'i');
+        if (queryObj.clerkId) query.clerkId = queryObj.clerkId;
+        if (queryObj.email) query.email = queryObj.email;
+        if (queryObj.ticker) query.ticker = queryObj.ticker;
 
-    // Full-text search handling
-    if (queryObj.searchText) {
-      query.$text = { $search: queryObj.searchText };
+        // Full-text search handling
+        if (queryObj.searchText) {
+            query.$text = { $search: queryObj.searchText };
+        }
+
+        const page = parseInt(queryObj.page ? queryObj.page.toString() : '1');
+        const limit = parseInt(queryObj.limit ? queryObj.limit.toString() : '10');
+
+        // Define the sort order based on the tickers array
+        // const tickers = [
+        //     'SWDY', 'EAST', 'POUL',
+        //     'EMFD', 'ISPH', 'SKPC',
+        //     'ALCN', 'ETEL', 'ESRS',
+        //     'AMOC', 'PHDC', 'ACGC',
+        //     'ATQA', 'HRHO', 'KABO',
+        //     'ABUK', 'TMGH', 'FWRY',
+        //     'EKHO'
+        // ];
+        const tickers = await extractTickersFromFile();
+
+        // Create a lookup object to quickly find the index of each ticker
+        const tickerOrder = tickers.reduce((acc, ticker, index) => {
+            acc[ticker] = index;
+            return acc;
+        }, {});
+
+        // Use aggregation to sort based on the custom order
+        const results = await Company.aggregate([
+            { $match: query },
+            { $addFields: { sortOrder: { $indexOfArray: [tickers, "$ticker"] } } },
+            { $sort: { sortOrder: 1 } },
+            { $skip: limit * (page - 1) },
+            { $limit: limit },
+            { $project: { sortOrder: 0 } } // Exclude the sortOrder field from the final output
+        ]).exec();
+
+        // Count total documents to calculate total pages
+        const totalCount = await Company.countDocuments(query);
+        const totalPages = Math.ceil(totalCount / limit);
+
+        return {
+            data: results,
+            currentPage: page,
+            totalPages,
+            totalCount
+        };
+    } catch (error) {
+        console.error('Error searching companies:', error);
+        throw error;
     }
-
-    const page = parseInt(queryObj.page ? queryObj.page.toString() : '1');
-    const limit = parseInt(queryObj.limit ? queryObj.limit.toString() : '10');
-
-
-    // Execute the query with pagination
-    const results = await Company.find(query)
-      // .select('companyName email ticker photo description')
-      .limit(limit)
-      .skip(limit * (page - 1))
-      .lean();
-
-    // Count total documents to calculate total pages
-    const totalCount = await Company.countDocuments(query);
-    const totalPages = Math.ceil(totalCount / limit);
-
-    return {
-      data: results,
-      currentPage: page,
-      totalPages,
-      totalCount
-    };
-  } catch (error) {
-    console.error('Error searching companies:', error);
-    throw error;
-  }
-
 }
 
 export async function chatbot(clerkId: string,  postId:Schema.Types.ObjectId) {
