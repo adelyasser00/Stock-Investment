@@ -82,6 +82,29 @@ export async function deleteCompany(clerkId: string) {
   }
 }
 
+export async function createPost(authorId: string, postParams: PostParams) {
+    try {
+        await connectToDatabase();
+
+        const newPost = new Post({
+            author: authorId,
+            title: postParams.title,
+            content: postParams.content,
+            contentSnippet: postParams.contentSnippet,
+            image: postParams.image,
+            link: postParams.link,
+            upvotes: 0, // Default value
+            downvotes: 0 // Default value
+        });
+
+        await newPost.save();
+        return newPost;
+    } catch (error) {
+        console.error('Error creating post:', error);
+        throw new Error('Could not create post');
+    }
+}
+
 // // USE CREDITS
 // export async function updateCredits(companyId: string, creditFee: number) {
 //   try {

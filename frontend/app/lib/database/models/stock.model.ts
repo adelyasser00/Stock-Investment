@@ -21,7 +21,11 @@ const InvestedStockSchema = new Schema({
    price: {
       type: Number,
       required: true
-   }
+   },
+   date: {
+        type: Date,
+        default: Date.now, // Set the default value to the current date
+    },
 });
 
 const Stock = models?.Stock || model("Stock", InvestedStockSchema);

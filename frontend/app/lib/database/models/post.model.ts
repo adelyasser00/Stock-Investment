@@ -6,7 +6,7 @@ const PostSchema = new Schema({
     type: Schema.Types.ObjectId,
     auto: true, // Automatically generate an ObjectId for each document
   },
-	author:Schema.Types.ObjectId,
+	author:String,
     content: String,
     contentSnippet: String,
     upvotes: { type: Number, default: 0 },

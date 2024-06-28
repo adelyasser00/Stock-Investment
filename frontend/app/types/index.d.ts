@@ -21,6 +21,7 @@ declare type AddInvestedStock = {
   numOfUnits: Number;
   companyTicker: string;
   date: Date;
+  isSell: boolean;
 }
 
 // ====== COMPANY PARAMS

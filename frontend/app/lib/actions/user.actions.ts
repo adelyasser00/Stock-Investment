@@ -168,7 +168,9 @@ export async function addInvestment(userClerkId: string, investment: AddInvested
     const newStock = new Stock({
      ...investment,
       investorClerkId: userClerkId,
-      companyClerkId: company_clerkId.clerkId
+      companyClerkId: company_clerkId.clerkId,
+      date: investment.date,
+      isSell: investment.isSell 
     });
 
     await newStock.save(); 
