@@ -60,7 +60,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
                 <MenuItem name="Search" icon="/css/icons/sdbar_search.png"/>
                 <MenuItem name="Saved Posts" icon="/css/icons/sdbar_home.png"/>
                 <MenuItem name="About Us" icon="/css/icons/sdbar_aboutUs.png"/>
-                <MenuItem name="Contact" icon="/css/icons/sdbar_contactUs.png"/>
+                {/*<MenuItem name="Contact" icon="/css/icons/sdbar_contactUs.png"/>*/}
             </div>
         </aside>
     )

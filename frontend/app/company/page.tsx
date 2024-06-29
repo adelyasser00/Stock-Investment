@@ -941,8 +941,7 @@ const HomePage = () => {
                         <p>
                             Welcome to <strong>Stock Investment Platform</strong>, your number one source for all things
                             related to stock investment. We're dedicated to providing you the very best of investment
-                            advice,
-                            with an emphasis on reliability, customer service, and uniqueness.
+                            advice, with an emphasis on reliability, customer service, and uniqueness.
                         </p>
                         <p>
                             Founded in 2023, <strong>Stock Investment Platform</strong> has come a long way from its
@@ -952,13 +951,9 @@ const HomePage = () => {
                         </p>
                         <p>
                             We hope you enjoy our services as much as we enjoy offering them to you. If you have any
-                            questions
-                            or comments, please don't hesitate to contact us.
+                            questions or comments, please don't hesitate to contact us.
                         </p>
-                    </div>
-                )}
-                {activeTab === 'Contact' && (
-                    <div className='bigSectionBG Contact'>
+                        <br></br><br></br>
                         <h1>
                             For further inquiries:
                         </h1>

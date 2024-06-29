@@ -765,7 +765,7 @@
                     },
                     title: {
                         display: true,
-                        text: "Month",
+                        text: "Date",
                         padding: {
                             top: 10,
                         },
