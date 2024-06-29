@@ -8,6 +8,7 @@ declare type CreateUserParams = {
   firstName: string;
   lastName: string;
   photo: string;
+  companyClerkId: string;
 };
 
 declare type UpdateUserParams = {
@@ -21,6 +22,7 @@ declare type AddInvestedStock = {
   numOfUnits: Number;
   companyTicker: string;
   date: Date;
+  isSell:boolean;
 }
 
 // ====== COMPANY PARAMS
@@ -35,7 +37,9 @@ declare type CreateCompanyParams = {
 declare type UpdateCompanyParams = {
   companyName: string;
   description:string;
-  ticker:string;
+  bio: string;
+  email:string;
+  website:string;
 };
 
 // ====== URL QUERY PARAMS

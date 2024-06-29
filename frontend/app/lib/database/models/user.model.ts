@@ -57,11 +57,11 @@ const UserSchema = new Schema({
     type: String
  }],
     // for registered companies
- companyClerkId:[{
+ companyClerkId:{
     type: String,
     ref:'CompanyClerkId',
     unique:true
-}]
+}
 });
 
 const User = models?.User || model("User", UserSchema);

@@ -67,6 +67,7 @@ console.log("before events")
       firstName: first_name,
       lastName: last_name,
       photo: image_url,
+      companyClerkId:"",
     };
     console.log(user)
 

@@ -97,9 +97,7 @@ export async function addToWatchlist(clerkId: string, companyId: string) {
 
     const updatedUser = await User.findOneAndUpdate(
       {clerkId:clerkId},
-      {
-        $push: { watchlist: companyId }
-      },
+        { $addToSet: { watchlist: companyId } }, // Using $addToSet to avoid duplicates
       {new: true}
     );
 
@@ -150,35 +148,37 @@ export async function getWatchlist(clerkId){
 }
 
 export async function addInvestment(userClerkId: string, investment: AddInvestedStock) {
-  try {
-    await connectToDatabase(); 
+    try {
+        await connectToDatabase();
 
-    const user = await User.findOne({ clerkId : userClerkId });
+        const user = await User.findOne({ clerkId : userClerkId });
 
-    if (!user) {
-      throw new Error('User not found');
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        const company_clerkId = await Company.findOne({ ticker: investment.companyTicker }).select('clerkId');
+
+        if (!company_clerkId) {
+            throw new Error('Company not found');
+        }
+
+        const newStock = new Stock({
+            ...investment,
+            investorClerkId: userClerkId,
+            companyClerkId: company_clerkId.clerkId,
+            date: investment.date,
+            isSell: investment.isSell
+        });
+
+        await newStock.save();
+
+        user.investedStocks.push(newStock._id);
+        await user.save();
+
+    } catch (error) {
+        handleError(error);
     }
-
-    const company_clerkId = await Company.findOne({ ticker: investment.companyTicker }).select('clerkId');
-
-    if (!company_clerkId) {
-      throw new Error('Company not found');
-    }
-
-    const newStock = new Stock({
-     ...investment,
-      investorClerkId: userClerkId,
-      companyClerkId: company_clerkId.clerkId
-    });
-
-    await newStock.save(); 
-
-    user.investedStocks.push(newStock._id);
-    await user.save(); 
-
-  } catch (error) {
-    handleError(error);
-  }
 }
 export async function getInvestments(userClerkId: string) {
     try {
@@ -497,6 +497,37 @@ export async function getSavedPosts(userId) {
         throw error;
     }
 }
+export async function removeSavedPost(postId: string, userId: string) {
+    console.log("Starting to remove post from saved list");
+    try {
+        await connectToDatabase();
+
+        const user = await User.findOne({ clerkId: userId });
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        // Remove the post ID from the user's savedlist
+        const index = user.savedlist.indexOf(postId);
+        if (index > -1) {
+            user.savedlist.splice(index, 1);  // Remove the post ID if it exists
+            await user.save();  // Save the updated user document
+            console.log("Post removed from saved list");
+        } else {
+            console.log("Post not found in user's saved list");
+            throw new Error('Post not found in saved list');
+        }
+
+        // Optionally, you could also delete the post from the database if needed
+        // const deletedPost = await Post.findByIdAndRemove(postId);
+
+        return { success: true, message: "Post removed successfully from saved list" };
+    } catch (error) {
+        console.error('Failed to remove post or update user:', error);
+        throw error;
+    }
+}
+
 
 // // USE CREDITS
 // export async function updateCredits(userId: string, creditFee: number) {

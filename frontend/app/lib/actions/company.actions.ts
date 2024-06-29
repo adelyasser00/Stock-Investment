@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 import Company from "../database/models/company.model";
 import { connectToDatabase } from "../database/mongoose";
 import { handleError } from "../utils";
+import Stock from "@/lib/database/models/stock.model";
+import User from "@/lib/database/models/user.model"
 
 /**
  * functionalities of company
@@ -37,7 +39,7 @@ export async function getCompanyById(companyId: string) {
 
     if (!company) throw new Error("Company not found");
 
-    return JSON.parse(JSON.stringify(company));
+    return company;
   } catch (error) {
     handleError(error);
   }
@@ -54,7 +56,7 @@ export async function updateCompany(clerkId: string, company: UpdateCompanyParam
 
     if (!updatedCompany) throw new Error("Company update failed");
     
-    return JSON.parse(JSON.stringify(updatedCompany));
+    return updatedCompany;
   } catch (error) {
     handleError(error);
   }
@@ -79,6 +81,34 @@ export async function deleteCompany(clerkId: string) {
     return deletedCompany ? JSON.parse(JSON.stringify(deletedCompany)) : null;
   } catch (error) {
     handleError(error);
+  }
+}
+export async function fetchInvestmentsByCompanyClerkId(clerkId: string) {
+  try {
+    await connectToDatabase();
+
+    // Find the user by clerkId
+    const user = await User.findOne({ clerkId: clerkId });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Extract companyClerkId from the user's record
+    const companyClerkIds = user.companyClerkId;
+
+    if (!companyClerkIds || companyClerkIds.length === 0) {
+      throw new Error('No companyClerkId found for the user');
+    }
+
+    // Find the stocks with companyClerkId equal to any of the user's companyClerkIds
+    const investments = await Stock.find({ companyClerkId: { $in: companyClerkIds } })
+        .sort({ date: 1 });  // Use -1 for descending order, or 1 for ascending order
+
+    return investments;
+  } catch (error) {
+    console.error('Error fetching investments:', error);
+    throw new Error('Could not fetch investments');
   }
 }
 

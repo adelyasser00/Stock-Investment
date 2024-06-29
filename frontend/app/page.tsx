@@ -14,7 +14,7 @@
     import {checkAndUpdateFeed} from "@/lib/newsfeed/helper";
     import {addToWatchlist, search} from "@/lib/actions/user.actions"
     import SearchBar from './searchbar'
-    import {getUserById, savePostToUser, getSavedPosts, addInvestment, getWatchlist, getInvestments} from '@/lib/actions/user.actions'
+    import {getUserById, savePostToUser, getSavedPosts, addInvestment, getWatchlist, getInvestments,removeFromWatchlist,removeSavedPost,removeInvestment} from '@/lib/actions/user.actions'
     import axios from 'axios';
     // import {runRecommsys} from '@/lib/recommsys/helper'
     import {sendRequest} from '@/lib/chatbot/helper'
@@ -102,6 +102,21 @@
             throw error;  // Rethrowing the error after logging
         }
     }
+    async function removePost(article,clerkId,setSavedArticles){
+
+        await removeSavedPost(article._id, clerkId)
+        fetchSavedPosts(clerkId)
+            .then(savedArticles=>{
+                console.log("saved articles received in frontend")
+                savedArticles.reverse();
+                setSavedArticles(savedArticles);
+                console.log("loading saved articles done")
+                alert("post has been removed successfully!")
+            })
+            .catch(error => {
+                console.error("Error fetching saved posts:", error);
+            });
+    }
     async function savePost(article,clerkId,setSavedArticles){
         console.log("saving this post")
         console.log(article)
@@ -144,7 +159,44 @@
     async function getUserId (u){
         return await getUserById(u)
     }
+    async function removeInvestmentFromUser(clerkId,stock,userInvestments,setUserInvestments){
+        const stockIdString = stock._id.toString();
+        await removeInvestment(clerkId,stockIdString)
+        getUserInvestments(clerkId)
+            .then(userInvestments=()=>{
+                setUserInvestments(userInvestments);
+                alert("investment removed successfully")
+            })
+            .catch(error => {
+                console.error("Error fetching investments:", error);
+            });
+    }
 
+    const handleRemoveWatchlist = async(clerkId,company,setWatchlist,setSelectedStock) =>{
+        try {
+            console.log("clerk id:",clerkId)
+            console.log("company id:",company.clerkId)
+            console.log("company is:",company)
+            await removeFromWatchlist(clerkId, company._id);
+            alert(`${company.companyName} removed to your watchlist!`);
+            if (clerkId){
+                fetchWatchlist(clerkId)
+                    .then(watchlist =>{
+                        console.log("watchlist received in frontend")
+                        setWatchlist(watchlist)
+                        setSelectedStock(watchlist[0])
+                        console.log("loading watchlist done")
+                    })
+                    .catch(error => {
+                        console.error("Error fetching watchlist:", error);
+                    });
+            }
+
+        } catch (error) {
+            console.error('Error removing to watchlist:', error);
+            alert('Failed to remove to watchlist.');
+        }
+    }
     const handleAddToWatchlistClick = async (clerkId,company,setWatchlist,setSelectedStock) => {
         try {
             console.log("company is: "+ company.ticker)
@@ -533,7 +585,10 @@
                 ticker:result.ticker,
                 details: result.details,
                 history: result.History,
-                _id: result._id
+                _id: result._id,
+                bio:result.bio,
+                website:result.website,
+                email:result.email,
             }));
             setCompanies(updatedCompanies);
         }
@@ -569,8 +624,13 @@
                         count: 0, // To calculate average price if needed
                     };
                 }
-                acc[key].totalValue += investment.numOfUnits * investment.price;
-                acc[key].count += investment.numOfUnits;
+                if (!investment.isSell){
+                    acc[key].totalValue += investment.numOfUnits * investment.price;
+                    acc[key].count += investment.numOfUnits;
+                } else {
+                    acc[key].totalValue -= investment.numOfUnits * investment.price;
+                    acc[key].count -= investment.numOfUnits;
+                }
                 return acc;
             }, {});
 
@@ -592,45 +652,48 @@
 
 
         const calculateColor = (history) => {
-            // Ensure that history is not null or undefined
-            if (!history) {
-                return {
-                    borderColor: "#cccccc", // Default color if history is not available
-                    pointBorderColor: "#cccccc",
-                    gradientColor: "#cccccc"
+            if(selectedStock){
+                // Ensure that history is not null or undefined
+                if (!history) {
+                    return {
+                        borderColor: "#cccccc", // Default color if history is not available
+                        pointBorderColor: "#cccccc",
+                        gradientColor: "#cccccc"
+                    };
+                }
+
+                // Sort the keys in history to find the latest two dates
+                const dates = Object.keys(selectedStock.History).sort((a, b) => {
+                    return new Date(a as string).getTime() - new Date(b as string).getTime();
+                });
+                // Ensure there are at least two dates to compare
+                if (dates.length < 2) {
+                    return {
+                        borderColor: "#cccccc", // Default color if not enough data
+                        pointBorderColor: "#cccccc",
+                        gradientColor: "#cccccc"
+                    };
+                }
+                dates.reverse()
+                // console.log("print dates for colors:")
+                // console.log(userInvestments)
+                // console.log(chatbot)
+                // console.log(chatbot.Response)
+                // console.log(history[dates[0]],history[dates[1]])
+                const lastPrice = parseFloat(history[dates[0]]);
+                const secondLastPrice = parseFloat(history[dates[1]]);
+
+                return lastPrice > secondLastPrice ? {
+                    borderColor: "#00ff00", // Green for increase
+                    pointBorderColor: "#00dd00",
+                    gradientColor: "#00dd00",
+                } : {
+                    borderColor: "#ff0000", // Red for decrease
+                    pointBorderColor: "#dd0000",
+                    gradientColor: "#dd0000",
                 };
             }
 
-            // Sort the keys in history to find the latest two dates
-            const dates = Object.keys(selectedStock.History).sort((a, b) => {
-                return new Date(a as string).getTime() - new Date(b as string).getTime();
-            });
-            // Ensure there are at least two dates to compare
-            if (dates.length < 2) {
-                return {
-                    borderColor: "#cccccc", // Default color if not enough data
-                    pointBorderColor: "#cccccc",
-                    gradientColor: "#cccccc"
-                };
-            }
-            dates.reverse()
-            // console.log("print dates for colors:")
-            // console.log(userInvestments)
-            // console.log(chatbot)
-            // console.log(chatbot.Response)
-            // console.log(history[dates[0]],history[dates[1]])
-            const lastPrice = parseFloat(history[dates[0]]);
-            const secondLastPrice = parseFloat(history[dates[1]]);
-
-            return lastPrice > secondLastPrice ? {
-                borderColor: "#00ff00", // Green for increase
-                pointBorderColor: "#00dd00",
-                gradientColor: "#00dd00",
-            } : {
-                borderColor: "#ff0000", // Red for decrease
-                pointBorderColor: "#dd0000",
-                gradientColor: "#dd0000",
-            };
         };
 
 
@@ -719,6 +782,7 @@
         const [stockPrice, setStockPrice] = useState('');
         const [amountPurchased, setAmountPurchased] = useState('');
         const [purchaseDate, setPurchaseDate] = useState('');
+        const [isSell, setIsSell] =useState(false);
         const [key, setKey] = useState(0);
         const [sales,setSales] = useState([]);
         const addInvestmentToCompany = async (event) => {
@@ -728,6 +792,7 @@
                 numOfUnits: parseInt(amountPurchased, 10),
                 companyTicker: stockName,
                 date: new Date(purchaseDate),
+                isSell: isSell,
             };
             try{
                 console.log('Submitting', { investment });
@@ -776,52 +841,52 @@
         //         }]
         //     };
         // };
-        useEffect(() => {
-            if (selectedStock){
-                const dates = Object.keys(selectedStock.History).sort((a, b) => {
-                return new Date(a as string).getTime() - new Date(b as string).getTime();
-            });
-                setSales(dates.map(date => parseFloat(selectedStock.History[date])))
-                // Assuming selectedStock is updated from somewhere, like a watchlist click
-                const newChartData = {
-
-                    labels: dates, // new labels array
-                    datasets: [{
-                        label: `${selectedStock.ticker} Price`,
-                        data: sales,
-                        borderColor: "rgba(53, 162, 235, 0.5)",
-                        fill: false,
-                        borderWidth: 2
-                    }]
-                };
-                setChartData(newChartData);
-            }
-
-
-        }, [selectedStock]); // Dependency on selectedStock to update the chart when it changes
-        useEffect(() => {
-            if (uInvestment && uInvestment.History){
-                const dates = Object.keys(uInvestment.History).sort((a, b) => {
-                    return new Date(a as string).getTime() - new Date(b as string).getTime();
-                });
-                setSales(dates.map(date => parseFloat(uInvestment.History[date])))
-                // Assuming selectedStock is updated from somewhere, like a watchlist click
-                const newChartData = {
-
-                    labels: dates, // new labels array
-                    datasets: [{
-                        label: `${uInvestment.ticker} Price`,
-                        data: sales,
-                        borderColor: "rgba(53, 162, 235, 0.5)",
-                        fill: false,
-                        borderWidth: 2
-                    }]
-                };
-                setChartDataPort(newChartData);
-            }
-
-
-        }, [uInvestment]); // Dependency on selectedStock to update the chart when it changes
+        // useEffect(() => {
+        //     if (selectedStock){
+        //         const dates = Object.keys(selectedStock.History).sort((a, b) => {
+        //         return new Date(a as string).getTime() - new Date(b as string).getTime();
+        //     });
+        //         setSales(dates.map(date => parseFloat(selectedStock.History[date])))
+        //         // Assuming selectedStock is updated from somewhere, like a watchlist click
+        //         const newChartData = {
+        //
+        //             labels: dates, // new labels array
+        //             datasets: [{
+        //                 label: `${selectedStock.ticker} Price`,
+        //                 data: sales,
+        //                 borderColor: "rgba(53, 162, 235, 0.5)",
+        //                 fill: false,
+        //                 borderWidth: 2
+        //             }]
+        //         };
+        //         setChartData(newChartData);
+        //     }
+        //
+        //
+        // }, [selectedStock]); // Dependency on selectedStock to update the chart when it changes
+        // useEffect(() => {
+        //     if (uInvestment && uInvestment.History){
+        //         const dates = Object.keys(uInvestment.History).sort((a, b) => {
+        //             return new Date(a as string).getTime() - new Date(b as string).getTime();
+        //         });
+        //         setSales(dates.map(date => parseFloat(uInvestment.History[date])))
+        //         // Assuming selectedStock is updated from somewhere, like a watchlist click
+        //         const newChartData = {
+        //
+        //             labels: dates, // new labels array
+        //             datasets: [{
+        //                 label: `${uInvestment.ticker} Price`,
+        //                 data: sales,
+        //                 borderColor: "rgba(53, 162, 235, 0.5)",
+        //                 fill: false,
+        //                 borderWidth: 2
+        //             }]
+        //         };
+        //         setChartDataPort(newChartData);
+        //     }
+        //
+        //
+        // }, [uInvestment]); // Dependency on selectedStock to update the chart when it changes
 
 
         const selectInvestmentFromPortfolio = (company) => {
@@ -897,28 +962,30 @@
 
                 const color = calculateColor(uInvestment.History);  // Ensure calculateColor can handle an empty or undefined 'history'
 
-                const newChartData = {
-                    labels: dates,
-                    datasets: [{
-                        label: uInvestment.ticker,  // Using ticker as the label
-                        data: sales,
-                        borderColor: color.borderColor,
-                        borderWidth: 3,
-                        pointBorderColor: color.pointBorderColor,
-                        pointBorderWidth: 3,
-                        tension: 0.5,
-                        fill: true,
-                        backgroundColor: (context) => {
-                            const ctx = context.chart.ctx;
-                            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-                            gradient.addColorStop(0, color.gradientColor);
-                            gradient.addColorStop(1, "white");
-                            return gradient;
-                        },
-                    }]
-                };
+                if (color) {
+                    const newChartData = {
+                        labels: dates,
+                        datasets: [{
+                            label: uInvestment.ticker,  // Using ticker as the label
+                            data: sales,
+                            borderColor: color.borderColor,
+                            borderWidth: 3,
+                            pointBorderColor: color.pointBorderColor,
+                            pointBorderWidth: 3,
+                            tension: 0.5,
+                            fill: true,
+                            backgroundColor: (context) => {
+                                const ctx = context.chart.ctx;
+                                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                                gradient.addColorStop(0, color.gradientColor);
+                                gradient.addColorStop(1, "white");
+                                return gradient;
+                            },
+                        }]
+                    };
 
-                setChartDataPort(newChartData);
+                    setChartDataPort(newChartData);
+                }
             } else {
                 // Handle cases where uInvestment or its history is not available
                 console.log("inside else of useEffect for chartData after change in uInvestment")
@@ -992,7 +1059,22 @@
                                         <img src={extractImageUrl(article.content)} alt="Post Image" className="post-image"/>
                                     </a>
                                     <p className='post-text'>{article.contentSnippet}</p>
-                                    <button className='submit-button save-button' onClick={() => savePost(article,clerkId, setSavedArticles)}>Save</button>
+                                    <br></br><br></br>
+                                    <button
+
+                                        onClick={() => savePost(article, clerkId, setSavedArticles)}
+                                        style={{
+                                            background: `url('/css/icons/save.png') no-repeat center center`,
+                                            backgroundSize: 'contain',
+                                            width: '64px', // Adjust the size as needed
+                                            height: '64px',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            padding: 0,
+                                            display: 'block'
+                                        }}
+                                        aria-label="Save"
+                                    />
                                 </div>
                             </div>
                         ))}
@@ -1002,171 +1084,257 @@
             )}
               {activeTab === 'Portfolio' && (
                   <div>
-                      <div className='bigSectionBG'>
-                          <p>Your Stocks
-                          </p>
-                          <p className='stockDisplayListWatchlist'>
+                      <div className='bigSectionBG' style={{
+                          padding: "20px",
+                          backgroundColor: "#f0f0f0",
+                          borderRadius: "8px",
+                          boxShadow: "0 4px 8px rgba(0,0,0,0.1)"
+                      }}>
+                          <h2 style={{
+                              fontSize: "24px",
+                              color: "#333",
+                              borderBottom: "2px solid #ccc",
+                              paddingBottom: "10px",
+                              marginBottom: "20px"
+                          }}>Your Stocks</h2>
+
+                          <div style={{marginBottom: "20px", overflowX: "auto"}}>
                               {uniqueInvestments.map(company => (
-                                  <span key={company._id} className='stockDisplayListItem'
+                                  <span key={company._id} style={{
+                                      display: "inline-block",
+                                      margin: "5px 10px",
+                                      padding: "10px 20px",
+                                      backgroundColor: "#fff",
+                                      borderRadius: "5px",
+                                      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                                      cursor: "pointer"
+                                  }}
                                         onClick={() => selectInvestmentFromPortfolio(company)}>
-                                    <br></br>
-                                  <span>{company.companyDetails.ticker}</span>
-                             </span>
+                        {company.companyDetails.ticker}
+                    </span>
                               ))}
-                          </p>
-                          <br/><br/>
-                          <p className='stockDisplayListWatchlist'>
-                              <div key={uInvestment._id} className='StockDisplayWatchlistStats'>
-
-                                  <span>Previous Close: {uInvestment.details.Open} &emsp;&emsp;
-                                      Open: {uInvestment.details.Open}&emsp;&emsp;
-                                      Market Cap: {uInvestment.details.Market_Cap} &emsp;&emsp;
-                                      Volume: {uInvestment.details.Volume}</span>
-                                  <br/>
-                                  <span> Market Cap: {uInvestment.details.Market_Cap} &emsp;&emsp;
-                                      Revenue: {uInvestment.details.Revenue} &emsp;&emsp;
-                                      PE Ratio: {uInvestment.details.PE_Ratio} &emsp;&emsp;
-                                      Dividend: {uInvestment.details.Dividend} &emsp;&emsp;
-                                      <br></br>
-                                      Shares Outstanding: {uInvestment.details.Shares_outstanding}</span>
-                              </div>
-                          </p>
-                          <div className="topChartClassWatchlist">
-                              {uInvestment ? (
-                                  <Line data={chartDataPort} options={options}/>
-                              ) : (
-                                  <div>Loading or Select a Stock...</div>
-                              )}
                           </div>
-                          {/*<p className='stockDisplayListWatchlist'>*/}
-                          {/*    <span className='stockDisplayListItem' onClick={() => setSelectedStock('AAPL')}>AAPL</span>*/}
-                          {/*    <br></br>*/}
-                          {/*    <span className='stockDisplayListItem' onClick={() => setSelectedStock('MSFT')}>MSFT</span>*/}
-                          {/*    <br></br>*/}
-                          {/*    <span className='stockDisplayListItem' onClick={() => setSelectedStock('TSLA')}>TSLA</span>*/}
-                          {/*</p>*/}
-                          {/*<div className="topChartClassWatchlist">*/}
-                          {/*    {selectedStock ? (*/}
-                          {/*        <Line data={chartData} options={options} />*/}
-                          {/*    ) : (*/}
-                          {/*        <div>Loading or Select a Stock...</div>*/}
-                          {/*    )}*/}
-                          {/*</div>*/}
-                          {/*<br></br>*/}
-                          {/*<br></br>*/}
-                          {/*<p className='stockDisplayListWatchlist bigWatchlist'>*/}
-                          {/*    <div className='StockDisplayWatchlistStats'>*/}
-                          {/*        <span>Previous Close: 172.62  &emsp;&emsp;    Open: 175.60&emsp;&emsp;    Bid 173.05 x 1400&emsp;&emsp; Volume: 75,000,820</span>*/}
-                          {/*        <br></br>*/}
-                          {/*        <span> Ask: 173.07 x 1100&emsp;&emsp; Day's Range: 173.52 - 177.71 &emsp;&emsp;52 Week Range: 155.98 - 199.62</span>*/}
-                          {/*    </div>*/}
-                          {/*</p>*/}
 
+                          {uInvestment && (
+                              <div style={{marginBottom: "20px"}}>
+                                  <div style={{height: "500px", marginBottom: "20px"}}>
+                                      <Line data={chartDataPort} options={options}/>
+                                  </div>
+
+                                  <div style={{
+                                      padding: "20px",
+                                      backgroundColor: "#fff",
+                                      borderRadius: "5px",
+                                      boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+                                  }}>
+                                      <div style={{fontSize: "16px", color: "#666", lineHeight: "1.5"}}>
+                                          <p><strong>Previous Close:</strong> {uInvestment.details.Open}</p>
+                                          <p><strong>Open:</strong> {uInvestment.details.Open}</p>
+                                          <p><strong>Market Cap:</strong> {uInvestment.details.Market_Cap}</p>
+                                          <p><strong>Volume:</strong> {uInvestment.details.Volume}</p>
+                                          <p><strong>Revenue:</strong> {uInvestment.details.Revenue}</p>
+                                          <p><strong>PE Ratio:</strong> {uInvestment.details.PE_Ratio}</p>
+                                          <p><strong>Dividend:</strong> {uInvestment.details.Dividend}</p>
+                                          <p><strong>Shares
+                                              Outstanding:</strong> {uInvestment.details.Shares_outstanding}</p>
+                                      </div>
+                                  </div>
+                              </div>
+                          )}
                       </div>
+                      <div className="bigSectionBG">
+                          <Table className="SearchResultsTable">
+                              <TableBody>
+                                  <TableRow>
+                                      <TableCell>Company</TableCell>
+                                      <TableCell>Number of investments</TableCell>
+                                      <TableCell>Price</TableCell>
+                                      <TableCell>Date</TableCell>
+                                      <TableCell>Operation Type</TableCell>
+                                      <TableCell>Action</TableCell> {/* Adding header for actions */}
+                                  </TableRow>
+                                  {userInvestments.map((investment, index) => (
+                                      <TableRow key={index}>
+                                          <TableCell>{investment.company}</TableCell>
+                                          <TableCell>{investment.numOfUnits}</TableCell>
+                                          <TableCell>${investment.price.toFixed(2)}</TableCell>
+                                          <TableCell>
+                                              {`${new Date(investment.date).toLocaleDateString('en-US', {
+                                                  year: 'numeric',
+                                                  month: 'long',
+                                                  day: 'numeric'
+                                              })}`}
+                                          </TableCell>
+                                          <TableCell className={investment.isSell ? 'stockIncrease' : 'stockDecrease'}>
+                                              {investment.isSell ? 'Sell' : 'Buy'}
+                                          </TableCell>
+                                          <TableCell>
+                                              <button onClick={() => removeInvestmentFromUser(clerkId,investment,userInvestments,setuserInvestments)} style={{
+                                                  background: `url('/css/icons/remove.png') no-repeat center center`,
+                                                  backgroundSize: 'contain',
+                                                  border: 'none',
+                                                  width: '32px',
+                                                  height: '32px',
+                                                  cursor: 'pointer'
+                                              }} aria-label="Remove Investment">
+                                              </button>
+                                          </TableCell>
+                                      </TableRow>
+                                  ))}
+                              </TableBody>
+                          </Table>
+                      </div>
+
+
                       <div className='bottomOfHomeChart'>
                           <div className='bottomRightSectionBG'>
                               <div className="bottomRightChartClass">
                                   <h3>Stock Distribution</h3>
                                   <Pie data={pieData}/>
                               </div>
-
                           </div>
+
                           <div className='bottomLeftSectionBG'>
-                              <form onSubmit={addInvestmentToCompany}>
+                              <form onSubmit={addInvestmentToCompany} style={{
+                                  padding: "20px",
+                                  backgroundColor: "#fff",
+                                  borderRadius: "5px",
+                                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+                              }}>
                                   <h3>Add your stocks</h3>
-                                  <button type="submit" className="submit-button"></button>
                                   <div className='form__group field'>
-                                      <input
-                                          type="text"
-                                          className="form__field"
-                                          value={stockName}
-                                          onChange={(e) => setStockName(e.target.value)}
-                                          placeholder="Stock Ticker"
-                                          required
-                                      />
+                                      <input type="text" className="form__field" value={stockName}
+                                             onChange={(e) => setStockName(e.target.value)} placeholder="Stock Ticker"
+                                             required/>
                                       <label htmlFor="name" className="form__label">Stock Name</label>
                                   </div>
                                   <div className='form__group field'>
-                                      <input
-                                          type="text"
-                                          className="form__field"
-                                          value={stockPrice}
-                                          onChange={(e) => setStockPrice(e.target.value)}
-                                          placeholder="Stock Price"
-                                          required
-                                      />
+                                      <input type="text" className="form__field" value={stockPrice}
+                                             onChange={(e) => setStockPrice(e.target.value)} placeholder="Stock Price"
+                                             required/>
                                       <label htmlFor="stockPrice" className="form__label">$ Stock Price </label>
                                   </div>
                                   <div className='form__group field'>
-                                      <input
-                                          type="text"
-                                          className="form__field"
-                                          value={amountPurchased}
-                                          onChange={(e) => setAmountPurchased(e.target.value)}
-                                          placeholder="Amount Purchased"
-                                          required
-                                      />
+                                      <input type="text" className="form__field" value={amountPurchased}
+                                             onChange={(e) => setAmountPurchased(e.target.value)}
+                                             placeholder="Amount Purchased" required/>
                                       <label htmlFor="amountPurchased" className="form__label">Amount Purchased</label>
                                   </div>
                                   <div className='form__group field'>
-                                      <input
-                                          type="date"
-                                          className="form__field"
-                                          value={purchaseDate}
-                                          onChange={(e) => setPurchaseDate(e.target.value)}
-                                          required
-                                      />
+                                      <input type="date" className="form__field" value={purchaseDate}
+                                             onChange={(e) => setPurchaseDate(e.target.value)} required/>
                                       <label htmlFor="purchaseDate" className="form__label">Purchase Date</label>
                                   </div>
-
+                                  <div className='form__group field'>
+                                      <label className="form__label">Transaction Type:</label>
+                                      <div className="radio-group">
+                                          <label>
+                                              <input type="radio" name="transactionType" value="buy" checked={isSell}
+                                                     onChange={() => setIsSell(true)}/>
+                                              Buy
+                                          </label>
+                                          &emsp;
+                                          <label>
+                                              <input type="radio" name="transactionType" value="sell" checked={!isSell}
+                                                     onChange={() => setIsSell(false)}/>
+                                              Sell
+                                          </label>
+                                      </div>
+                                  </div>
+                                  <button type="submit" style={{margin: "20px 0", padding: "10px 20px"}}>Submit</button>
                               </form>
                           </div>
                       </div>
                   </div>
               )}
-              {activeTab === 'Watchlist' && (
-                  <div className='bigSectionBG'>
-                      <p>My WatchList</p>
-                      {/*<div className='form__group__watchlist field'>*/}
-                      {/*    <input type="text" className="form__field"/>*/}
-                      {/*    <label htmlFor="name" className="form__label">Add a stock</label>*/}
-                      {/*</div>*/}
-                      <p className='stockDisplayListWatchlist'>
-                          {watchlist.map(company => (
-                              <span key={company._id} className='stockDisplayListItem'
-                                    onClick={() => selectStockFromWatchlist(company)}>
-                                    <br></br>
-                                  <span>{company.ticker}</span>
-            </span>
-                          ))}
-                      </p>
-                      <br/><br/>
-                      <p className='stockDisplayListWatchlist'>
-                          {/*{watchlist.map(company => (*/}
-                              <div key={selectedStock._id} className='StockDisplayWatchlistStats'>
 
-                                  <span>Previous Close: {selectedStock.details.Open} &emsp;&emsp;
-                                      Open: {selectedStock.details.Open}&emsp;&emsp;
-                                      Market Cap: {selectedStock.details.Market_Cap} &emsp;&emsp;
-                                      Volume: {selectedStock.details.Volume}</span>
-                                  <br/>
-                                  <span> Market Cap: {selectedStock.details.Market_Cap} &emsp;&emsp;
-                                      Revenue: {selectedStock.details.Revenue} &emsp;&emsp;
-                                      PE Ratio: {selectedStock.details.PE_Ratio} &emsp;&emsp;
-                                      Dividend: {selectedStock.details.Dividend} &emsp;&emsp;
-                                      <br></br>
-                                      Shares Outstanding: {selectedStock.details.Shares_outstanding}</span>
+              {activeTab === 'Watchlist' && (
+                  <div className='bigSectionBG' style={{
+                      padding: "20px",
+                      backgroundColor: "#f0f0f0",
+                      borderRadius: "8px",
+                      boxShadow: "0 4px 8px rgba(0,0,0,0.1)"
+                  }}>
+                      <h2 style={{
+                          fontSize: "24px",
+                          color: "#333",
+                          borderBottom: "2px solid #ccc",
+                          paddingBottom: "10px",
+                          marginBottom: "20px"
+                      }}>My WatchList</h2>
+
+                      <div style={{
+                          marginBottom: "20px"
+                      }}>
+                          {watchlist.map(company => (
+                              <div key={company._id} style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  margin: "5px 10px",
+                                  padding: "10px 20px",
+                                  backgroundColor: "#fff",
+                                  borderRadius: "5px",
+                                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                              }}>
+                    <span style={{
+                        flex: 1,
+                        cursor: "pointer"
+                    }} onClick={() => selectStockFromWatchlist(company)}>
+                        {company.ticker}
+                    </span>
+                                  <button style={{
+                                      border: "none",
+                                      background: "red",
+                                      color: "white",
+                                      padding: "5px 10px",
+                                      borderRadius: "5px",
+                                      cursor: "pointer"
+                                  }} onClick={() => handleRemoveWatchlist(clerkId, company, setWatchlist, setSelectedStock)}>
+                                      Remove
+                                  </button>
                               </div>
-                          {/*))}*/}
-                      </p>
-                      <div className="topChartClassWatchlist">
-                          {selectedStock ? (
-                              <Line data={chartData} options={options} key={key} />
-                          ) : (
-                              <div>Loading or Select a Stock...</div>
-                          )}
+                          ))}
                       </div>
+
+                      {selectedStock && (
+                          <div style={{
+                              marginBottom: "20px",
+                          }}>
+                              <div style={{
+                                  height: "500px",  // Larger height for more emphasis
+                                  marginBottom: "20px"
+                              }}>
+                                  <Line data={chartData} options={options} key={key}/>
+                              </div>
+
+                              <div style={{
+                                  padding: "20px",
+                                  backgroundColor: "#fff",
+                                  borderRadius: "5px",
+                                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+                              }}>
+                                  <div style={{
+                                      fontSize: "16px",
+                                      color: "#666",
+                                      lineHeight: "1.5"
+                                  }}>
+                                      {/* Display company details */}
+                                      <p><strong>Previous Close:</strong> {selectedStock.details.Open}</p>
+                                      <p><strong>Open:</strong> {selectedStock.details.Open}</p>
+                                      <p><strong>Market Cap:</strong> {selectedStock.details.Market_Cap}</p>
+                                      <p><strong>Volume:</strong> {selectedStock.details.Volume}</p>
+                                      <p><strong>Revenue:</strong> {selectedStock.details.Revenue}</p>
+                                      <p><strong>PE Ratio:</strong> {selectedStock.details.PE_Ratio}</p>
+                                      <p><strong>Dividend:</strong> {selectedStock.details.Dividend}</p>
+                                      <p><strong>Shares Outstanding:</strong> {selectedStock.details.Shares_outstanding}
+                                      </p>
+                                  </div>
+                              </div>
+                          </div>
+                      )}
                   </div>
+
+
               )}
 
               {activeTab === 'Search' && (
@@ -1174,55 +1342,117 @@
                       <div className={'bigSectionBG searchContainer'}>
                           <SearchBar onSearchResults={handleSearchResults}/>
                           <Table className="SearchResultsTable">
-                          {/* Tabletjsx content */}
+                              {/* Tabletjsx content */}
                               <TableBody>
                                   {companies.map((company, index) => (
                                       <TableRow key={index} onClick={() => handleCompanyClick(company)}>
-                                          <TableCell className="font-medium SearchCompanyName">{company.name}</TableCell>
+                                          <TableCell
+                                              className="font-medium SearchCompanyName">{company.name}</TableCell>
                                           <TableCell>{company.ticker}</TableCell>
-                                      <TableCell>{company.description}</TableCell>
-                                      <TableCell className={`font-medium ${company.history['06/13/2024'] - company.history['06/12/2024'] > 0 ? 'stockIncrease' : 'stockDecrease'}`}>
-                                          ${company?.history['06/13/2024'] || 'N/A'} {company.history['06/13/2024'] - company.history['06/12/2024'] >= 0 ? '↑' : '↓'}
-                                      </TableCell>
-                                  </TableRow>
-                              ))}
-                          </TableBody>
-                      </Table>
+                                          <TableCell>{company.description}</TableCell>
+                                          <TableCell
+                                              className={`font-medium ${company.history['06/13/2024'] - company.history['06/12/2024'] > 0 ? 'stockIncrease' : 'stockDecrease'}`}>
+                                              ${company?.history['06/13/2024'] || 'N/A'} {company.history['06/13/2024'] - company.history['06/12/2024'] >= 0 ? '↑' : '↓'}
+                                          </TableCell>
+                                      </TableRow>
+                                  ))}
+                              </TableBody>
+                          </Table>
 
-                  </div>
+                      </div>
                       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
                           {selectedCompany ? (
-                              <div style={{position: 'relative'}}>
-                                  {/* Adding an image below the close button but aligned to the top right corner */}
+                              <div style={{
+                                  position: 'relative',
+                                  padding: "20px",
+                                  backgroundColor: "#f9f9f9",
+                                  borderRadius: "8px",
+                                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                                  marginBottom: "20px"
+                              }}>
                                   <img src="/css/icons/200-x-200.jpg" alt="Modal Icon" style={{
                                       position: 'absolute',
-                                      right: '10px',
-                                      top: '40px',
-                                      width: '150px',
-                                      height: '150px'
+                                      right: '20px',
+                                      top: '20px',
+                                      width: '100px', // Reduced for better fit
+                                      height: '100px',
+                                      borderRadius: '50%' // Make it circular if it fits the design
                                   }}/>
-                                  <br/><br/><br/>
-                                  <h1 style={{fontSize: '48px'}}>{selectedCompany.name}</h1>
-                                  <br/><br/>
-                                  <p>{selectedCompany.description}</p>
-                                  <br/><br/><br/><br/>
-                                  <p className="profileStockValue">
-                                      Current Stock Price:
-                                      <span className={selectedCompany.history && selectedCompany.history['06/13/2024'] - selectedCompany.history['06/12/2024'] >= 0 ? 'stockIncrease' : 'stockDecrease'}>
-                        &nbsp;${selectedCompany.history && selectedCompany.history['06/13/2024'] || 'N/A'}
-                                          {selectedCompany.history && (selectedCompany.history['06/13/2024'] - selectedCompany.history['06/12/2024'] >= 0 ? '↑' : '↓')}
-                    </span>
-                                  </p>
-                                  <button className="addWatchlistBtn" onClick={() => handleAddToWatchlistClick(clerkId,selectedCompany,setWatchlist,setSelectedStock)}>Add to Watchlist</button>
+                                  <br/><br/><br/><br/> {/* Adjusted for spacing */}
+
+                                  <p style={{
+                                      fontSize: "24px",
+                                      color: "#333",
+                                      borderBottom: "1px solid #ddd",
+                                      paddingBottom: "10px"
+                                  }}>Stock Metrics</p>
+
+                                  <h2 style={{marginTop: "20px", color: "#222"}}>{selectedCompany.companyName}</h2>
+                                  <h3 style={{color: "#555"}}>{selectedCompany.ticker}</h3>
+
+                                  <div style={{
+                                      fontSize: "16px",
+                                      color: "#666",
+                                      marginTop: "10px",
+                                      lineHeight: "1.5"
+                                  }}>
+                                      <span>Previous Close: {selectedCompany.details.Open} &emsp;&emsp;</span>
+                                      <span>Open: {selectedCompany.details.Open} &emsp;&emsp;</span>
+                                      <span>Market Cap: {selectedCompany.details.Market_Cap} &emsp;&emsp;</span>
+                                      <span>Volume: {selectedCompany.details.Volume}</span>
+                                      <br/>
+                                      <span>Revenue: {selectedCompany.details.Revenue} &emsp;&emsp;</span>
+                                      <span>PE Ratio: {selectedCompany.details.PE_Ratio} &emsp;&emsp;</span>
+                                      <span>Dividend: {selectedCompany.details.Dividend} &emsp;&emsp;</span>
+                                      <br/>
+                                      <span>Shares Outstanding: {selectedCompany.details.Shares_outstanding}</span>
+                                  </div>
+
+                                  <p style={{
+                                      marginTop: "10px",
+                                      color: "#444",
+                                      fontSize: "18px"
+                                  }}>Bio: {selectedCompany.bio}</p>
+
+                                  <p style={{
+                                      color: "#444",
+                                      fontSize: "18px"
+                                  }}>Website: <a href={selectedCompany.website}
+                                                 style={{color: "#0652DD"}}>{selectedCompany.website}</a></p>
+
+                                  <p style={{
+                                      color: "#444",
+                                      fontSize: "18px"
+                                  }}>Email: <a href={`mailto:${selectedCompany.email}`}
+                                               style={{color: "#0652DD"}}>{selectedCompany.email}</a></p>
+
+                                  <p style={{
+                                      color: "#444",
+                                      fontSize: "18px"
+                                  }}>Category: {selectedCompany.description}</p>
+
+                                  <button style={{
+                                      marginTop: "20px",
+                                      padding: "10px 20px",
+                                      fontSize: "16px",
+                                      color: "#fff",
+                                      backgroundColor: "#0652DD",
+                                      border: "none",
+                                      borderRadius: "5px",
+                                      cursor: "pointer",
+                                      outline: "none"
+                                  }}
+                                          onClick={() => handleAddToWatchlistClick(clerkId, selectedCompany, setWatchlist, setSelectedStock)}>
+                                      Add to Watchlist
+                                  </button>
                               </div>
+
                           ) : (
                               <div>
                                   <p>No company selected.</p>
                               </div>
                           )}
                       </Modal>
-
-
 
 
                   </div>
@@ -1263,12 +1493,12 @@
               )}
               {activeTab === 'Apply Company' && (
                   <div className='bigSectionBG Contact'>
-                     <h1>
-                         Please upload your company's documents and we will be in touch
-                     </h1>
+                      <h1>
+                          Please upload your company's documents and we will be in touch
+                      </h1>
                       <form onSubmit={handleApplyCompany}>
                           <input type="file" accept="document/*"/>
-                          <button className="submit-button apply-company" >Submit</button>
+                          <button className="submit-button apply-company">Submit</button>
                       </form>
                   </div>
               )}
@@ -1276,7 +1506,7 @@
                   <div className='bigSectionBG chatbot'>
                       <ChatComponent onSendMessage={handleSendMessage} conversation={conversation}/>
                       <ChatbotTaskContext.Provider value={chatbotTask}>
-                          <RadioButtonsComponent setChatbotTask={setChatbotTask} />
+                          <RadioButtonsComponent setChatbotTask={setChatbotTask}/>
                           <div>Selected Task: {chatbotTask}</div>
                           {/* Other components that need access to chatbotTask */}
                       </ChatbotTaskContext.Provider>
@@ -1295,10 +1525,22 @@
                                           </p>
                                           <p className='postPubDate'>{article.pubDate}</p>
                                           <a href={article.link}>
-                                              <img src={extractImageUrl(article.content)} alt="Post Image"
-                                                   className="post-image"/>
+                                              <img src={extractImageUrl(article.content)} alt="Post Image" className="post-image"/>
                                           </a>
                                           <p className='post-text'>{article.contentSnippet}</p>
+                                          <br></br><br></br>
+                                          <button
+                                              onClick={() => removePost(article, clerkId,setSavedArticles)}
+                                              style={{
+                                                  background: `url('/css/icons/remove.png') no-repeat center center`,
+                                                  backgroundSize: 'contain',
+                                                  width: '64px',
+                                                  height: '64px',
+                                                  border: 'none',
+                                                  cursor: 'pointer'
+                                              }}
+                                              aria-label="Remove"
+                                          ></button>
                                       </div>
                                   </div>
                               ))}
@@ -1306,6 +1548,7 @@
                       </div>
                   </div>
               )}
+
           </div>
 
         </div>

@@ -4,7 +4,7 @@ import axios from 'axios';
 export async function sendRequest(task: 'Financial Sentiment Analysis' | 'Financial Relation Extraction' | 'Financial Headline Classification' | 'Financial Named Entity Recognition', data: string): Promise<any> {
   const encodedData = encodeURIComponent(data);
   const encodedTask = encodeURIComponent(task);
-  const url = `https://5681-34-74-253-152.ngrok-free.app/predict?data=${encodedData}&task=${encodedTask}`;
+  const url = `https://280c-34-136-60-221.ngrok-free.app/predict?data=${encodedData}&task=${encodedTask}`;
 
   try {
     // const response = await fetch(url)

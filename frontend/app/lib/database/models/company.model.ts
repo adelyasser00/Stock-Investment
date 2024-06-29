@@ -50,6 +50,12 @@ const CompanySchema = new Schema({
         type: Map,
         of: String
     },
+    bio:{
+        type: String,
+    },
+    website:{
+        type: String,
+    }
 
 });
 CompanySchema.index({ companyName: 'text', description: 'text', ticker: 'text' });

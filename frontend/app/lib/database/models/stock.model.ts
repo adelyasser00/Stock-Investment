@@ -21,7 +21,16 @@ const InvestedStockSchema = new Schema({
    price: {
       type: Number,
       required: true
-   }
+   },
+    date: {
+        type: Date,
+        default: Date.now, // Set the default value to the current date
+    },
+    isSell: {
+    type: Boolean,
+        required: true, // Make this field required
+}
+
 });
 
 const Stock = models?.Stock || model("Stock", InvestedStockSchema);

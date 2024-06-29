@@ -274,6 +274,7 @@ h3, h2 {
 
 }
 
+
 .bottomRightSectionBG {
     background-color: #FFF;
     padding: 30px;
@@ -281,12 +282,12 @@ h3, h2 {
     display: flex;
     flex-direction: column;
     /*max-width: 50%;*/
-    left: 885px;
+    left: 980px;
     top:30px;
-    width:570px;
+    width:643px;
     position: relative;
     /*transform: translateX(33.5%) translateY(38%);*/
-    max-width:360px;
+    max-width:500px;
     box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);
 
 }
@@ -301,7 +302,7 @@ h3, h2 {
     flex-direction: column;
     width: 570px;
     left: 300px;
-    top: -355px;
+    top: -494px;
 
     /*transform: translateX(-106.5%) translateY(-55%);*/
     /*width:50%;*/
@@ -554,7 +555,7 @@ td:nth-last-child{
     position: absolute;
     top: 10px;
     right: 10px;
-    background-color: #7140DEFF;
+    background-color: #00ff51;
     color: white;
     font-size: 16px;
     padding: 2px 8px 2px 8px ; /* Adjust padding to make space for the icon */
@@ -576,7 +577,7 @@ td:nth-last-child{
     position: absolute;
     bottom:-110px;
     left:10px;
-    background-color: #7140DEFF;
+    background-color: #00ff51;
     color: white;
     font-size: 16px;
     padding: 8px 40px 8px 32px; /* Adjust padding to make space for the icon */
@@ -628,13 +629,13 @@ td:nth-last-child{
     position: relative;
 }
 .postArea{
-    max-width: 40vw;
+    max-width: 76.7vw;
     left: 1150px;
     top:20px;
     position: relative;
     display: flex;
     flex-direction: column;
-    width:750px;
+    /*width:950px;*/
 
 }
 .post-text{
@@ -762,8 +763,8 @@ td:nth-last-child{
     top:40px;
 }
 input[type=radio] {
-    opacity: 0;
-    display: none;
+    /*opacity: 0;*/
+    display: inline-block;
     margin: 0;
 }
 
@@ -814,7 +815,7 @@ input[type=radio] {
 
 @media (max-width: 1730px){
     .postArea{
-        left:550px;
+        left:300px;
     }
 }
 @media (max-width: 768px){

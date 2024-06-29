@@ -21,7 +21,7 @@ let localStorage = {
     }
 };
 // "https://www.youm7.com/rss/SectionRss?SectionID=297"
-const feedURLs = ["https://www.almasryalyoum.com/rss/rssfeed"];
+const feedURLs = ["https://www.almasryalyoum.com/rss/rssfeed?sectionid=4"];
 const parser = new RSSParser();
 let articles = [];
 export { articles };
