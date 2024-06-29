@@ -592,17 +592,17 @@ const HomePage = () => {
             <div>
                 {activeTab === 'Feed' && (
                     <div>
-                        <div className='bigSectionBG addPostSection'>
-                            <p>Share some news!
-                            </p>
-                            <div className='form__group field'>
-                                <input type="text" className="form__field form__fieldBIO"/>
-                                <label htmlFor="name" className="form__label">Type something...</label>
-                                <button className='postBtn'>post</button>
-                            </div>
-
-
-                        </div>
+                    {/*//     <div className='bigSectionBG addPostSection'>*/}
+                    {/*//         <p>Share some news!*/}
+                    {/*//         </p>*/}
+                    {/*//         <div className='form__group field'>*/}
+                    {/*//             <input type="text" className="form__field form__fieldBIO"/>*/}
+                    {/*//             <label htmlFor="name" className="form__label">Type something...</label>*/}
+                    {/*//             <button className='postBtn'>post</button>*/}
+                    {/*//         </div>*/}
+                    {/*//*/}
+                    {/*//*/}
+                    {/*//     </div>*/}
                         <div className='bottomOfHomeChart'>
                             <div className='postArea'>
                                 {articles.map((article, index) => (

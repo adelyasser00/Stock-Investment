@@ -891,7 +891,7 @@
 
         const selectInvestmentFromPortfolio = (company) => {
             console.log("entered selectInvestmentFromPortfolio")
-            setUInvesment(company); // Assuming setUInvesment sets the company whose details are to be displayed
+            setUInvesment(company.companyDetails); // Assuming setUInvesment sets the company whose details are to be displayed
             console.log("set selectInvestmentFromPortfolio: ","stock sent as parameter: " ,company)
         };
         const selectStockFromWatchlist = (company) => {
@@ -962,7 +962,6 @@
 
                 const color = calculateColor(uInvestment.History);  // Ensure calculateColor can handle an empty or undefined 'history'
 
-                if (color) {
                     const newChartData = {
                         labels: dates,
                         datasets: [{
@@ -981,11 +980,12 @@
                                 gradient.addColorStop(1, "white");
                                 return gradient;
                             },
-                        }]
+                        }],
                     };
+                    console.log(newChartData)
 
                     setChartDataPort(newChartData);
-                }
+
             } else {
                 // Handle cases where uInvestment or its history is not available
                 console.log("inside else of useEffect for chartData after change in uInvestment")
@@ -1110,12 +1110,12 @@
                                       cursor: "pointer"
                                   }}
                                         onClick={() => selectInvestmentFromPortfolio(company)}>
-                        {company.companyDetails.ticker}
-                    </span>
+                    {company.companyDetails.ticker}
+                </span>
                               ))}
                           </div>
 
-                          {uInvestment && (
+                          {uInvestment ? (
                               <div style={{marginBottom: "20px"}}>
                                   <div style={{height: "500px", marginBottom: "20px"}}>
                                       <Line data={chartDataPort} options={options}/>
@@ -1128,17 +1128,22 @@
                                       boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
                                   }}>
                                       <div style={{fontSize: "16px", color: "#666", lineHeight: "1.5"}}>
-                                          <p><strong>Previous Close:</strong> {uInvestment.details.Open}</p>
-                                          <p><strong>Open:</strong> {uInvestment.details.Open}</p>
-                                          <p><strong>Market Cap:</strong> {uInvestment.details.Market_Cap}</p>
-                                          <p><strong>Volume:</strong> {uInvestment.details.Volume}</p>
-                                          <p><strong>Revenue:</strong> {uInvestment.details.Revenue}</p>
-                                          <p><strong>PE Ratio:</strong> {uInvestment.details.PE_Ratio}</p>
-                                          <p><strong>Dividend:</strong> {uInvestment.details.Dividend}</p>
+                                          <p><strong>Previous Close:</strong> {uInvestment.details?.Open || 'N/A'}</p>
+                                          <p><strong>Open:</strong> {uInvestment.details?.Open || 'N/A'}</p>
+                                          <p><strong>Market Cap:</strong> {uInvestment.details?.Market_Cap || 'N/A'}</p>
+                                          <p><strong>Volume:</strong> {uInvestment.details?.Volume || 'N/A'}</p>
+                                          <p><strong>Revenue:</strong> {uInvestment.details?.Revenue || 'N/A'}</p>
+                                          <p><strong>PE Ratio:</strong> {uInvestment.details?.PE_Ratio || 'N/A'}</p>
+                                          <p><strong>Dividend:</strong> {uInvestment.details?.Dividend || 'N/A'}</p>
                                           <p><strong>Shares
-                                              Outstanding:</strong> {uInvestment.details.Shares_outstanding}</p>
+                                              Outstanding:</strong> {uInvestment.details?.Shares_outstanding || 'N/A'}
+                                          </p>
                                       </div>
                                   </div>
+                              </div>
+                          ) : (
+                              <div style={{marginBottom: "20px", textAlign: "center"}}>
+                                  <p>No investment selected or available to display.</p>
                               </div>
                           )}
                       </div>
@@ -1155,7 +1160,7 @@
                                   </TableRow>
                                   {userInvestments.map((investment, index) => (
                                       <TableRow key={index}>
-                                          <TableCell>{investment.company}</TableCell>
+                                          <TableCell>{investment.companyDetails.companyName}</TableCell>
                                           <TableCell>{investment.numOfUnits}</TableCell>
                                           <TableCell>${investment.price.toFixed(2)}</TableCell>
                                           <TableCell>
@@ -1169,14 +1174,16 @@
                                               {investment.isSell ? 'Sell' : 'Buy'}
                                           </TableCell>
                                           <TableCell>
-                                              <button onClick={() => removeInvestmentFromUser(clerkId,investment,userInvestments,setuserInvestments)} style={{
-                                                  background: `url('/css/icons/remove.png') no-repeat center center`,
-                                                  backgroundSize: 'contain',
-                                                  border: 'none',
-                                                  width: '32px',
-                                                  height: '32px',
-                                                  cursor: 'pointer'
-                                              }} aria-label="Remove Investment">
+                                              <button
+                                                  onClick={() => removeInvestmentFromUser(clerkId, investment, userInvestments, setuserInvestments)}
+                                                  style={{
+                                                      background: `url('/css/icons/remove.png') no-repeat center center`,
+                                                      backgroundSize: 'contain',
+                                                      border: 'none',
+                                                      width: '32px',
+                                                      height: '32px',
+                                                      cursor: 'pointer'
+                                                  }} aria-label="Remove Investment">
                                               </button>
                                           </TableCell>
                                       </TableRow>
@@ -1289,7 +1296,8 @@
                                       padding: "5px 10px",
                                       borderRadius: "5px",
                                       cursor: "pointer"
-                                  }} onClick={() => handleRemoveWatchlist(clerkId, company, setWatchlist, setSelectedStock)}>
+                                  }}
+                                          onClick={() => handleRemoveWatchlist(clerkId, company, setWatchlist, setSelectedStock)}>
                                       Remove
                                   </button>
                               </div>
