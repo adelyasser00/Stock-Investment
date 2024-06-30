@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-
 // ====== USER PARAMS
 declare type CreateUserParams = {
   clerkId: string;
@@ -85,5 +84,6 @@ declare type PostParams = {
   content: string,
   contentSnippet:string,
   image: string,
-  link: string
+  link: string,
+  companyClerkId: string,
 }

@@ -6,7 +6,8 @@ import Company from "../database/models/company.model";
 import { connectToDatabase } from "../database/mongoose";
 import { handleError } from "../utils";
 import Stock from "@/lib/database/models/stock.model";
-import User from "@/lib/database/models/user.model"
+import User from "@/lib/database/models/user.model";
+import Post from "@/lib/database/models/post.model"
 
 /**
  * functionalities of company
@@ -111,6 +112,40 @@ export async function fetchInvestmentsByCompanyClerkId(clerkId: string) {
     throw new Error('Could not fetch investments');
   }
 }
+
+// ADD POST
+export async function addPost(title: string, content: string, companyClerkId: string) {
+  try {
+    await connectToDatabase();
+
+    // Check if the company exists
+    const companyExists = await Company.findOne({ clerkId: companyClerkId });
+    if (!companyExists) {
+      throw new Error("Company not found for the given clerkId");
+    }
+
+    // Create new post related to the company
+    const newPost = new Post({
+      title: title,
+      content: content,
+      companyClerkId: companyClerkId
+    });
+
+    const savedPost = await newPost.save();
+
+    if (!savedPost) throw new Error("Failed to save the post");
+
+    // Optionally, if you want to add the post ID to the company document
+    // companyExists.posts.push(savedPost._id);
+    // await companyExists.save();
+
+    return JSON.parse(JSON.stringify(savedPost));
+  } catch (error) {
+    handleError(error);
+    throw error;
+  }
+}
+
 
 // // USE CREDITS
 // export async function updateCredits(companyId: string, creditFee: number) {

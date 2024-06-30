@@ -13,7 +13,8 @@ const PostSchema = new Schema({
     downvotes: { type: Number, default: 0 },
     title:String,
     image:String,
-    link:String
+    link:String,
+    companyClerkId: String,
 });
 
 const Post = models?.Post || mongoose.model("Post", PostSchema);

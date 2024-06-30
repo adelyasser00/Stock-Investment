@@ -14,7 +14,7 @@ import {checkAndUpdateFeed} from "@/lib/newsfeed/helper";
 import {search} from "@/lib/actions/user.actions"
 import SearchBar from '../searchbar'
 import {getUserById, savePostToUser, getSavedPosts} from '@/lib/actions/user.actions'
-import {fetchInvestmentsByCompanyClerkId, getCompanyById, updateCompany} from '@/lib/actions/company.actions';
+import {fetchInvestmentsByCompanyClerkId, getCompanyById, updateCompany, addPost} from '@/lib/actions/company.actions';
 import {
   Chart as ChartJS,
   LineElement,
@@ -143,6 +143,8 @@ const HomePage = () => {
         labels: [],
         datasets: []
     });
+    // State to store the input value
+    const [inputValue, setInputValue] = useState('');
     const [chartData, setChartData] = useState(null);
     const [userAccount, setUserAccount] = useState(null);
     const [investments, setInvestments] = useState([]);
@@ -581,6 +583,25 @@ const HomePage = () => {
     };
 
 
+
+    // Handle input change
+    const handleInputChange = (event) => {
+        setInputValue(event.target.value);
+    };
+    const handleSubmitPost = async (event) => {
+        event.preventDefault();  // Prevent the default form submission behavior
+        console.log('Submitted value:', inputValue);
+        // Here you can also send `inputValue` to a server or another component
+        // Reset the input value if needed
+        console.log("submitting post")
+        console.log(company.companyName)
+        console.log(inputValue)
+        console.log(company.clerkId)
+        await addPost(company.companyName,inputValue,company.clerkId)
+        setInputValue('');
+    };
+
+
     return (
         <div>
 
@@ -592,17 +613,25 @@ const HomePage = () => {
             <div>
                 {activeTab === 'Feed' && (
                     <div>
-                    {/*//     <div className='bigSectionBG addPostSection'>*/}
-                    {/*//         <p>Share some news!*/}
-                    {/*//         </p>*/}
-                    {/*//         <div className='form__group field'>*/}
-                    {/*//             <input type="text" className="form__field form__fieldBIO"/>*/}
-                    {/*//             <label htmlFor="name" className="form__label">Type something...</label>*/}
-                    {/*//             <button className='postBtn'>post</button>*/}
-                    {/*//         </div>*/}
-                    {/*//*/}
-                    {/*//*/}
-                    {/*//     </div>*/}
+                         <div className='bigSectionBG addPostSection'>
+                             <p>Share some news!
+                             </p>
+                             <div className='form__group field'>
+                                 <form onSubmit={handleSubmitPost}>
+                                     <input
+                                         type="text"
+                                         className="form__field form__fieldBIO"
+                                         value={inputValue}  // Controlled component
+                                         onChange={handleInputChange}  // Update state on change
+                                         placeholder="Type something..." // Placeholder as label's alternative
+                                     />
+                                     <label htmlFor="name" className="form__label">Type something...</label>
+                                     <button className='postBtn' type="submit">Post</button>
+                                 </form>
+                             </div>
+
+
+                         </div>
                         <div className='bottomOfHomeChart'>
                             <div className='postArea'>
                                 {articles.map((article, index) => (

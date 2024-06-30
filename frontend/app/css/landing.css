@@ -398,6 +398,24 @@ h3, h2 {
 
 
 }
+.postContainerWatchlist{
+    position: relative;
+    background-color:#FFF;
+    color:#000;
+    padding-top:50px;
+    padding-left:30px;
+    padding-right:30px;
+    padding-bottom:50px;
+    border-radius:10px;
+    display:flex;
+    flex-direction:column;
+
+    max-height:1200000vh;
+
+    margin-top:30px;
+    box-shadow: 3px 3px 1px 0 rgba(0,0,0,0.1);    /*max-height: 60%;*/
+    text-align: left;
+}
 .searchBar {
     height: 15%;
     min-height: 15%;
@@ -648,6 +666,16 @@ td:nth-last-child{
     text-align: right;
 
 }
+.post-textWatchlist{
+    position: relative;
+    top:30px;
+    font-weight: 300;
+    font-size: 1.2em;
+    /*left:160px;*/
+    /*    align text in arabic to be on the right of the page*/
+    text-align: left;
+
+}
 .post-image{
     /*width:800px;*/
     /*height:800px;*/
@@ -749,6 +777,11 @@ td:nth-last-child{
     position: relative;
     left:0;
     text-align: right;
+}
+.postContentWatchlist{
+    position: relative;
+    left:0;
+    text-align: left;
 }
 
 .postPubDate{

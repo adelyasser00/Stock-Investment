@@ -245,6 +245,23 @@ export async function removeInvestment(userClerkId: string, stockId: string) {
     handleError(error);
   }
 }
+export async function getWatchlistPosts(companyIds: string[]) {
+    try {
+        await connectToDatabase();
+        const watchlistPosts = await Post.find({
+            companyClerkId: { $in: companyIds }  // Use $in to match any of the company IDs
+        });
+
+        if (!watchlistPosts.length) {  // Checking if the array is empty
+            throw new Error('No posts found for the given company IDs.');
+        }
+
+        return watchlistPosts;
+    } catch (error) {
+        handleError(error);
+    }
+}
+
 
 export async function followCompany(clerkId: string,  companyId:string) {
   try {
@@ -443,6 +460,27 @@ export async function chatbot(clerkId: string,  postId:Schema.Types.ObjectId) {
   }
 }
 
+export async function saveWatchlistPostToUser(postId, userId) {
+    console.log("moved to actions")
+    try {
+        await connectToDatabase();
+
+        const user = await User.findOne({ clerkId : userId });
+        if (!user) {
+            throw new Error('User not found');
+        }
+        console.log("saving post of watchlist")
+        const objPostId = new mongoose.Types.ObjectId(postId)
+        console.log(objPostId)
+        user.savedlist.push(objPostId)
+        await user.save();
+
+        // return savedPost;
+    } catch (error) {
+        console.error('Failed to save post or update user:', error);
+        throw error;
+    }
+}
 export async function savePostToUser(postData: PostParams, userId) {
   console.log("moved to actions")
   try {
@@ -452,25 +490,24 @@ export async function savePostToUser(postData: PostParams, userId) {
     if (!user) {
       throw new Error('User not found');
     }
+        const newPost = new Post({
+            title: postData.title,
+            content: postData.content,
+            contentSnippet: postData.contentSnippet,
+            image: postData.image,
+            link: postData.link
+        });
 
-    // console.log(user)
-    const newPost = new Post({
-      title: postData.title,
-      content: postData.content,
-      contentSnippet: postData.contentSnippet,
-      image: postData.image,
-      link: postData.link
-    });
+        // Save the new post to the database.
+        const savedPost = await newPost.save();
 
-    // Save the new post to the database.
-    const savedPost = await newPost.save();
+        // await savedPost.save();
+        console.log(savedPost._id);
+        user.savedlist.push(savedPost._id);
 
-    // await savedPost.save();  
-
-    user.savedlist.push(savedPost._id);
     await user.save(); 
 
-    return savedPost;
+    // return savedPost;
   } catch (error) {
     console.error('Failed to save post or update user:', error);
     throw error;

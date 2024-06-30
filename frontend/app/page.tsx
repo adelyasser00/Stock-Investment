@@ -14,7 +14,7 @@
     import {checkAndUpdateFeed} from "@/lib/newsfeed/helper";
     import {addToWatchlist, search} from "@/lib/actions/user.actions"
     import SearchBar from './searchbar'
-    import {getUserById, savePostToUser, getSavedPosts, addInvestment, getWatchlist, getInvestments,removeFromWatchlist,removeSavedPost,removeInvestment} from '@/lib/actions/user.actions'
+    import {getUserById, savePostToUser, getSavedPosts, addInvestment, getWatchlist, getInvestments,removeFromWatchlist,removeSavedPost,removeInvestment, getWatchlistPosts,saveWatchlistPostToUser} from '@/lib/actions/user.actions'
     import axios from 'axios';
     // import {runRecommsys} from '@/lib/recommsys/helper'
     import {sendRequest} from '@/lib/chatbot/helper'
@@ -102,6 +102,16 @@
             throw error;  // Rethrowing the error after logging
         }
     }
+    async function fetchWatchlistPosts(watchlistCompanyIds){
+        try{
+            const response = await getWatchlistPosts(watchlistCompanyIds)
+            return response;
+        } catch (error) {
+            console.error("Error fetching watchlist posts :", error);
+            throw error;  // Rethrowing the error after logging
+        }
+
+    }
     async function removePost(article,clerkId,setSavedArticles){
 
         await removeSavedPost(article._id, clerkId)
@@ -136,6 +146,28 @@
                 console.error("Error fetching saved posts:", error);
             });
     }
+    async function saveWatchlistPost(article,clerkId,setSavedArticles){
+        console.log("saving this post")
+        console.log(article)
+        console.log(article._id)
+        const result = await saveWatchlistPostToUser(article._id,clerkId)
+        console.log("save successful")
+        console.log(result)
+        // re-fetch saved posts for the same session
+        console.log("fetching the updated saved posts")
+        fetchSavedPosts(clerkId)
+            .then(savedArticles=>{
+                console.log("saved articles received in frontend")
+                savedArticles.reverse();
+                setSavedArticles(savedArticles);
+                console.log("loading saved articles done")
+            })
+            .catch(error => {
+                console.error("Error fetching saved posts:", error);
+            });
+    }
+
+
     async function fetchSavedPosts(clerkId){
         try{
             const response = await getSavedPosts(clerkId)
@@ -342,6 +374,7 @@
         const [conversation, setConversation] = useState([
             { text: "Hello! How can I assist you with your financial planning today?", isUser: false }
         ]);
+        const[watchlistPosts, setWatchlistPosts] = useState([])
         const [chatbotResponse,setChatbotResponse]= useState(null)
         const handleSendMessage = async (message) => {
             // Update conversation with user's message
@@ -427,6 +460,26 @@
                     console.error("Error fetching RSS:", error);
                 });
         }, []);
+        useEffect(() => {
+            if (watchlist && watchlist.length > 0) {
+                // Extract clerkIds from the watchlist
+                const clerkIds = watchlist.map(item => item.clerkId);
+
+                // Call fetchWatchlistPosts with the array of clerkIds
+                fetchWatchlistPosts(clerkIds)
+                    .then( watchlistPosts => {
+                        console.log("watchlist posts received in frontend")
+                        console.log(watchlistPosts)
+                        setWatchlistPosts(watchlistPosts)
+                        console.log("loading done")
+                    }).catch(error => {
+                    console.error("Error fetching watchlist posts:", error);
+                });
+            }
+        }, [watchlist]);
+
+
+
         useEffect(() => {
             if (clerkId) {
                 fetchSavedPosts(clerkId)
@@ -1048,6 +1101,32 @@
                 <div>
                     <div className='bottomOfHomeChart'>
                     <div className='postArea'>
+                        {watchlistPosts.map((article, index) => (
+                            <div key={index} className='postContainerWatchlist'>
+                                <div className='postContentWatchlist'>
+                                    <p className='postTitle'>
+                                        {article.title}
+                                    </p>
+                                    <p className='post-textWatchlist'>{article.content}</p>
+                                    <br></br><br></br>
+                                    <button
+
+                                        onClick={() => saveWatchlistPost(article, clerkId, setSavedArticles)}
+                                        style={{
+                                            background: `url('/css/icons/save.png') no-repeat center center`,
+                                            backgroundSize: 'contain',
+                                            width: '64px', // Adjust the size as needed
+                                            height: '64px',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            padding: 0,
+                                            display: 'block'
+                                        }}
+                                        aria-label="Save"
+                                    />
+                                </div>
+                            </div>
+                        ))}
                         {articles.map((article, index) => (
                             <div key={index} className='postContainer'>
                                 <div className='postContent'>
@@ -1529,16 +1608,34 @@
                                   <div key={index} className='postContainer'>
                                       <div className='postContent'>
                                           <p className='postTitle'>
-                                              <a href={article.link}>{article.title}</a>
+                                              {article.companyClerkId ? (
+                                                  <span>{article.title}</span>
+                                              ) : (
+                                                  <a href={article.link}>{article.title}</a>
+                                              )}
                                           </p>
-                                          <p className='postPubDate'>{article.pubDate}</p>
-                                          <a href={article.link}>
-                                              <img src={extractImageUrl(article.content)} alt="Post Image" className="post-image"/>
-                                          </a>
-                                          <p className='post-text'>{article.contentSnippet}</p>
-                                          <br></br><br></br>
+                                          {article.companyClerkId && (
+                                              <>
+                                              <p className='post-text'>{article.content}</p>
+                                              <br></br><br></br>
+                                              </>
+                                          )}
+
+
+                                          {!article.companyClerkId && (
+                                              <>
+                                                  <p className='postPubDate'>{article.pubDate}</p>
+                                                  <a href={article.link}>
+                                                      <img src={extractImageUrl(article.content)} alt="Post Image"
+                                                           className="post-image"/>
+                                                  </a>
+                                                  <p className='post-text'>{article.contentSnippet}</p>
+                                                  <br></br><br></br>
+                                              </>
+                                          )}
+
                                           <button
-                                              onClick={() => removePost(article, clerkId,setSavedArticles)}
+                                              onClick={() => removePost(article, clerkId, setSavedArticles)}
                                               style={{
                                                   background: `url('/css/icons/remove.png') no-repeat center center`,
                                                   backgroundSize: 'contain',
@@ -1552,6 +1649,7 @@
                                       </div>
                                   </div>
                               ))}
+
                           </div>
                       </div>
                   </div>
